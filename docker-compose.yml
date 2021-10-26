@@ -1,0 +1,39 @@
+version: '3.7'
+
+volumes:
+  db:
+
+networks:
+  frontend:
+  backend:
+
+services:
+  frontend:
+    build: ./frontend
+    image: frontend
+    restart: always
+    networks:
+      - frontend
+
+  backend:
+    build: ./backend
+    image: backend
+    restart: always
+    networks:
+      - frontend
+      - backend
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - db:/var/lib/postgres/data
+    networks:
+      - backend
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8000:8000"
+  
