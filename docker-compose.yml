@@ -1,41 +1,60 @@
 version: '3.7'
 
-volumes:
-  db:
-
-networks:
-  frontend:
-  backend:
-
 services:
   frontend:
     build: ./frontend
-    image: frontend
-    restart: always
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules/
     networks:
       - frontend
 
   backend:
     build: ./backend
-    image: backend
-    restart: always
+    expose:
+      - 5000
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - postgres
     networks:
       - frontend
       - backend
 
-  db:
-    image: postgres
-    restart: always
+  postgres:
+    image: postgres:latest
     volumes:
-      - db:/var/lib/postgres/data
+      - postgres:/var/lib/postgres/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: wgplaner
+    ports:
+      - 5432:5432
     networks:
       - backend
 
   adminer:
-    image: adminer
-    restart: always
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: galkaev
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
     networks:
       - backend
-    ports:
-      - "8000:8000"
-  
+
+volumes:
+  postgres:
+
+networks:
+  frontend:
+  backend:
