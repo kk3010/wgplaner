@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import type { IUser } from './interfaces/user.interface';
+import { MockType } from '../../test/mockType';
 
-const mockUserService = {
+const mockUserService: MockType<UserService> = {
   create: jest.fn(),
-  findAll: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
   remove: jest.fn(),
