@@ -11,6 +11,7 @@ import { getConnectionOptions } from 'typeorm';
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
+          keepConnectionAlive: true,
         }),
     }),
     UserModule,
