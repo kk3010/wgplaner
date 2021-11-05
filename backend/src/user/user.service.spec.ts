@@ -39,7 +39,13 @@ describe('UserService', () => {
   describe('findAll', () => {
     it('should return an array of users', async () => {
       const result: IUser[] = [
-        { id: 1, email: 'test@abc.de', firstName: 'first', lastName: 'last' },
+        {
+          id: 1,
+          password: 'abc',
+          email: 'test@abc.de',
+          firstName: 'first',
+          lastName: 'last',
+        },
       ];
 
       jest.spyOn(repository, 'find').mockResolvedValue(result);
@@ -50,9 +56,16 @@ describe('UserService', () => {
     describe('findOne', () => {
       it('Should return a single user', async () => {
         const users: IUser[] = [
-          { id: 1, email: 'test@abc.de', firstName: 'first', lastName: 'last' },
+          {
+            id: 1,
+            password: 'abc',
+            email: 'test@abc.de',
+            firstName: 'first',
+            lastName: 'last',
+          },
           {
             id: 2,
+            password: 'abc',
             email: 'test@abc.de',
             firstName: 'second',
             lastName: 'last',

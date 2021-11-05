@@ -37,7 +37,13 @@ describe('UserController', () => {
   describe('findAll', () => {
     it('should return an array of users', async () => {
       const result: IUser[] = [
-        { id: 1, email: 'test@abc.de', firstName: 'first', lastName: 'last' },
+        {
+          id: 1,
+          password: 'abc',
+          email: 'test@abc.de',
+          firstName: 'first',
+          lastName: 'last',
+        },
       ];
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
 
