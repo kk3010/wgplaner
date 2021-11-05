@@ -33,21 +33,4 @@ describe('UserController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-
-  describe('findAll', () => {
-    it('should return an array of users', async () => {
-      const result: IUser[] = [
-        {
-          id: 1,
-          password: 'abc',
-          email: 'test@abc.de',
-          firstName: 'first',
-          lastName: 'last',
-        },
-      ];
-      jest.spyOn(service, 'findAll').mockResolvedValue(result);
-
-      expect(await controller.findAll()).toBe(result);
-    });
-  });
 });

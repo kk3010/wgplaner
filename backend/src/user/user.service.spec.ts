@@ -36,47 +36,34 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findAll', () => {
-    it('should return an array of users', async () => {
-      const result: IUser[] = [
+  describe('findOne', () => {
+    it('Should return a single user', async () => {
+      const testEmail = 'test@abc.de';
+      const users: IUser[] = [
         {
           id: 1,
           password: 'abc',
-          email: 'test@abc.de',
+          email: testEmail,
           firstName: 'first',
+          lastName: 'last',
+        },
+        {
+          id: 2,
+          password: 'abc',
+          email: 'test@example.de',
+          firstName: 'second',
           lastName: 'last',
         },
       ];
 
-      jest.spyOn(repository, 'find').mockResolvedValue(result);
+      jest
+        .spyOn(repository, 'findOne')
+        .mockImplementation(async ({ email }) =>
+          users.find((user) => user.email === email),
+        );
 
-      expect(await service.findAll()).toBe(result);
-    });
-
-    describe('findOne', () => {
-      it('Should return a single user', async () => {
-        const users: IUser[] = [
-          {
-            id: 1,
-            password: 'abc',
-            email: 'test@abc.de',
-            firstName: 'first',
-            lastName: 'last',
-          },
-          {
-            id: 2,
-            password: 'abc',
-            email: 'test@abc.de',
-            firstName: 'second',
-            lastName: 'last',
-          },
-        ];
-
-        jest.spyOn(repository, 'findOne').mockResolvedValue(users[1]);
-
-        expect(await service.findOne(2)).toBe(users[1]);
-        expect(repository.findOne).toHaveBeenCalledWith(2);
-      });
+      expect(await service.findOne(testEmail)).toBe(users[0]);
+      expect(repository.findOne).toHaveBeenCalledWith({ email: testEmail });
     });
   });
 });
