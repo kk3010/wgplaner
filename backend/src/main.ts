@@ -2,6 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import * as helmet from 'helmet';
 import type { INestApplication } from '@nestjs/common';
 
 declare const module: any;
@@ -21,6 +22,8 @@ function addSwagger(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
