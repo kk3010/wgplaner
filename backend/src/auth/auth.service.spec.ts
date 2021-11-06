@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import type { MockType } from '../../test/mockType';
 import type { IUser } from '../user/interfaces/user.interface';
+import * as bcrypt from 'bcrypt';
 
 const mockUserServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),
@@ -54,7 +55,10 @@ describe('AuthService', () => {
     });
 
     it('should return user without password when passwords match', async () => {
-      jest.spyOn(userService, 'findOne').mockResolvedValue(user);
+      const hash = await bcrypt.hash(user.password, 10);
+      jest
+        .spyOn(userService, 'findOne')
+        .mockResolvedValue({ ...user, password: hash });
       const { password, ...rest } = user;
       expect(await service.validateUser('', password)).toEqual(rest);
     });

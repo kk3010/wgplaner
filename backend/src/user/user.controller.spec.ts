@@ -34,22 +34,6 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should insert a user', async () => {
-      const user = {
-        email: 'abc@abc.de',
-        firstName: 'first',
-        lastName: 'last',
-        password: 'password',
-      };
-      jest
-        .spyOn(service, 'create')
-        .mockImplementation(async (user) => ({ ...user, id: 1 }));
-      expect(await controller.create(user)).toEqual({ ...user, id: 1 });
-      expect(service.create).toHaveBeenCalledWith(user);
-    });
-  });
-
   describe('update', () => {
     it('should call UserService.update', async () => {
       const updateSpy = jest.spyOn(service, 'update');

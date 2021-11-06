@@ -1,9 +1,14 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,5 +20,11 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Login failed.' })
   async login(@Req() req: Request) {
     return this.authService.login(req.user);
+  }
+
+  @Post('register')
+  @ApiBadRequestResponse()
+  async register(@Body() createUserDto: CreateUserDto) {
+    await this.authService.register(createUserDto);
   }
 }
