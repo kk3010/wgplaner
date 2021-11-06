@@ -5,11 +5,13 @@ import { JwtService } from '@nestjs/jwt';
 import type { MockType } from '../../test/mockType';
 import type { IUser } from '../user/interfaces/user.interface';
 
-const mockUserService: MockType<UserService> = {
+const mockUserServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),
-};
+});
 
-const mockJwtService: MockType<JwtService> = {};
+const mockJwtServiceFactory: () => MockType<JwtService> = () => ({
+  sign: jest.fn(),
+});
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -21,11 +23,11 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: UserService,
-          useFactory: () => mockUserService,
+          useFactory: mockUserServiceFactory,
         },
         {
           provide: JwtService,
-          useFactory: () => mockJwtService,
+          useFactory: mockJwtServiceFactory,
         },
       ],
     }).compile();

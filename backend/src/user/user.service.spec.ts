@@ -6,13 +6,13 @@ import { Repository } from 'typeorm';
 import type { IUser } from './interfaces/user.interface';
 import type { MockType } from '../../test/mockType';
 
-const mockUserRepository: MockType<Repository<User>> = {
+const mockUserRepositoryFactory: () => MockType<Repository<User>> = () => ({
   create: jest.fn(),
   find: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-};
+});
 
 describe('UserService', () => {
   let service: UserService;
@@ -24,7 +24,7 @@ describe('UserService', () => {
         UserService,
         {
           provide: getRepositoryToken(User),
-          useFactory: () => mockUserRepository,
+          useFactory: mockUserRepositoryFactory,
         },
       ],
     }).compile();

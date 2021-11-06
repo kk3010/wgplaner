@@ -4,12 +4,12 @@ import { UserService } from './user.service';
 import type { MockType } from '../../test/mockType';
 import type { UpdateUserDto } from './dto/update-user.dto';
 
-const mockUserService: MockType<UserService> = {
+const mockUserServiceFactory: () => MockType<UserService> = () => ({
   create: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
   remove: jest.fn(),
-};
+});
 
 describe('UserController', () => {
   let controller: UserController;
@@ -21,7 +21,7 @@ describe('UserController', () => {
       providers: [
         {
           provide: UserService,
-          useFactory: () => mockUserService,
+          useFactory: mockUserServiceFactory,
         },
       ],
     }).compile();
