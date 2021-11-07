@@ -8,6 +8,7 @@ import { AuthController } from '../src/auth/auth.controller';
 import { LocalStrategy } from '../src/auth/strategies/local.strategy';
 import { LoginDto } from '../src/auth/dto/login.dto';
 import { LocalAuthGuard } from '../src/auth/guards/local-auth.guard';
+import { ValidationPipe } from '@nestjs/common';
 
 const authServiceFactory: () => MockType<AuthService> = () => ({
   login: jest.fn(),
@@ -39,14 +40,13 @@ describe('Auth', () => {
       .compile();
 
     app = moduleRef.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     authService = moduleRef.get(AuthService);
     await app.init();
   });
 
   describe('/login', () => {
     it('returns an access token when valid credentials are presented', () => {
-      const user = { ...mockUser };
-      delete user.password;
       jest
         .spyOn(authService, 'login')
         .mockResolvedValue({ access_token: 'token' });

@@ -7,6 +7,7 @@ import type { MockType } from './mockType';
 import type { UpdateUserDto } from '../src/user/dto/update-user.dto';
 import { mockUser } from './user.mock';
 import { UserController } from '../src/user/user.controller';
+import { ValidationPipe } from '@nestjs/common';
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),
@@ -31,6 +32,7 @@ describe('User', () => {
     userService = moduleRef.get(UserService);
     app = moduleRef.createNestApplication();
     app.use(mockUserMiddleware);
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
