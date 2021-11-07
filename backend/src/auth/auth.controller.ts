@@ -9,7 +9,9 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { SkipJwt } from './skit-jwt-auth.decorator';
 
+@SkipJwt()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -18,7 +20,7 @@ export class AuthController {
   @Post('login')
   @ApiBody({ type: LoginDto })
   @ApiUnauthorizedResponse({ description: 'Login failed.' })
-  async login(@Req() req: Request) {
+  login(@Req() req: Request) {
     return this.authService.login(req.user);
   }
 
