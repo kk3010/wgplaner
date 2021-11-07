@@ -3,7 +3,6 @@ import { Test } from '@nestjs/testing';
 import { AuthService } from '../src/auth/auth.service';
 import type { CanActivate, INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import { mockUser } from './user.mock';
 import { AuthController } from '../src/auth/auth.controller';
 import { LocalStrategy } from '../src/auth/strategies/local.strategy';
 import { LoginDto } from '../src/auth/dto/login.dto';

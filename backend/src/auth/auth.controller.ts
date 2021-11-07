@@ -16,9 +16,9 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { SkipJwt } from './skit-jwt-auth.decorator';
+import { SkipJwtAuth } from './skip-jwt-auth.decorator';
 
-@SkipJwt()
+@SkipJwtAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
