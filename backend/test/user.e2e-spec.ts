@@ -1,15 +1,12 @@
 import * as request from 'supertest';
-import { Repository } from 'typeorm';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test } from '@nestjs/testing';
-import { UserModule } from '../src/user/user.module';
 import { UserService } from '../src/user/user.service';
-import { User } from '../src/user/entities/user.entity';
 import { mockUserMiddleware } from './mock-user.middleware';
 import type { INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import type { IUser } from '../dist/user/interfaces/user.interface';
 import type { UpdateUserDto } from '../src/user/dto/update-user.dto';
+import { mockUser } from './user.mock';
+import { UserController } from '../src/user/user.controller';
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),
@@ -17,34 +14,27 @@ const userServiceFactory: () => MockType<UserService> = () => ({
   update: jest.fn(),
 });
 
-const userRepoFactory: () => MockType<Repository<User>> = () => ({});
-
 describe('User', () => {
   let app: INestApplication;
-  let userService: UserService;
+  let userService: MockType<UserService>;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [UserModule],
-    })
-      .overrideProvider(UserService)
-      .useFactory({ factory: userServiceFactory })
-      .overrideProvider(getRepositoryToken(User))
-      .useFactory({ factory: userRepoFactory })
-      .compile();
+      controllers: [UserController],
+      providers: [
+        {
+          provide: UserService,
+          useFactory: userServiceFactory,
+        },
+      ],
+    }).compile();
     userService = moduleRef.get(UserService);
     app = moduleRef.createNestApplication();
     app.use(mockUserMiddleware);
     await app.init();
   });
 
-  const user: IUser = {
-    email: '',
-    firstName: '',
-    id: 1,
-    lastName: '',
-    password: '',
-  };
+  const user = { ...mockUser };
 
   it('/GET', () => {
     jest.spyOn(userService, 'findOne').mockResolvedValue(user);
