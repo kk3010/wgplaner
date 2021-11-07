@@ -2,10 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import type { MockType } from '../../test/mockType';
 import type { IUser } from '../user/interfaces/user.interface';
-import * as bcrypt from 'bcrypt';
 import type { IJwtPayload } from '../../dist/auth/interfaces/IJwtPayload';
+import type { CreateUserDto } from '../user/dto/create-user.dto';
 
 const mockUserServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),
@@ -16,10 +17,13 @@ const mockJwtServiceFactory: () => MockType<JwtService> = () => ({
   sign: jest.fn(),
 });
 
+jest.mock('bcrypt');
+
 describe('AuthService', () => {
   let service: AuthService;
   let userService: MockType<UserService>;
   let jwtService: MockType<JwtService>;
+  let mockedCompare: jest.Mock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +43,8 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     userService = module.get(UserService);
     jwtService = module.get(JwtService);
+    mockedCompare = jest.fn();
+    (bcrypt.compare as jest.Mock) = mockedCompare;
   });
 
   it('should be defined', () => {
@@ -59,18 +65,21 @@ describe('AuthService', () => {
       expect(await service.validateUser('', 'wrong')).toBe(null);
     });
 
-    it("should return null when passwords don't match", async () => {
-      jest.spyOn(userService, 'findOne').mockResolvedValue(user);
-      expect(await service.validateUser('', 'wrong')).toBe(null);
-    });
+    describe('when a user is found', () => {
+      beforeEach(() => {
+        jest.spyOn(userService, 'findOne').mockResolvedValue(user);
+      });
 
-    it('should return user without password when passwords match', async () => {
-      const hash = await bcrypt.hash(user.password, 10);
-      jest
-        .spyOn(userService, 'findOne')
-        .mockResolvedValue({ ...user, password: hash });
-      const { password, ...rest } = user;
-      expect(await service.validateUser('', password)).toEqual(rest);
+      it("should return null when passwords don't match", async () => {
+        mockedCompare.mockResolvedValue(false);
+        expect(await service.validateUser('', 'wrong')).toBe(null);
+      });
+
+      it('should return user without password when passwords match', async () => {
+        mockedCompare.mockResolvedValue(true);
+        const { password, ...rest } = user;
+        expect(await service.validateUser('', '')).toEqual(rest);
+      });
     });
   });
 
@@ -89,18 +98,23 @@ describe('AuthService', () => {
   });
 
   describe('register', () => {
+    let mockedHash: jest.Mock;
+
+    beforeEach(() => {
+      mockedHash = jest.fn().mockResolvedValue('hash');
+      (bcrypt.hash as jest.Mock) = mockedHash;
+    });
+
     it('should hash the password and call UserService.create', async () => {
       const spy = jest.spyOn(userService, 'create');
-      const user = {
+      const user: CreateUserDto = {
         email: 'email',
         firstName: 'firstName',
         lastName: 'last',
+        password: 'test',
       };
-      const password = 'test';
-      await service.register({ ...user, password });
-      expect(spy).toHaveBeenCalled();
-      const calledWithPass = spy.mock.calls[0][0].password;
-      expect(await bcrypt.compare(password, calledWithPass)).toBe(true);
+      await service.register(user);
+      expect(spy).toHaveBeenCalledWith({ ...user, password: 'hash' });
     });
   });
 });
