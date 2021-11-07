@@ -23,13 +23,13 @@ export class UserController {
     return this.userService.findOne((req.user as IJwtPayload).email);
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    await this.userService.update(id, updateUserDto);
+  @Patch()
+  async update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
+    await this.userService.update((req.user as IJwtPayload).sub, updateUserDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: number) {
-    await this.userService.remove(id);
+  @Delete()
+  async remove(@Req() req: Request) {
+    await this.userService.remove((req.user as IJwtPayload).sub);
   }
 }
