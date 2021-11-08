@@ -1,0 +1,36 @@
+image: node:latest
+
+cache:
+  key:
+    files:
+      - backend/package.json
+  paths:
+    - backend/node_modules/
+
+before_script:
+  - cd backend
+  - npm install
+
+lint-backend:
+  stage: lint
+  script:
+    - npm run lint
+
+unit-test-backend:
+  stage: test
+  dependencies:
+    - lint-backend
+  script:
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - backend/junit.xml
+      cobertura: backend/coverage/cobertura-coverage.xml
+
+integration-test-backend:
+  stage: test
+  script:
+    - npm run test:e2e
