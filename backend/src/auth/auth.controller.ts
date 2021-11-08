@@ -13,7 +13,7 @@ import {
 } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './dto/login.dto';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { SkipJwtAuth } from './skip-jwt-auth.decorator';

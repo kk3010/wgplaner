@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import type { MockType } from '../../test/mockType';
-import type { IUser } from '../user/interfaces/user.interface';
-import type { IJwtPayload } from '../../dist/auth/interfaces/IJwtPayload';
-import type { CreateUserDto } from '../user/dto/create-user.dto';
+import type { MockType } from '../../../test/mockType';
+import type { IUser } from '../../user/interfaces/user.interface';
+import type { IJwtPayload } from '../../../dist/auth/interfaces/IJwtPayload';
+import type { CreateUserDto } from '../../user/dto/create-user.dto';
 
 const mockUserServiceFactory: () => MockType<UserService> = () => ({
   findOne: jest.fn(),

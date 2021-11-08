@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import type { Request } from 'express';
-import type { IJwtPayload } from '../auth/interfaces/IJwtPayload';
+import type { IJwtPayload } from '../auth/interfaces/jwtPayload.interface';
 
 @Controller('user')
 @ApiBearerAuth()
