@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { RefreshTokenService } from './refresh-token/refresh-token.service';
 
 @Module({
   imports: [
@@ -22,6 +21,6 @@ import { RefreshTokenService } from './refresh-token/refresh-token.service';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RefreshTokenService],
+  providers: [AppService],
 })
 export class AppModule {}

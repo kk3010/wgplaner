@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import type { Request } from 'express';
-import type { IJwtPayload } from '../auth/interfaces/jwtPayload.interface';
+import type { IUser } from '../../dist/user/interfaces/user.interface';
 
 @Controller('user')
 @ApiBearerAuth()
@@ -12,16 +12,16 @@ export class UserController {
 
   @Get()
   profile(@Req() req: Request) {
-    return this.userService.findOne((req.user as IJwtPayload).email);
+    return this.userService.findById((req.user as IUser).id);
   }
 
   @Patch()
   async update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
-    await this.userService.update((req.user as IJwtPayload).sub, updateUserDto);
+    await this.userService.update((req.user as IUser).id, updateUserDto);
   }
 
   @Delete()
   async remove(@Req() req: Request) {
-    await this.userService.remove((req.user as IJwtPayload).sub);
+    await this.userService.remove((req.user as IUser).id);
   }
 }

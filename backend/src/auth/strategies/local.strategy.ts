@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { UserService } from '../../user/user.service';
 
 /**
  * The local strategy is used to verify login credentials before issuing a JWT
@@ -9,13 +9,13 @@ import { AuthService } from '../auth.service';
  */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(private userService: UserService) {
     // passport-local by default expects a property named 'username' - we're using an email address though
     super({ usernameField: 'email' });
   }
 
   async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(email, password);
+    const user = await this.userService.validateCredentials(email, password);
     if (!user) {
       throw new UnauthorizedException();
     }

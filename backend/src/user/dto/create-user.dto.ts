@@ -3,14 +3,14 @@ import type { IUser } from '../interfaces/user.interface';
 
 export class CreateUserDto implements Omit<IUser, 'id'> {
   @Length(8)
-  password: string;
+  readonly password: string;
 
   @IsNotEmpty()
-  firstName: string;
+  readonly firstName: string;
 
   @IsNotEmpty()
-  lastName: string;
+  readonly lastName: string;
 
   @IsEmail()
-  email: string;
+  readonly email: string;
 }

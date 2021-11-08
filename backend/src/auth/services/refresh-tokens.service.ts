@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '../../user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { RefreshTokens } from '../entites/refresh-tokens.entity';
+import { RefreshToken } from '../entites/refresh-token.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { IUser } from '../../../dist/user/interfaces/user.interface';
 
 @Injectable()
 export class RefreshTokensService {
   constructor(
-    @InjectRepository(RefreshTokens)
-    private refreshTokensRepository: Repository<RefreshTokens>,
+    @InjectRepository(RefreshToken)
+    private refreshTokensRepository: Repository<RefreshToken>,
   ) {}
 
-  async createRefreshToken(user: User, ttl: number) {
+  async createRefreshToken(user: IUser, ttl: number) {
     const expires = new Date(Date.now() + ttl);
 
     const token = this.refreshTokensRepository.create({
