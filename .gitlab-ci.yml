@@ -2,6 +2,7 @@ stages:
   - lint
   - test
   - build
+  - deploy
 
 include:
   - "/backend/.gitlab-ci.yml"

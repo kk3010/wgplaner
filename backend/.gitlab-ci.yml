@@ -18,10 +18,11 @@ lint-backend:
 
 unit-test-backend:
   stage: test
-  dependencies:
-    - lint-backend
   script:
     - npm run test:ci
+  cache:
+    paths:
+      - backend/coverage/
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     when: always
@@ -34,3 +35,17 @@ integration-test-backend:
   stage: test
   script:
     - npm run test:e2e
+
+pages:
+  stage: deploy
+  dependencies:
+    - unit-test-backend
+  script:
+    - mkdir .public
+    - cp -r backend/coverage/* .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

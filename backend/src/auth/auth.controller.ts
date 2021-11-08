@@ -9,7 +9,6 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
