@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -16,7 +17,13 @@ import { ConfigModule } from '@nestjs/config';
           keepConnectionAlive: true,
         }),
     }),
-    ConfigModule.forRoot({ cache: true }),
+    ConfigModule.forRoot({
+      cache: true,
+      validationSchema: Joi.object({
+        JWT_SECRET: Joi.string().required(),
+        FRONTEND_URL: Joi.string().required(),
+      }),
+    }),
     UserModule,
     AuthModule,
   ],

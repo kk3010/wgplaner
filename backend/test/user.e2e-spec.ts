@@ -5,9 +5,9 @@ import { mockUserMiddleware } from './mock-user.middleware';
 import { generateFakeUser } from './user.mock';
 import { UserController } from '../src/user/user.controller';
 import { ValidationPipe } from '@nestjs/common';
+import { UpdateUserDto } from '../src/user/dto/update-user.dto';
 import type { INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import type { UpdateUserDto } from '../src/user/dto/update-user.dto';
 import type { IUser } from '../src/user/interfaces/user.interface';
 
 const userServiceFactory: () => MockType<UserService> = () => ({

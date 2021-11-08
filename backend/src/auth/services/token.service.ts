@@ -4,7 +4,7 @@ import { UserService } from '../../user/user.service';
 import { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { RefreshTokensService } from './refresh-tokens.service';
-import type { IRefreshTokenPayload } from '../interfaces/refresh-token-payload.interface';
+import { RefreshTokenPayloadDto } from '../dto/refresh-token-payload.dto';
 import type { IUser } from '../../user/interfaces/user.interface';
 import type { IRefreshToken } from '../interfaces/refresh-token.interface';
 
@@ -84,7 +84,7 @@ export class TokenService {
 
   private async decodeRefreshToken(
     token: string,
-  ): Promise<IRefreshTokenPayload> {
+  ): Promise<RefreshTokenPayloadDto> {
     try {
       return await this.jwtService.verify(token);
     } catch (e) {
@@ -97,7 +97,7 @@ export class TokenService {
   }
 
   private getUserFromRefreshTokenPayload(
-    payload: IRefreshTokenPayload,
+    payload: RefreshTokenPayloadDto,
   ): Promise<IUser> {
     if (!payload.sub) {
       throw new UnprocessableEntityException('Refresh token malformed');
@@ -106,7 +106,7 @@ export class TokenService {
   }
 
   private getRefreshTokenFromRefreshTokenPayload(
-    payload: IRefreshTokenPayload,
+    payload: RefreshTokenPayloadDto,
   ): Promise<IRefreshToken> {
     if (!payload.jti) {
       throw new UnprocessableEntityException('Refresh token malformed');

@@ -5,11 +5,11 @@ import { AuthController } from '../src/auth/auth.controller';
 import { LocalStrategy } from '../src/auth/strategies/local.strategy';
 import { LocalAuthGuard } from '../src/auth/guards/local-auth.guard';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
-import { IAuthenticationPayload } from '../src/auth/interfaces/authentication-payload.interface';
+import { AuthenticationPayloadDto } from '../src/auth/dto/authentication-payload.dto';
 import { generateFakeUser } from './user.mock';
 import { UserService } from '../src/user/user.service';
 import { mockUserMiddleware } from './mock-user.middleware';
-import type { LoginDto } from '../src/auth/dto/login.dto';
+import { LoginDto } from '../src/auth/dto/login.dto';
 import type { CanActivate, INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
 import type { IUser } from '../src/user/interfaces/user.interface';
@@ -84,12 +84,10 @@ describe('Auth', () => {
     });
     it('calls UserService.create and then returns refresh and access tokens', async () => {
       const { password, ...rest } = user;
-      const expectedResponse: IAuthenticationPayload = {
+      const expectedResponse: AuthenticationPayloadDto = {
         user: rest,
-        payload: {
-          token: 'token',
-          refresh_token: 'refresh',
-        },
+        token: 'token',
+        refresh_token: 'refresh',
       };
       await request(app.getHttpServer())
         .post('/auth/register')

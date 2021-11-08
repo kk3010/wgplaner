@@ -7,7 +7,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBody,
+  ApiResponse,
+  ApiTags,
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -18,11 +21,12 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { SkipJwtAuth } from './skip-jwt-auth.decorator';
 import { UserService } from '../user/user.service';
 import type { Request } from 'express';
-import type { IUser } from '../../dist/user/interfaces/user.interface';
-import type { IAuthenticationPayload } from './interfaces/authentication-payload.interface';
+import type { IUser } from '../user/interfaces/user.interface';
+import { AuthenticationPayloadDto } from './dto/authentication-payload.dto';
 import { RefreshDto } from './dto/refresh.dto';
 
 @SkipJwtAuth()
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -44,6 +48,7 @@ export class AuthController {
 
   @Post('register')
   @ApiUnprocessableEntityResponse()
+  @ApiBadRequestResponse()
   async register(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
     const { token, refresh } = await this.generateTokensForUser(user);
@@ -75,14 +80,12 @@ export class AuthController {
     user: IUser,
     accessToken: string,
     refreshToken?: string,
-  ): IAuthenticationPayload {
+  ): AuthenticationPayloadDto {
     const { password, ...rest } = user;
     return {
       user: rest,
-      payload: {
-        token: accessToken,
-        ...(refreshToken ? { refresh_token: refreshToken } : {}),
-      },
+      token: accessToken,
+      ...(refreshToken ? { refresh_token: refreshToken } : {}),
     };
   }
 }

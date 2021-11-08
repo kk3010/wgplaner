@@ -7,7 +7,7 @@ import type { MockType } from '../../test/mockType';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { generateFakeUser } from '../../test/user.mock';
 import * as bcrypt from 'bcrypt';
-import type { IUser } from '../../dist/user/interfaces/user.interface';
+import type { IUser } from '../user/interfaces/user.interface';
 
 const mockUserRepositoryFactory: () => MockType<Repository<User>> = () => ({
   create: jest.fn(),
