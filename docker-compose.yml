@@ -28,7 +28,7 @@ services:
       - backend
 
   postgres:
-    image: postgres:latest
+    image: postgres:11
     volumes:
       - postgres:/var/lib/postgres/data
     environment:
