@@ -1,28 +1,25 @@
 image: node:latest
 
 cache:
-  key:
-    files:
-      - backend/package.json
+  key: $CI_COMMIT_REF_SLUG
   paths:
-    - backend/node_modules/
+    - backend/.npm/
 
 before_script:
   - cd backend
-  - npm install
+  - npm ci --cache .npm --prefer-offline
 
 lint-backend:
   stage: lint
   script:
     - npm run lint
+  needs: []
 
 unit-test-backend:
   stage: test
+  needs: []
   script:
     - npm run test:ci
-  cache:
-    paths:
-      - backend/coverage/
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     when: always
@@ -33,17 +30,40 @@ unit-test-backend:
 
 integration-test-backend:
   stage: test
+  needs: []
   script:
     - npm run test:e2e
 
+build-backend:
+  needs: []
+  stage: build
+  script:
+    - npm run build
+
+build-documentation:
+  stage: build
+  needs:
+    - unit-test-backend
+  dependencies:
+    - unit-test-backend
+  cache:
+    paths:
+      - backend/documentation/
+  script:
+    - npm run doc
+  artifacts:
+    paths:
+      - backend/documentation
 pages:
   stage: deploy
   dependencies:
-    - unit-test-backend
+    - build-documentation
+  needs:
+    - build-documentation
   script:
-    - mkdir .public
-    - cp -r backend/coverage/* .public
-    - mv .public public
+    - mkdir ../.public
+    - cp -r documentation/* ../.public
+    - mv ../.public ../public
   artifacts:
     paths:
       - public

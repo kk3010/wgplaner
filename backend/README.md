@@ -1,5 +1,9 @@
 # WG Planer Backend
 
+## Documentation
+
+The documentation for the main branch is available via gitlab pages at <https://mwa.pages.mi.hdm-stuttgart.de/ws21/wgplaner/>
+
 ## Installation
 
 ```bash

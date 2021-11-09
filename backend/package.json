@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "doc": "compodoc -p tsconfig.build.json --theme material --unitTestCoverage coverage/coverage-summary.json"
   },
   "dependencies": {
     "@nestjs/common": "^8.2.0",
@@ -48,6 +49,7 @@
     "typeorm": "^0.2.38"
   },
   "devDependencies": {
+    "@compodoc/compodoc": "^1.1.15",
     "@nestjs/cli": "^8.1.4",
     "@nestjs/schematics": "^8.0.4",
     "@nestjs/testing": "^8.2.0",
@@ -98,7 +100,8 @@
       "html",
       "text",
       "text-summary",
-      "cobertura"
+      "cobertura",
+      "json-summary"
     ],
     "testEnvironment": "node"
   }
