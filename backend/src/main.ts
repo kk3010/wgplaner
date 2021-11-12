@@ -10,7 +10,7 @@ declare const module: any;
 function addSwagger(app: INestApplication) {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('WG Planer')
-    .setDescription('OpenAPI schema for the wg plaenr')
+    .setDescription('OpenAPI schema for the wg planer')
     .setVersion('0.1')
     .addBearerAuth()
     .build();
