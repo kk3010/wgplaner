@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import type { IUser } from '../interfaces/user.interface';
+import { Flat } from '../../flat/entities/flat.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { IUser } from '../interfaces/user.interface';
 
 @Entity()
 export class User implements IUser {
@@ -19,4 +20,7 @@ export class User implements IUser {
 
   @Column({ unique: true })
   email: string;
+
+  @ManyToOne(() => Flat, (flat) => flat.members, { onDelete: 'SET NULL' })
+  flat: Flat;
 }

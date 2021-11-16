@@ -1,6 +1,6 @@
-import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { IFlat } from '../interfaces/flat.interface';
+import { User } from '../../user/entities/user.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import type { IFlat } from '../interfaces/flat.interface';
 
 @Entity()
 export class Flat implements IFlat {
@@ -10,6 +10,11 @@ export class Flat implements IFlat {
   @Column()
   name: string;
 
-  @OneToMany((type) => User, (user) => user.id)
+  @Column()
+  invitationToken: string;
+
+  @OneToMany(() => User, (user) => user.flat, {
+    eager: true,
+  })
   members: User[];
 }

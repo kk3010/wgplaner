@@ -1,6 +1,6 @@
-import { PartialType, OmitType } from '@nestjs/swagger';
-import { CreateFlatDto } from './create-flat.dto';
+import { IsNotEmpty } from 'class-validator';
 
-export class UpdateFlatDto extends PartialType(
-  OmitType(CreateFlatDto, ['members'] as const),
-) {}
+export class UpdateFlatDto {
+  @IsNotEmpty()
+  readonly name: string;
+}
