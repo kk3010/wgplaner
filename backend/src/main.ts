@@ -17,7 +17,9 @@ function addSwagger(app: INestApplication) {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-  SwaggerModule.setup('', app, document);
+  SwaggerModule.setup('', app, document, {
+    swaggerOptions: { persistAuthorization: true },
+  });
 }
 
 async function bootstrap() {
