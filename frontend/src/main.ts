@@ -3,7 +3,7 @@ import App from './App.vue'
 import './index.css'
 
 if (import.meta.env.DEV) {
-  const { worker } = require('./mocks/browser')
+  const { worker } = await import('./mocks/browser')
   worker.start()
 }
 

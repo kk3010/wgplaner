@@ -8,9 +8,12 @@
     "lint": "eslint '*/**/*.{vue,js,ts}' --fix"
   },
   "dependencies": {
+    "axios": "^0.24.0",
+    "daisyui": "^1.16.2",
     "vue": "^3.2.16"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@typescript-eslint/parser": "^5.2.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "@vue/eslint-config-prettier": "^6.0.0",
