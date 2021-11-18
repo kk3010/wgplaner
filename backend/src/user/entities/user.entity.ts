@@ -6,6 +6,10 @@ import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User implements IUser {
+  constructor(params: Partial<User>) {
+    Object.assign(this, params);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 

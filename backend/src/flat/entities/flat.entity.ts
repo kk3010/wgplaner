@@ -4,6 +4,10 @@ import type { IFlat } from '../../interfaces/flat.interface';
 
 @Entity()
 export class Flat implements IFlat {
+  constructor(params: Partial<Flat>) {
+    Object.assign(this, params);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 

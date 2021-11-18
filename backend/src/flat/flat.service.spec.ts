@@ -44,12 +44,22 @@ describe('FlatService', () => {
   });
 
   describe('create', () => {
-    it('should create a new flat', async () => {
-      const creator = generateFakeUser();
-
+    beforeEach(() => {
       jest.spyOn(crypto, 'randomUUID').mockReturnValue('token');
       jest.spyOn(repository, 'create').mockImplementation((val) => val);
       jest.spyOn(repository, 'save').mockImplementation(async (val) => val);
+    });
+
+    it('should throw UnprocessableEntityException when user belongs to another flat', async () => {
+      const creator = generateFakeUser(1);
+
+      await expect(
+        service.create({ name: 'test ' }, creator),
+      ).rejects.toThrowError(UnprocessableEntityException);
+    });
+
+    it('should create a new flat', async () => {
+      const creator = generateFakeUser();
 
       const expected: Omit<IFlat, 'id'> = {
         name: 'flat',
