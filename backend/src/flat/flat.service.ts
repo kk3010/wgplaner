@@ -1,16 +1,12 @@
-import {
-  ForbiddenException,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { IUser } from '../user/interfaces/user.interface';
-import { getConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { randomUUID } from 'crypto';
 import { CreateFlatDto } from './dto/create-flat.dto';
 import { UpdateFlatDto } from './dto/update-flat.dto';
 import { Flat } from './entities/flat.entity';
-import { User } from 'src/user/entities/user.entity';
-import { randomUUID } from 'crypto';
+import type { IUser } from '../user/interfaces/user.interface';
+import type { IFlat } from './interfaces/flat.interface';
 
 @Injectable()
 export class FlatService {
@@ -29,34 +25,16 @@ export class FlatService {
     return this.flatRepository.save(flat);
   }
 
-  async findOne(user: IUser) {
-    const flat = await getConnection()
-      .createQueryBuilder()
-      .relation(User, 'flat')
-      .of(user.id)
-      .loadOne();
-
-    return await this.flatRepository.findOne(flat.id);
+  findOneById(id: number) {
+    return this.flatRepository.findOne(id);
   }
 
-  async updateName(user: IUser, updateFlatDto: UpdateFlatDto) {
-    const flat = await getConnection()
-      .createQueryBuilder()
-      .relation(User, 'flat')
-      .of(user.id)
-      .loadOne();
-
-    return this.flatRepository.update(flat.id, updateFlatDto);
+  updateName(flatId: number, updateFlatDto: UpdateFlatDto) {
+    return this.flatRepository.update(flatId, updateFlatDto);
   }
 
-  async remove(user: IUser) {
-    const flat = await getConnection()
-      .createQueryBuilder()
-      .relation(User, 'flat')
-      .of(user.id)
-      .loadOne();
-
-    return this.flatRepository.delete(flat.id);
+  remove(flatId: number) {
+    return this.flatRepository.delete(flatId);
   }
 
   async addMember(invitationToken: string, user: IUser) {
@@ -67,26 +45,19 @@ export class FlatService {
     if (!flat) {
       throw new UnprocessableEntityException('No flat with this token found');
     }
+
     if (flat.members.some((member) => member.id === user.id)) {
       throw new UnprocessableEntityException(
         'User is already a member of the flat',
       );
     }
 
-    flat.members = [...flat.members, user];
-    return this.flatRepository.save(flat);
+    return this.flatRepository.update(flat.id, {
+      members: [...flat.members, user],
+    });
   }
 
-  async removeMember(user: IUser, id: number, userId: number) {
-    const flat = await this.flatRepository.findOne(id);
-
-    // only allow members to delete other members
-    if (!flat.members.some((member) => member.id === user.id)) {
-      throw new ForbiddenException(
-        'You must be a member of the flat to call this',
-      );
-    }
-
+  removeMember(flat: IFlat, userId: number) {
     // user must be a member first to get removed
     if (!flat.members.some((member) => member.id === userId)) {
       throw new UnprocessableEntityException(
@@ -94,12 +65,8 @@ export class FlatService {
       );
     }
 
-    const updatedMembers = flat.members.filter((user) => user.id != id);
+    const updatedMembers = flat.members.filter((user) => user.id != userId);
 
-    return this.flatRepository
-      .createQueryBuilder()
-      .update(flat)
-      .set({ members: updatedMembers })
-      .execute();
+    return this.flatRepository.update(flat.id, { members: updatedMembers });
   }
 }

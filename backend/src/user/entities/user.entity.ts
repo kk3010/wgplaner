@@ -21,6 +21,9 @@ export class User implements IUser {
   @Column({ unique: true })
   email: string;
 
+  @Column({ nullable: true })
+  flatId: number;
+
   @ManyToOne(() => Flat, (flat) => flat.members, { onDelete: 'SET NULL' })
   flat: Flat;
 }

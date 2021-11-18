@@ -6,5 +6,6 @@ export interface IUser {
   lastName: string;
   email: string;
   password: string;
+  flatId: number;
   flat: IFlat;
 }
