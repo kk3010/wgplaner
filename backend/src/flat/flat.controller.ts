@@ -10,7 +10,12 @@ import {
 import { FlatService } from './flat.service';
 import { CreateFlatDto } from './dto/create-flat.dto';
 import { UpdateFlatDto } from './dto/update-flat.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
 import type { IUser } from '../interfaces/user.interface';
 
@@ -28,6 +33,7 @@ export class FlatController {
 
   @Get()
   @ApiOperation({ summary: 'find flat' })
+  @ApiNotFoundResponse({ description: 'Flat could not be found' })
   findOne(@User('flatId') flatId: number) {
     return this.flatService.findOneById(flatId);
   }

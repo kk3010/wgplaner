@@ -2,8 +2,8 @@ import { Controller, Get, Body, Patch, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UserPayloadDto } from './dto/user-payload.dto';
 import { User } from './user.decorator';
+import { User as UserEntity } from './entities/user.entity';
 
 @Controller('user')
 @ApiTags('user')
@@ -12,7 +12,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  profile(@User('id') userId: number): Promise<UserPayloadDto> {
+  profile(@User('id') userId: number): Promise<UserEntity> {
     return this.userService.findById(userId);
   }
 

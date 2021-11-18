@@ -1,7 +1,9 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import type { IUser } from '../../interfaces/user.interface';
 
-export class CreateUserDto implements Omit<IUser, 'id' | 'flat'> {
+export class CreateUserDto
+  implements Pick<IUser, 'password' | 'firstName' | 'lastName' | 'email'>
+{
   @Length(8)
   readonly password: string;
 

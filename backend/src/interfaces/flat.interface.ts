@@ -1,8 +1,8 @@
-import { User } from 'src/user/entities/user.entity';
+import type { IUser } from './user.interface';
 
 export interface IFlat {
   id: number;
   name: string;
   invitationToken: string;
-  members: User[];
+  members: IUser[];
 }

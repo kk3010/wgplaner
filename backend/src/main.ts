@@ -29,7 +29,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector()));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   addSwagger(app);
 
   await app.listen(5000);

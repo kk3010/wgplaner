@@ -72,9 +72,8 @@ export class AuthController {
     accessToken: string,
     refreshToken?: string,
   ): AuthenticationPayloadDto {
-    const { password, ...rest } = user;
     return {
-      user: rest,
+      user,
       token: accessToken,
       ...(refreshToken ? { refresh_token: refreshToken } : {}),
     };
