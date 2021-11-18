@@ -1,4 +1,8 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
@@ -16,7 +20,12 @@ export class FlatService {
   ) {}
 
   async create(createFlatDto: CreateFlatDto, creator: IUser) {
+    if (creator.flatId) {
+      throw new UnprocessableEntityException('User belongs to another flat');
+    }
+
     const token = randomUUID();
+
     const flat = this.flatRepository.create({
       ...createFlatDto,
       members: [creator],
@@ -25,8 +34,12 @@ export class FlatService {
     return this.flatRepository.save(flat);
   }
 
-  findOneById(id: number) {
-    return this.flatRepository.findOne(id);
+  async findOneById(id: number) {
+    const flat = await this.flatRepository.findOne(id);
+    if (!flat) {
+      throw new NotFoundException();
+    }
+    return flat;
   }
 
   async updateName(flatId: number, updateFlatDto: UpdateFlatDto) {
