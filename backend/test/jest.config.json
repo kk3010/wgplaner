@@ -1,4 +1,6 @@
 {
+  "name": "e2e",
+  "displayName": "e2e test",
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
