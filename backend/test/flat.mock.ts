@@ -1,9 +1,12 @@
-import { address } from 'faker';
-import { IFlat } from 'src/flat/interfaces/flat.interface';
-import { generateFakeUser } from './user.mock';
+import { address, datatype } from 'faker';
+import type { IFlat } from '../src/flat/interfaces/flat.interface';
+import type { IUser } from '../src/user/interfaces/user.interface';
 
-export const generateFakeFlat: () => IFlat = () => ({
-  id: 1,
-  name: address.streetName + ' flat',
-  members: [generateFakeUser()],
+export const generateFakeFlat: (members?: IUser[]) => IFlat = (
+  members = [],
+) => ({
+  id: datatype.number(),
+  name: address.streetName() + ' flat',
+  members,
+  invitationToken: 'token',
 });

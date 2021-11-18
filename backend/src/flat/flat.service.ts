@@ -29,12 +29,12 @@ export class FlatService {
     return this.flatRepository.findOne(id);
   }
 
-  updateName(flatId: number, updateFlatDto: UpdateFlatDto) {
-    return this.flatRepository.update(flatId, updateFlatDto);
+  async updateName(flatId: number, updateFlatDto: UpdateFlatDto) {
+    await this.flatRepository.update(flatId, updateFlatDto);
   }
 
-  remove(flatId: number) {
-    return this.flatRepository.delete(flatId);
+  async remove(flatId: number) {
+    await this.flatRepository.delete(flatId);
   }
 
   async addMember(invitationToken: string, user: IUser) {
@@ -52,12 +52,12 @@ export class FlatService {
       );
     }
 
-    return this.flatRepository.update(flat.id, {
+    await this.flatRepository.update(flat.id, {
       members: [...flat.members, user],
     });
   }
 
-  removeMember(flat: IFlat, userId: number) {
+  async removeMember(flat: IFlat, userId: number) {
     // user must be a member first to get removed
     if (!flat.members.some((member) => member.id === userId)) {
       throw new UnprocessableEntityException(
@@ -67,6 +67,6 @@ export class FlatService {
 
     const updatedMembers = flat.members.filter((user) => user.id != userId);
 
-    return this.flatRepository.update(flat.id, { members: updatedMembers });
+    await this.flatRepository.update(flat.id, { members: updatedMembers });
   }
 }
