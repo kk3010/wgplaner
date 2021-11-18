@@ -12,7 +12,7 @@ import { CreateFlatDto } from './dto/create-flat.dto';
 import { UpdateFlatDto } from './dto/update-flat.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
-import type { IUser } from '../user/interfaces/user.interface';
+import type { IUser } from '../interfaces/user.interface';
 
 @Controller('flat')
 @ApiTags('flat')

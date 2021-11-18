@@ -8,8 +8,8 @@ import { FlatService } from './flat.service';
 import { MockType } from '../../test/mockType';
 import { generateFakeUser } from '../../test/user.mock';
 import { generateFakeFlat } from '../../test/flat.mock';
-import type { IFlat } from './interfaces/flat.interface';
-import type { IUser } from '../user/interfaces/user.interface';
+import type { IFlat } from '../interfaces/flat.interface';
+import type { IUser } from '../interfaces/user.interface';
 
 const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({
   create: jest.fn(),

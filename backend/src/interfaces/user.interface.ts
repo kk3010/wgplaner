@@ -1,4 +1,4 @@
-import type { IFlat } from '../../flat/interfaces/flat.interface';
+import type { IFlat } from './flat.interface';
 
 export interface IUser {
   id: number;

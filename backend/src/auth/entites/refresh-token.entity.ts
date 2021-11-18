@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IRefreshToken } from '../interfaces/refresh-token.interface';
+import { IRefreshToken } from '../../interfaces/refresh-token.interface';
 
 @Entity()
 export class RefreshToken implements IRefreshToken {

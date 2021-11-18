@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Flat } from '../../flat/entities/flat.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IUser } from '../interfaces/user.interface';
+import { IUser } from '../../interfaces/user.interface';
 
 @Entity()
 export class User implements IUser {

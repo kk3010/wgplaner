@@ -12,7 +12,7 @@ import { TokenService } from './services/token.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { SkipJwtAuth } from './skip-jwt-auth.decorator';
 import { UserService } from '../user/user.service';
-import type { IUser } from '../user/interfaces/user.interface';
+import type { IUser } from '../interfaces/user.interface';
 import { AuthenticationPayloadDto } from './dto/authentication-payload.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { User } from '../user/user.decorator';

@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '../../interfaces/user.interface';
 
 export class CreateUserDto implements Omit<IUser, 'id' | 'flat'> {
   @Length(8)

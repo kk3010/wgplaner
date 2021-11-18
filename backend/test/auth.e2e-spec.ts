@@ -12,7 +12,7 @@ import { mockUserMiddleware } from './mock-user.middleware';
 import { LoginDto } from '../src/auth/dto/login.dto';
 import type { CanActivate, INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import type { IUser } from '../src/user/interfaces/user.interface';
+import type { IUser } from '../src/interfaces/user.interface';
 
 const tokenServiceFactory: () => MockType<TokenService> = () => ({
   generateAccessToken: jest.fn(),

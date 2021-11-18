@@ -1,6 +1,6 @@
 import { address, datatype } from 'faker';
-import type { IFlat } from '../src/flat/interfaces/flat.interface';
-import type { IUser } from '../src/user/interfaces/user.interface';
+import type { IFlat } from '../src/interfaces/flat.interface';
+import type { IUser } from '../src/interfaces/user.interface';
 
 export const generateFakeFlat: (members?: IUser[]) => IFlat = (
   members = [],

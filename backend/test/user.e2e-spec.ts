@@ -8,7 +8,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { UpdateUserDto } from '../src/user/dto/update-user.dto';
 import type { INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import type { IUser } from '../src/user/interfaces/user.interface';
+import type { IUser } from '../src/interfaces/user.interface';
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   findById: jest.fn(),

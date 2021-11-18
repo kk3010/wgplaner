@@ -5,8 +5,8 @@ import { randomUUID } from 'crypto';
 import { CreateFlatDto } from './dto/create-flat.dto';
 import { UpdateFlatDto } from './dto/update-flat.dto';
 import { Flat } from './entities/flat.entity';
-import type { IUser } from '../user/interfaces/user.interface';
-import type { IFlat } from './interfaces/flat.interface';
+import type { IUser } from '../interfaces/user.interface';
+import type { IFlat } from '../interfaces/flat.interface';
 
 @Injectable()
 export class FlatService {
