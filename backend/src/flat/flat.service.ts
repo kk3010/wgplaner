@@ -34,19 +34,19 @@ export class FlatService {
     return this.flatRepository.save(flat);
   }
 
-  async findOneById(id: number) {
-    const flat = await this.flatRepository.findOne(id);
-    if (!flat) {
-      throw new NotFoundException();
-    }
+  async findOneById(flatId: number) {
+    this.checkForExistingFlatId(flatId);
+    const flat = await this.flatRepository.findOne(flatId);
     return flat;
   }
 
   async updateName(flatId: number, updateFlatDto: UpdateFlatDto) {
+    this.checkForExistingFlatId(flatId);
     await this.flatRepository.update(flatId, updateFlatDto);
   }
 
   async remove(flatId: number) {
+    this.checkForExistingFlatId(flatId);
     await this.flatRepository.delete(flatId);
   }
 
@@ -77,9 +77,21 @@ export class FlatService {
         'User is not a member of the flat',
       );
     }
+    // avoid removing the last member
+    if (flat.members.length === 1) {
+      throw new UnprocessableEntityException(
+        'You can not remove the last member',
+      );
+    }
 
     const updatedMembers = flat.members.filter((user) => user.id != userId);
 
     await this.flatRepository.update(flat.id, { members: updatedMembers });
   }
+
+  checkForExistingFlatId = (flatId: number) => {
+    if (!flatId) {
+      throw new NotFoundException();
+    }
+  };
 }

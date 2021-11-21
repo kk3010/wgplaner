@@ -126,6 +126,13 @@ describe('FlatService', () => {
       );
     });
 
+    it('throws UnprocessableEntityException when user is the only member of the flat', async () => {
+      const flat = generateFakeFlat([user1]);
+      await expect(service.removeMember(flat, user1.id)).rejects.toThrowError(
+        UnprocessableEntityException,
+      );
+    });
+
     it('removes a user from the members list', async () => {
       const flat = generateFakeFlat([user1, user2]);
       repository.update.mockImplementation(async (id, partial) =>
