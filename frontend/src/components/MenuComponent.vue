@@ -1,9 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import SideMenu from './SideMenu.vue'
+
+defineProps<{
+  show: boolean
+}>()
+</script>
 
 <template>
   <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
     <div class="flex-none hidden lg:flex">
-      <button class="btn btn-square btn-ghost">
+      <!-- menu button -->
+      <button class="btn btn-square btn-ghost" id="my-drawer" @click="show = true">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -14,10 +21,13 @@
         </svg>
       </button>
     </div>
+
+    <!-- logo placeholder -->
     <div class="flex-1 hidden px-2 mx-2 lg:flex">
       <span class="text-lg font-bold"> MI CASA </span>
     </div>
 
+    <!-- search bar -->
     <div class="flex-none">
       <button class="btn btn-square btn-ghost">
         <svg
@@ -52,6 +62,8 @@
         </svg>
       </button>
     </div>
+
+    <!-- user avatar -->
     <div class="flex-none">
       <div class="avatar">
         <div class="rounded-full w-10 h-10 m-1">
@@ -60,4 +72,5 @@
       </div>
     </div>
   </div>
+  <SideMenu v-bind:class="{ active: show }" key="off" v-if="show"></SideMenu>
 </template>
