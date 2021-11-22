@@ -10,6 +10,7 @@ import type { IUser } from '../../interfaces/user.interface';
 import type { SignOptions } from 'jsonwebtoken';
 import type { IRefreshToken } from '../../interfaces/refresh-token.interface';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { RefreshTokenPayloadDto } from '../dto/refresh-token-payload.dto';
 
 const mockUserServiceFactory: () => MockType<UserService> = () => ({
   findById: jest.fn(),
@@ -112,38 +113,40 @@ describe('TokenService', () => {
 
   describe('resolveRefreshToken', () => {
     beforeEach(() => {
-      jest.spyOn(service as any, 'decodeRefreshToken').mockResolvedValue({});
+      jest
+        .spyOn(service as any, 'decodeRefreshToken')
+        .mockResolvedValue(new RefreshTokenPayloadDto());
     });
 
-    it('should throw when no token is found', () => {
+    it('should throw when no token is found', async () => {
       jest
         .spyOn(service as any, 'getRefreshTokenFromRefreshTokenPayload')
         .mockResolvedValue(null);
-      expect(service.resolveRefreshToken('token')).rejects.toThrowError(
+      await expect(service.resolveRefreshToken('token')).rejects.toThrowError(
         UnprocessableEntityException,
       );
     });
 
-    it('should throw when token is revoked', () => {
+    it('should throw when token is revoked', async () => {
       const fakeRefreshToken = {
         is_revoked: true,
       } as IRefreshToken;
       jest
         .spyOn(service as any, 'getRefreshTokenFromRefreshTokenPayload')
         .mockResolvedValue(fakeRefreshToken);
-      expect(service.resolveRefreshToken('token')).rejects.toThrowError(
+      await expect(service.resolveRefreshToken('token')).rejects.toThrowError(
         UnprocessableEntityException,
       );
     });
 
-    it('should throw when no user is found', () => {
+    it('should throw when no user is found', async () => {
       jest
         .spyOn(service as any, 'getRefreshTokenFromRefreshTokenPayload')
         .mockResolvedValue({});
       jest
         .spyOn(service as any, 'getUserFromRefreshTokenPayload')
         .mockResolvedValue(null);
-      expect(service.resolveRefreshToken('token')).rejects.toThrowError(
+      await expect(service.resolveRefreshToken('token')).rejects.toThrowError(
         UnprocessableEntityException,
       );
     });
