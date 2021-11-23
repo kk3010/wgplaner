@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { FlatModule } from './flat/flat.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -26,6 +27,7 @@ import * as Joi from 'joi';
     }),
     UserModule,
     AuthModule,
+    FlatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

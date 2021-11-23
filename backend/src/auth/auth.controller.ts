@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -19,10 +12,10 @@ import { TokenService } from './services/token.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { SkipJwtAuth } from './skip-jwt-auth.decorator';
 import { UserService } from '../user/user.service';
-import type { Request } from 'express';
-import type { IUser } from '../user/interfaces/user.interface';
+import type { IUser } from '../interfaces/user.interface';
 import { AuthenticationPayloadDto } from './dto/authentication-payload.dto';
 import { RefreshDto } from './dto/refresh.dto';
+import { User } from '../user/user.decorator';
 
 @SkipJwtAuth()
 @ApiTags('auth')
@@ -38,8 +31,7 @@ export class AuthController {
   @HttpCode(200)
   @ApiBody({ type: LoginDto })
   @ApiUnauthorizedResponse({ description: 'Login failed.' })
-  async login(@Req() req: Request) {
-    const user = req.user as IUser;
+  async login(@User() user: IUser) {
     const { token, refresh } = await this.generateTokensForUser(user);
 
     return this.buildResponsePayload(user, token, refresh);
@@ -80,9 +72,8 @@ export class AuthController {
     accessToken: string,
     refreshToken?: string,
   ): AuthenticationPayloadDto {
-    const { password, ...rest } = user;
     return {
-      user: rest,
+      user,
       token: accessToken,
       ...(refreshToken ? { refresh_token: refreshToken } : {}),
     };

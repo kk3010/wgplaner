@@ -1,10 +1,13 @@
-import { name, internet } from 'faker';
-import type { IUser } from '../src/user/interfaces/user.interface';
+import { name, internet, datatype } from 'faker';
+import type { IUser } from '../src/interfaces/user.interface';
 
-export const generateFakeUser: () => IUser = () => ({
-  id: 1,
+export const generateFakeUser: (flatId?: number) => IUser = (
+  flatId?: number,
+) => ({
+  id: datatype.number(),
   email: internet.email(),
   firstName: name.firstName(),
   lastName: name.lastName(),
   password: internet.password(8),
+  flatId: flatId ?? null,
 });

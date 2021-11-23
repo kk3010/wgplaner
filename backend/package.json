@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest.config.json",
     "doc": "compodoc -p tsconfig.build.json --theme material --unitTestCoverage coverage/coverage-summary.json"
   },
   "dependencies": {
@@ -82,20 +82,21 @@
     "webpack-node-externals": "^3.0.0"
   },
   "jest": {
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "./src/**/*.ts",
+      "!**/*.spec.ts",
+      "!**/*.module.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "coverageReporters": [
       "html",
       "text",
@@ -103,6 +104,9 @@
       "cobertura",
       "json-summary"
     ],
-    "testEnvironment": "node"
+    "projects": [
+      "<rootDir>/src/",
+      "<rootDir>/test/"
+    ]
   }
 }

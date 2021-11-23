@@ -1,9 +1,11 @@
-import { IsObject, IsString } from 'class-validator';
-import { UserPayloadDto } from '../../user/dto/user-payload.dto';
+import { Type } from 'class-transformer';
+import { IsString, ValidateNested } from 'class-validator';
+import { User } from '../../user/entities/user.entity';
 
 export class AuthenticationPayloadDto {
-  @IsObject()
-  user: UserPayloadDto;
+  @Type(() => User)
+  @ValidateNested()
+  user: User;
 
   @IsString()
   token: string;

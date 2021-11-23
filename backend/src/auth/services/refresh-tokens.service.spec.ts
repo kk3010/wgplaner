@@ -4,7 +4,7 @@ import type { MockType } from '../../../test/mockType';
 import { Repository } from 'typeorm';
 import { RefreshToken } from '../entites/refresh-token.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import type { IRefreshToken } from '../interfaces/refresh-token.interface';
+import type { IRefreshToken } from '../../interfaces/refresh-token.interface';
 import { generateFakeUser } from '../../../test/user.mock';
 
 const refreshTokensRepositoryFactory: () => MockType<Repository<RefreshToken>> =

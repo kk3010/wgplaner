@@ -29,13 +29,6 @@ unit-test-backend:
         - backend/junit.xml
       cobertura: backend/coverage/cobertura-coverage.xml
 
-integration-test-backend:
-  stage: test
-  needs: []
-  script:
-    - npm install
-    - npm run test:e2e
-
 build-backend:
   stage: build
   needs: []
@@ -58,6 +51,8 @@ build-documentation:
   artifacts:
     paths:
       - backend/documentation/
+  only:
+    - main
 
 pages:
   stage: deploy

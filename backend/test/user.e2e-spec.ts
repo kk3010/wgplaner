@@ -1,14 +1,15 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { UserService } from '../src/user/user.service';
-import { mockUserMiddleware } from './mock-user.middleware';
+import { createMockUserMiddleware } from './mock-user.middleware';
 import { generateFakeUser } from './user.mock';
 import { UserController } from '../src/user/user.controller';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { UpdateUserDto } from '../src/user/dto/update-user.dto';
 import type { INestApplication } from '@nestjs/common';
 import type { MockType } from './mockType';
-import type { IUser } from '../src/user/interfaces/user.interface';
+import type { IUser } from '../src/interfaces/user.interface';
+import { Reflector } from '@nestjs/core';
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   findById: jest.fn(),
@@ -32,8 +33,11 @@ describe('User', () => {
     }).compile();
     userService = moduleRef.get(UserService);
     app = moduleRef.createNestApplication();
-    app.use(mockUserMiddleware);
+    app.use(createMockUserMiddleware());
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector)),
+    );
     await app.init();
   });
 
@@ -48,19 +52,15 @@ describe('User', () => {
     return request(app.getHttpServer()).get('/user').expect(200).expect(user);
   });
 
-  it('/PATCH', async () => {
+  it('/PATCH', () => {
     const update: UpdateUserDto = {
       firstName: 'hello',
     };
-    const spy = jest.spyOn(userService, 'update');
-    await request(app.getHttpServer()).patch('/user').send(update).expect(200);
-    expect(spy).toHaveBeenCalledWith(1, update);
+    return request(app.getHttpServer()).patch('/user').send(update).expect(200);
   });
 
-  it('/DELETE', async () => {
-    const spy = jest.spyOn(userService, 'remove');
-    await request(app.getHttpServer()).delete('/user').expect(200);
-    expect(spy).toHaveBeenCalledWith(1);
+  it('/DELETE', () => {
+    return request(app.getHttpServer()).delete('/user').expect(200);
   });
 
   afterAll(async () => {

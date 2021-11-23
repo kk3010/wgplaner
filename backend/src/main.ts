@@ -10,14 +10,16 @@ declare const module: any;
 function addSwagger(app: INestApplication) {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('WG Planer')
-    .setDescription('OpenAPI schema for the wg plaenr')
+    .setDescription('OpenAPI schema for the wg planer')
     .setVersion('0.1')
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-  SwaggerModule.setup('', app, document);
+  SwaggerModule.setup('', app, document, {
+    swaggerOptions: { persistAuthorization: true },
+  });
 }
 
 async function bootstrap() {
@@ -27,7 +29,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector()));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   addSwagger(app);
 
   await app.listen(5000);
