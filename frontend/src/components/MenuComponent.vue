@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import SideMenu from './SideMenu.vue'
-
-defineProps<{
-  show: boolean
-}>()
+import {useSideMenu} from '@/composables/useSideMenu'
+const {toggle} = useSideMenu()
 </script>
 
 <template>
   <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
     <div class="flex-none hidden lg:flex">
       <!-- menu button -->
-      <button class="btn btn-square btn-ghost" id="my-drawer" @click="show = true">
+      <button class="btn btn-square btn-ghost" id="my-drawer" @click="toggle()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -71,6 +68,5 @@ defineProps<{
         </div>
       </div>
     </div>
-  </div>
-  <SideMenu v-bind:class="{ active: show }" key="off" v-if="show"></SideMenu>
+  </div>  
 </template>

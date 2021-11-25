@@ -8,9 +8,11 @@
     "lint": "eslint '*/**/*.{vue,js,ts}' --fix"
   },
   "dependencies": {
+    "@vueuse/core": "^7.1.1",
     "axios": "^0.24.0",
     "daisyui": "^1.16.2",
-    "vue": "^3.2.16"
+    "vue": "^3.2.16",
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
