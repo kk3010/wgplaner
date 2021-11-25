@@ -6,4 +6,7 @@ module.exports = {
   },
   resetMocks: false,
   setupFiles: ['jest-localstorage-mock'],
+  collectCoverageFrom: ['./src/**/*.ts', '!**/*.spec.ts', '!**/*.d.ts'],
+  coverageDirectory: './coverage',
+  coverageReporters: ['html', 'text', 'text-summary', 'cobertura', 'json-summary'],
 }
