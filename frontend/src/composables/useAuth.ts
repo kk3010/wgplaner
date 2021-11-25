@@ -1,4 +1,6 @@
 import axios from 'axios'
+import createAuthRefreshInterceptor from 'axios-auth-refresh'
+import type { AxiosAuthRefreshRequestConfig } from 'axios-auth-refresh'
 import { IUser } from '@interfaces/user.interface'
 
 const REFRESH_TOKEN = 'refresh-token'
@@ -32,18 +34,33 @@ export function useAuth() {
     }
   }
 
+  const addRefreshHandler = () => {
+    createAuthRefreshInterceptor(axios, () => refresh(), { statusCodes: [401, 422] })
+  }
+
+  const addAxiosAuth = () => {
+    addTokenToAxios()
+    addRefreshHandler()
+  }
+
   const login = async (email: string, password: string) => {
-    const { data } = await axios.post<AuthResponse>('/auth/login', { email, password })
+    const { data } = await axios.post<AuthResponse>('/auth/login', { email, password }, {
+      skipAuthRefresh: true,
+    } as AxiosAuthRefreshRequestConfig)
     setTokens(data)
   }
 
   const register = async (user: Pick<IUser, 'email' | 'firstName' | 'lastName' | 'password'>) => {
-    const { data } = await axios.post<AuthResponse>('/auth/register', user)
+    const { data } = await axios.post<AuthResponse>('/auth/register', user, {
+      skipAuthRefresh: true,
+    } as AxiosAuthRefreshRequestConfig)
     setTokens(data)
   }
 
   const refresh = async () => {
-    const { data } = await axios.post<AuthResponse>('/auth/refresh', { refresh_token: getRefreshToken() })
+    const { data } = await axios.post<AuthResponse>('/auth/refresh', { refresh_token: getRefreshToken() }, {
+      skipAuthRefresh: true,
+    } as AxiosAuthRefreshRequestConfig)
     setTokens(data)
   }
 
@@ -55,5 +72,5 @@ export function useAuth() {
     }
   }
 
-  return { login, logout, register, refresh, addTokenToAxios }
+  return { login, logout, register, addAxiosAuth }
 }
