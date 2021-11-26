@@ -5,4 +5,5 @@ export interface IShoppingItem {
   price?: number;
   buyerId?: number;
   isPaid?: boolean;
+  flatId: number;
 }
