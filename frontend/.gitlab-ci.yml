@@ -1,11 +1,9 @@
 image: node:latest
 
-before_script:
-  - cd frontend
-
 lint-frontend:
   stage: lint
   script:
+    - cd frontend
     - npm install
     - npm run lint
   needs: []
@@ -14,6 +12,7 @@ unit-test-frontend:
   stage: test
   needs: []
   script:
+    - cd frontend
     - npm install
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
@@ -33,5 +32,6 @@ build-frontend:
   stage: build
   needs: []
   script:
+    - cd frontend
     - npm install
     - npm run build
