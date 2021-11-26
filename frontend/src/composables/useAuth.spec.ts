@@ -36,5 +36,12 @@ describe('useAuth', () => {
       expect(mock.history.get.length).toBe(2)
       expect(mock.history.get[1].headers?.['Authorization']).toBe('Bearer token')
     })
+
+    it('fails when error is something other than 401 or 422', async () => {
+      mock.onAny().reply(404)
+
+      await expect(axios.get('')).rejects.toThrow()
+      expect(mock.history.get.length).toBe(1)
+    })
   })
 })
