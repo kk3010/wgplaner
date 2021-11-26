@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { User } from 'src/user/user.decorator';
+import { IUser } from 'src/interfaces/user.interface';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
@@ -23,18 +25,14 @@ export class ShoppingItemController {
   constructor(private readonly shoppingItemService: ShoppingItemService) {}
 
   @Post()
-  @ApiOperation({ summary: 'create flat' })
-  @ApiNotFoundResponse({ description: 'Flat could not be found' })
-  create(@Body() createShoppingItemDto: createShoppingItemDto) {
-    return this.shoppingItemService.create(createShoppingItemDto);
+  @ApiOperation({ summary: 'create ShoppingItem' })
+  @ApiNotFoundResponse({ description: 'ShoppingItem could not be found' })
+  create(
+    @User() user: IUser,
+    @Body() createShoppingItemDto: createShoppingItemDto,
+  ) {
+    return this.shoppingItemService.create(user, createShoppingItemDto);
   }
-
-  // Do we need this?
-  // @Get()
-  // @ApiOperation({ summary: 'get all shoppingItems' })
-  // findAll() {
-  //   return this.shoppingItemService.findAll();
-  // }
 
   @Get(':id')
   @ApiOperation({ summary: 'get shoppingItem by id' })
@@ -45,8 +43,8 @@ export class ShoppingItemController {
   // TODO check if path naming is correct
   @Patch('check/:id')
   @ApiOperation({ summary: 'update checked state of item' })
-  update(@Param('id') id: string) {
-    return this.shoppingItemService.toggleCheck(+id);
+  update(@Param('id') id: string, @User() user: IUser) {
+    return this.shoppingItemService.toggleCheck(+id, user);
   }
 
   @Delete(':id')
