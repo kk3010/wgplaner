@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {useSideMenu} from '@/composables/useSideMenu'
-const {toggle} = useSideMenu()
+import { useSideMenu } from '@/composables/useSideMenu'
+import ThemeDropdown from './ThemeDropdown.vue'
+const { toggle } = useSideMenu()
 </script>
 
 <template>
@@ -60,6 +61,8 @@ const {toggle} = useSideMenu()
       </button>
     </div>
 
+    <ThemeDropdown />
+
     <!-- user avatar -->
     <div class="flex-none">
       <div class="avatar">
@@ -68,5 +71,5 @@ const {toggle} = useSideMenu()
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>

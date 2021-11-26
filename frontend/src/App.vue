@@ -1,6 +1,4 @@
-<script setup lang="ts">
-// import SideMenu from './components/SideMenu.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <!-- mx center items-->
