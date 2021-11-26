@@ -14,20 +14,15 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "baseUrl": ".",
-    "types": ["vite/client"],
+    "types": ["vite/client", "jest"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@interfaces/*": ["../backend/src/interfaces/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "noUnusedLocals": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
   "exclude": ["node_modules"]
 }

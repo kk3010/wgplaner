@@ -1,0 +1,37 @@
+image: node:latest
+
+lint-frontend:
+  stage: lint
+  script:
+    - cd frontend
+    - npm install
+    - npm run lint
+  needs: []
+
+unit-test-frontend:
+  stage: test
+  needs: []
+  script:
+    - cd frontend
+    - npm install
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  cache:
+    paths:
+      - frontend/coverage/
+  artifacts:
+    when: always
+    paths:
+      - frontend/coverage/
+    reports:
+      junit:
+        - frontend/junit.xml
+      cobertura: frontend/coverage/cobertura-coverage.xml
+
+build-frontend:
+  stage: build
+  needs: []
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
