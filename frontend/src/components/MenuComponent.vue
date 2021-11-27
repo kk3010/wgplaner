@@ -6,7 +6,7 @@ import ThemeDropdown from './ThemeDropdown.vue'
   <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
     <div class="flex-none lg:hidden">
       <!-- menu button -->
-      <label class="btn btn-square btn-ghost" for="my-drawer" >
+      <label class="btn btn-square btn-ghost" for="my-drawer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

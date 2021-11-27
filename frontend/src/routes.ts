@@ -32,27 +32,28 @@ import RegisterView from './views/RegisterView.vue'
     { path: '/auth', component: AuthView },
   ] */
 const routes: RouteRecordRaw[] = [
-  { 
-    path: '/', 
-    component: RegisterView, 
+  {
+    path: '/',
+    component: RegisterView,
   },
-  { 
-    path: '/login', 
-    component: AuthView 
+  {
+    path: '/login',
+    component: AuthView,
   },
-  { 
-    path: '/auth', 
-    component: HomeView, 
+  {
+    path: '/auth',
+    component: HomeView,
     children: [
       {
         path: 'Putzplan',
-        component: CleaningScheduleView
+        component: CleaningScheduleView,
       },
       {
         path: 'Einkaufsliste',
-        component: ShoppingListView
+        component: ShoppingListView,
       },
-  ]},
-  ]
+    ],
+  },
+]
 
-export {routes}
+export { routes }

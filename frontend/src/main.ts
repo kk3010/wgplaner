@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './index.css'
-import {createRouter, createWebHashHistory} from 'vue-router'
-import {routes} from './routes'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { routes } from './routes'
 
 if (import.meta.env.DEV) {
   const { worker } = await import('./mocks/browser')
