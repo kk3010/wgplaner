@@ -54,7 +54,7 @@ function handleRegistration() {
         />
       </div>
       <div class="mb-4">
-        <span>I've already have an account. Go to <router-link to="/login" class="font-semibold text-green-500">LOGIN</router-link>.</span>
+        <span>I already have an account. Go to <router-link to="/login" class="font-semibold text-green-500">LOGIN</router-link>.</span>
       </div>
       <div class="flex items-end form-control">
         <button class="btn btn-square btn-outline p-4" type="submit">Sign up</button>
