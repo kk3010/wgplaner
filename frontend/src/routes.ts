@@ -4,52 +4,33 @@ import HomeView from './views/HomeView.vue'
 import CleaningScheduleView from './views/CleaningScheduleView.vue'
 import ShoppingListView from './views/ShoppingListView.vue'
 import RegisterView from './views/RegisterView.vue'
+import LoginView from './views/LoginView.vue'
 
-/* const routes: RouteRecordRaw[] = [
-  { 
-    path: '/', 
-    component: HomeView, 
-    children: [
-      {
-        path: 'Putzplan',
-        component: CleaningScheduleView
-      },
-      {
-        path: 'Einkaufsliste',
-        component: ShoppingListView
-      },
-      {
-        path: 'login',
-        component: AuthView
-      },
-      {
-        path: '',
-        component : RegisterView
-      },
-
-    ]
-  },
-    { path: '/auth', component: AuthView },
-  ] */
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    component: RegisterView,
-  },
-  {
-    path: '/login',
-    component: AuthView,
-  },
-  {
     path: '/auth',
+    component: AuthView,
+    children: [
+      {
+        path: '/register',
+        component: RegisterView,
+      },
+      {
+        path: '/login',
+        component: LoginView,
+      },
+    ],
+  },
+  {
+    path: '',
     component: HomeView,
     children: [
       {
-        path: 'Putzplan',
+        path: 'putzplan',
         component: CleaningScheduleView,
       },
       {
-        path: 'Einkaufsliste',
+        path: 'einkaufsliste',
         component: ShoppingListView,
       },
     ],

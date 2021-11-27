@@ -6,10 +6,10 @@ import MenuComponent from '@/components/MenuComponent.vue'
 <template>
   <div class="drawer drawer-mobile">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="flex flex-col drawer-content">
+    <main class="flex flex-col drawer-content">
       <MenuComponent />
       <router-view></router-view>
-    </div>
+    </main>
     <SideMenu></SideMenu>
   </div>
 </template>

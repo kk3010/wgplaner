@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import LoginComponent from '@/components/LoginComponent.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <LoginComponent></LoginComponent>
+  <main class="mx-auto max-w-xs">
+    <RouterView />
+  </main>
 </template>

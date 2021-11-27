@@ -2,7 +2,7 @@
 
 <template>
   <!-- mx center items-->
-  <main class="container mx-auto h-screen">
+  <div class="container h-screen mx-auto">
     <router-view></router-view>
-  </main>
+  </div>
 </template>

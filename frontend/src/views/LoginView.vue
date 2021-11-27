@@ -12,7 +12,7 @@ function handleLogin() {
 </script>
 
 <template>
-  <div class="form-control max-w-xs">
+  <div class="form-control">
     <span class="m-4 ml-0 text-sm font-semibold uppercase label-text"> Login </span>
     <form @submit.prevent="handleLogin">
       <div class="form-control">
