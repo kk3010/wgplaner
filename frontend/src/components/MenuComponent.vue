@@ -3,7 +3,7 @@ import ThemeDropdown from './ThemeDropdown.vue'
 </script>
 
 <template>
-  <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
+  <div class="navbar mx-1 mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
     <div class="flex-none lg:hidden">
       <!-- menu button -->
       <label class="btn btn-square btn-ghost" for="my-drawer">

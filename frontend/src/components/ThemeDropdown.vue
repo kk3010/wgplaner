@@ -25,7 +25,7 @@ const themes = [
   'luxury',
   'dracula',
   'cmyk',
-]
+].sort()
 
 onMounted(() => {
   themeChange(false)
@@ -37,7 +37,20 @@ onMounted(() => {
     <button class="m-1 btn btn-ghost normal-case">Theme</button>
     <ul
       tabindex="0"
-      class="mt-16 p-2 overflow-y-auto shadow menu dropdown-content bg-base-100 text-base-content rounded-box"
+      class="
+        mt-16
+        p-2
+        top-px
+        overflow-y-auto
+        shadow
+        menu
+        compact
+        h-72
+        dropdown-content
+        bg-base-100
+        text-base-content
+        rounded-box
+      "
     >
       <li v-for="theme in themes" :key="theme">
         <a tabindex="0" :data-set-theme="theme" data-act-class="active">
