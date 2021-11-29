@@ -31,11 +31,6 @@ import ThemeDropdown from './ThemeDropdown.vue'
         </label>
       </div>
 
-      <!-- logo placeholder -->
-      <div class="flex flex-1 px-2 mx-2">
-        <span class="text-lg font-bold"> MI CASA </span>
-      </div>
-
       <!-- search bar -->
       <div class="flex-none">
         <button class="btn btn-square btn-ghost">

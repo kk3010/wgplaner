@@ -5,7 +5,8 @@ function handleJoin() {}
 <template>
   <h2 class="card-title">Join an existing one.</h2>
   <p>Honestly, who you're lying to? You don't have any friends. You are still a silly bloody wanker</p>
-  <form class="mt-4" @submit.prevent="handleJoin">
+  <div class="flex-grow"></div>
+  <form class="mt-4 flex-none" @submit.prevent="handleJoin">
     <div class="form-control">
       <input
         class="input input-bordered input-accent mt-4"

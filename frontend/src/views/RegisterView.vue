@@ -14,7 +14,7 @@ function handleRegistration() {
 </script>
 
 <template>
-  <div class="card text-center flex-grow m-10 shadow-2xl p-12">
+  <div class="card text-center shadow-2xl">
     <div class="card-body">
       <h2 class="card-title uppercase">Create a new account</h2>
       <form @submit.prevent="handleRegistration">

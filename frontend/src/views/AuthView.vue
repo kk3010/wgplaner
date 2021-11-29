@@ -1,9 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main class="h-full flex flex-col justify-center items-center">
-    <div>
-      <RouterView />
-    </div>
+  <main class="md:h-full flex flex-col justify-center items-center p-4">
+    <RouterView />
   </main>
 </template>
