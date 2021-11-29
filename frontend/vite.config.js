@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
+      '@': resolve(__dirname, 'src'),
       '@interfaces': resolve(__dirname, '../backend/src/interfaces'),
     },
   },
