@@ -2,7 +2,7 @@
 
 <template>
   <!-- mx center items-->
-  <div class="container h-screen mx-auto flex flex-col justify-center items-center">
+  <div class="container h-screen mx-auto">
     <router-view></router-view>
   </div>
 </template>

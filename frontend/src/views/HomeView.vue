@@ -9,7 +9,7 @@ const drawerOpen = ref(false)
 <template>
   <div class="drawer drawer-mobile">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" v-model="drawerOpen" />
-    <main class="flex flex-col px-1 drawer-content">
+    <main class="flex flex-col drawer-content">
       <MenuComponent />
       <div class="p-4 lg:p-10">
         <router-view></router-view>
