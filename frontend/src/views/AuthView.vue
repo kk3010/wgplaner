@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main class="mx-auto max-w-xs">
+  <main class="mx-auto">
     <RouterView />
   </main>
 </template>

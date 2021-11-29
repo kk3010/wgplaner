@@ -5,6 +5,7 @@ import CleaningScheduleView from './views/CleaningScheduleView.vue'
 import ShoppingListView from './views/ShoppingListView.vue'
 import RegisterView from './views/RegisterView.vue'
 import LoginView from './views/LoginView.vue'
+import JoinView from './views/JoinView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -18,6 +19,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/login',
         component: LoginView,
+      },
+      {
+        path: '/flat',
+        component: JoinView,
       },
     ],
   },
