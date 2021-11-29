@@ -2,30 +2,7 @@
 import { onMounted } from 'vue'
 import { themeChange } from 'theme-change'
 
-const themes = [
-  'light',
-  'dark',
-  'cupcake',
-  'bumblebee',
-  'emerald',
-  'corporate',
-  'synthwave',
-  'retro',
-  'cyberpunk',
-  'valentine',
-  'halloween',
-  'garden',
-  'forest',
-  'aqua',
-  'lofi',
-  'pastel',
-  'fantasy',
-  'wireframe',
-  'black',
-  'luxury',
-  'dracula',
-  'cmyk',
-].sort()
+const themes = ['light', 'dark', 'black', 'bumblebee', 'cmyk', 'emerald', 'fantasy', 'forest', 'halloween']
 
 onMounted(() => {
   themeChange(false)
