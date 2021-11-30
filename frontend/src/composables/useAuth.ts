@@ -1,22 +1,24 @@
 import axios from 'axios'
 import createAuthRefreshInterceptor from 'axios-auth-refresh'
+import type { Ref } from 'vue'
 import type { AxiosAuthRefreshRequestConfig } from 'axios-auth-refresh'
-import { IUser } from '@interfaces/user.interface'
+import type { IUser } from '@interfaces/user.interface'
 
 const REFRESH_TOKEN = 'refresh-token'
 
-type AuthResponse = { user: IUser; token: string; refresh_token?: string }
+type TokenAuthResponse = { token: string; refresh_token?: string }
+type AuthResponse = TokenAuthResponse & { user: IUser }
 
 let accessToken: string | null = null
 let axiosInterceptor: number | null = null
 
-export function useAuth() {
+export function useAuth(user: Ref<IUser | undefined>) {
   // wrapper for access token to make axios always uses the new one
   const getAccessToken = () => accessToken
   const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN)
   const setRefreshToken = (value: string) => localStorage.setItem(REFRESH_TOKEN, value)
 
-  const setTokens = (data: AuthResponse) => {
+  const setTokens = (data: TokenAuthResponse) => {
     if (data.refresh_token) {
       setRefreshToken(data.refresh_token)
     }
@@ -48,17 +50,19 @@ export function useAuth() {
       skipAuthRefresh: true,
     } as AxiosAuthRefreshRequestConfig)
     setTokens(data)
+    user.value = data.user
   }
 
-  const register = async (user: Pick<IUser, 'email' | 'firstName' | 'lastName' | 'password'>) => {
-    const { data } = await axios.post<AuthResponse>('/auth/register', user, {
+  const register = async (userToCreate: Pick<IUser, 'email' | 'firstName' | 'lastName' | 'password'>) => {
+    const { data } = await axios.post<AuthResponse>('/auth/register', userToCreate, {
       skipAuthRefresh: true,
     } as AxiosAuthRefreshRequestConfig)
     setTokens(data)
+    user.value = data.user
   }
 
   const refresh = async () => {
-    const { data } = await axios.post<AuthResponse>('/auth/refresh', { refresh_token: getRefreshToken() }, {
+    const { data } = await axios.post<TokenAuthResponse>('/auth/refresh', { refresh_token: getRefreshToken() }, {
       skipAuthRefresh: true,
     } as AxiosAuthRefreshRequestConfig)
     setTokens(data)

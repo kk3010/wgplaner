@@ -1,8 +1,8 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { IFlat } from '@interfaces/flat.interface'
 import { useFlat } from './useFlat'
-import { IUser } from '@interfaces/user.interface'
+import type { IFlat } from '@interfaces/flat.interface'
+import type { IUser } from '@interfaces/user.interface'
 
 const mock = new MockAdapter(axios)
 

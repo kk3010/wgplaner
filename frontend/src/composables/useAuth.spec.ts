@@ -1,13 +1,14 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import { useAuth } from './useAuth'
+import { ref } from 'vue'
 
 const mock = new MockAdapter(axios)
 
 describe('useAuth', () => {
   describe('refresh flow', () => {
     beforeAll(() => {
-      const { addAxiosAuth } = useAuth()
+      const { addAxiosAuth } = useAuth(ref())
       addAxiosAuth()
     })
 
