@@ -6,8 +6,8 @@ import type { IUser } from '@interfaces/user.interface'
 
 const REFRESH_TOKEN = 'refresh-token'
 
-type TokenAuthResponse = { token: string; refresh_token?: string }
-type AuthResponse = TokenAuthResponse & { user: IUser }
+export type TokenAuthResponse = { token: string; refresh_token?: string }
+export type AuthResponse = TokenAuthResponse & { user: IUser }
 
 let accessToken: string | null = null
 let axiosInterceptor: number | null = null
@@ -68,12 +68,13 @@ export function useAuth(user: Ref<IUser | undefined>) {
     setTokens(data)
   }
 
-  const logout = async () => {
+  const logout = () => {
     localStorage.removeItem(REFRESH_TOKEN)
     if (axiosInterceptor) {
       axios.interceptors.request.eject(axiosInterceptor)
       axiosInterceptor = null
     }
+    user.value = undefined
   }
 
   return { login, logout, register, addAxiosAuth }
