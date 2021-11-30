@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { FlatModule } from './flat/flat.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SseModule } from './sse/sse.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -25,11 +25,11 @@ import * as Joi from 'joi';
         FRONTEND_URL: Joi.string().required(),
       }),
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     FlatModule,
+    SseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
