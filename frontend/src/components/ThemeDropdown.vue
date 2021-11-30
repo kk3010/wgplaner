@@ -10,7 +10,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div title="Theme ändern" class="dropdown dropdown-end">
+  <div title="Change theme" class="dropdown dropdown-end">
     <button class="m-1 btn btn-ghost normal-case">Theme</button>
     <ul
       tabindex="0"

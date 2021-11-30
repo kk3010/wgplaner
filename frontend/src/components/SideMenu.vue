@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const routes = [
   {
-    link: '/putzplan',
-    text: 'putzplan',
+    link: '/cleaning',
+    text: 'cleaning',
   },
   {
-    link: '/einkaufsliste',
-    text: 'einkaufsliste',
+    link: '/shopping',
+    text: 'shopping',
   },
 ]
 </script>

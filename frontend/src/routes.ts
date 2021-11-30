@@ -31,11 +31,11 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
     children: [
       {
-        path: 'putzplan',
+        path: 'cleaning',
         component: CleaningScheduleView,
       },
       {
-        path: 'einkaufsliste',
+        path: 'shopping',
         component: ShoppingListView,
       },
     ],
