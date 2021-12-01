@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IShoppingItem } from 'src/interfaces/shopping-item.interface';
-import { Flat } from 'src/flat/entities/flat.entity';
+import type { IShoppingItem } from '../../interfaces/shopping-item.interface';
+import { Flat } from '../../flat/entities/flat.entity';
+import { Purchase } from '../../purchase/entities/purchase.entity';
 
 @Entity()
 export class ShoppingItem implements IShoppingItem {
@@ -24,10 +25,15 @@ export class ShoppingItem implements IShoppingItem {
   buyerId?: number;
 
   @Column({ default: false })
-  isPaid?: boolean;
+  isPaid: boolean;
 
   @ManyToOne(() => Flat, (flat) => flat.shoppingItems, {
     onDelete: 'SET NULL',
   })
   flatId: number;
+
+  @ManyToOne(() => Purchase, (purchase) => purchase.shoppingItems, {
+    onDelete: 'SET NULL',
+  })
+  purchaseId: number;
 }

@@ -1,7 +1,8 @@
 import { User } from '../../user/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import type { IFlat } from '../../interfaces/flat.interface';
-import { ShoppingItem } from 'src/shopping-item/entities/shopping-item.entity';
+import { ShoppingItem } from '../../shopping-item/entities/shopping-item.entity';
+import { Purchase } from '../../purchase/entities/purchase.entity';
 
 @Entity()
 export class Flat implements IFlat {
@@ -27,4 +28,7 @@ export class Flat implements IFlat {
     eager: true,
   })
   shoppingItems: ShoppingItem[];
+
+  @OneToMany(() => Purchase, (purchase) => purchase.flatId)
+  purchases: Purchase[];
 }

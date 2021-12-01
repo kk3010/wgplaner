@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { IShoppingItem } from 'src/interfaces/shopping-item.interface';
+import type { IShoppingItem } from '../interfaces/shopping-item.interface';
+import type { MockType } from '../../test/mockType';
 import { generateFakeFlat } from '../../test/flat.mock';
-import { MockType } from '../../test/mockType';
 import { generateFakeUser } from '../../test/user.mock';
 import { Repository } from 'typeorm';
 import { ShoppingItem } from './entities/shopping-item.entity';
