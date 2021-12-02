@@ -15,6 +15,7 @@ function handleLogin() {
   <div class="card text-center shadow-2xl">
     <div class="card-body">
       <h2 class="card-title uppercase">Login</h2>
+      <!-- .prevent hinders page reloading -->
       <form @submit.prevent="handleLogin">
         <div class="form-control">
           <input
