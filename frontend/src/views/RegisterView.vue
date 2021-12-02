@@ -1,15 +1,23 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import axios from 'axios'
+import { useAuth, RegisterRequest } from '@/composables/useAuth'
+import { useUser } from '@/composables/useUser'
+import { useRouter } from 'vue-router'
 
-const user = reactive({
-  firstname: '',
-  lastname: '',
+const { user } = useUser()
+const { register } = useAuth(user)
+const { push } = useRouter()
+
+const formUser = reactive<RegisterRequest>({
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
 })
-function handleRegistration() {
-  axios.post('/auth/register', user)
+
+async function handleRegistration() {
+  await register(formUser)
+  await push('/flat')
 }
 </script>
 
@@ -21,25 +29,25 @@ function handleRegistration() {
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.firstname"
-            name="firstname"
-            placeholder="firstname"
+            v-model="formUser.firstName"
+            name="firstName"
+            placeholder="first name"
             type="text"
           />
         </div>
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.lastname"
-            name="lastname"
-            placeholder="lastname"
+            v-model="formUser.lastName"
+            name="lastName"
+            placeholder="last name"
             type="text"
           />
         </div>
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.email"
+            v-model="formUser.email"
             name="email"
             placeholder="email"
             type="email"
@@ -48,7 +56,7 @@ function handleRegistration() {
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.password"
+            v-model="formUser.password"
             name="password"
             placeholder="password"
             type="password"

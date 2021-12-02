@@ -9,6 +9,8 @@ const REFRESH_TOKEN = 'refresh-token'
 export type TokenAuthResponse = { token: string; refresh_token?: string }
 export type AuthResponse = TokenAuthResponse & { user: IUser }
 
+export type RegisterRequest = Pick<IUser, 'email' | 'firstName' | 'lastName' | 'password'>
+
 let accessToken: string | null = null
 let axiosInterceptor: number | null = null
 
@@ -53,7 +55,7 @@ export function useAuth(user: Ref<IUser | undefined>) {
     user.value = data.user
   }
 
-  const register = async (userToCreate: Pick<IUser, 'email' | 'firstName' | 'lastName' | 'password'>) => {
+  const register = async (userToCreate: RegisterRequest) => {
     const { data } = await axios.post<AuthResponse>('/auth/register', userToCreate, {
       skipAuthRefresh: true,
     } as AxiosAuthRefreshRequestConfig)

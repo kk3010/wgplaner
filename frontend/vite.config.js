@@ -11,4 +11,13 @@ export default defineConfig({
       '@interfaces': resolve(__dirname, '../backend/src/interfaces'),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })
