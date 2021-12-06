@@ -25,7 +25,7 @@ export class PurchaseService {
   }
 
   update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
-    return `This action updates a #${id} purchase`;
+    return this.purchaseRepository.update(id, updatePurchaseDto);
   }
 
   remove(id: number) {

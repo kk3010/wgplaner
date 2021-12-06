@@ -24,6 +24,12 @@ export class Purchase implements IPurchase {
   @Column()
   price: number;
 
+  @Column({ nullable: true })
+  buyerId?: number;
+
+  @Column({ default: false })
+  isPaid: boolean;
+
   @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchaseId, {
     eager: true,
   })

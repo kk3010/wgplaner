@@ -18,15 +18,6 @@ export class ShoppingItem implements IShoppingItem {
   @Column({ default: false })
   isChecked: boolean;
 
-  @Column({ nullable: true })
-  price?: number;
-
-  @Column({ nullable: true })
-  buyerId?: number;
-
-  @Column({ default: false })
-  isPaid: boolean;
-
   @ManyToOne(() => Flat, (flat) => flat.shoppingItems, {
     onDelete: 'SET NULL',
   })

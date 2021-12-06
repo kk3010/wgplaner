@@ -25,20 +25,20 @@ export class PurchaseController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.purchaseService.findOne(+id);
+  findAll(@Param('id') id: number) {
+    return this.purchaseService.findAllByFlatId(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updatePurchaseDto: UpdatePurchaseDto,
   ) {
-    return this.purchaseService.update(+id, updatePurchaseDto);
+    return this.purchaseService.update(id, updatePurchaseDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.purchaseService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.purchaseService.remove(id);
   }
 }

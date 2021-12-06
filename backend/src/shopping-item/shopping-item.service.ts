@@ -20,20 +20,19 @@ export class ShoppingItemService {
     return this.shoppingItemRepository.save(shoppingItem);
   }
 
-  findOne(id: number) {
-    return this.shoppingItemRepository.findOne(id);
+  findUnpurchasedItems(flatId: number) {
+    return this.shoppingItemRepository.find({
+      where: { flatId, purchaseId: null },
+    });
   }
 
-  async toggleCheck(ids: number[], user: IUser) {
-    for (const id in ids) {
-      const item = await this.shoppingItemRepository.findOne(id);
-      if (item.isChecked) {
-        this.shoppingItemRepository.update(id, { buyerId: null });
-      } else {
-        this.shoppingItemRepository.update(id, { buyerId: user.id });
-      }
-      this.shoppingItemRepository.update(id, { isChecked: !item.isChecked });
-    }
+  async toggleCheck(ids: number[]) {
+    ids.map(async (itemId) => {
+      const item = await this.shoppingItemRepository.findOne(itemId);
+      this.shoppingItemRepository.update(itemId, {
+        isChecked: !item.isChecked,
+      });
+    });
   }
 
   remove(id: number) {
