@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import type { IPurchase } from '../../interfaces/purchase.interface';
+import { Exclude } from 'class-transformer';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Purchase implements IPurchase {
@@ -35,6 +37,11 @@ export class Purchase implements IPurchase {
   })
   shoppingItems: ShoppingItem[];
 
-  @ManyToOne(() => Flat)
+  @Column()
   flatId: number;
+
+  @ManyToOne(() => Flat)
+  @Exclude()
+  @ApiHideProperty()
+  flat: Flat;
 }

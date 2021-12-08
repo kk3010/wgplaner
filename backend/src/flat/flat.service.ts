@@ -65,7 +65,8 @@ export class FlatService {
       );
     }
 
-    await this.flatRepository.update(flat.id, {
+    await this.flatRepository.save({
+      ...flat,
       members: [...flat.members, user],
     });
   }
@@ -86,7 +87,7 @@ export class FlatService {
 
     const updatedMembers = flat.members.filter((user) => user.id != userId);
 
-    await this.flatRepository.update(flat.id, { members: updatedMembers });
+    await this.flatRepository.save({ ...flat, members: updatedMembers });
   }
 
   checkForExistingFlatId = (flatId: number) => {

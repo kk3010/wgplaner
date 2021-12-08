@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import type { IShoppingItem } from '../interfaces/shopping-item.interface';
 import type { MockType } from '../../test/mockType';
-import { generateFakeFlat } from '../../test/flat.mock';
 import { generateFakeUser } from '../../test/user.mock';
 import { Repository } from 'typeorm';
 import { ShoppingItem } from './entities/shopping-item.entity';
@@ -49,19 +48,16 @@ describe('ShoppingItemService', () => {
     });
 
     it('should create a new shopping item', async () => {
-      // const flat = generateFakeFlat();
       const user = generateFakeUser();
 
-      const expected: Omit<IShoppingItem, 'id'> = {
+      const expected: Pick<IShoppingItem, 'name' | 'flatId'> = {
         name: 'Eier',
-        isChecked: false,
         flatId: user.flatId,
-        buyerId: null,
       };
 
-      expect(await service.create(user, { name: expected.name })).toEqual(
-        expected,
-      );
+      expect(
+        await service.create(user.flatId, { name: expected.name }),
+      ).toEqual(expected);
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);
     });
