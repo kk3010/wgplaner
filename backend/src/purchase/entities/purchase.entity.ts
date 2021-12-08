@@ -10,6 +10,7 @@ import {
 import type { IPurchase } from '../../interfaces/purchase.interface';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Purchase implements IPurchase {
@@ -28,6 +29,11 @@ export class Purchase implements IPurchase {
 
   @Column()
   buyerId: number;
+
+  @Exclude()
+  @ApiHideProperty()
+  @ManyToOne(() => User)
+  buyer: User;
 
   @Column({ default: false })
   isPaid: boolean;
