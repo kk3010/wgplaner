@@ -33,7 +33,7 @@ export class PurchaseController {
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'find one purchase' })
   findOne(@Param('id') id: number) {
-    return this.purchaseService.find(id);
+    return this.purchaseService.findOneById(id);
   }
 
   @Get()

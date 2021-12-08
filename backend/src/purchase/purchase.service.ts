@@ -24,7 +24,7 @@ export class PurchaseService {
     return this.purchaseRepository.save(purchase);
   }
 
-  async find(id: number) {
+  async findOneById(id: number) {
     return await this.purchaseRepository.findOne(id);
   }
 
