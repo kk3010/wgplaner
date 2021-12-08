@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ShoppingItemService } from './shopping-item.service';
 import { ShoppingItemDto } from './dto/shopping-item.dto';
@@ -16,9 +17,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
+import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
+@SetService(ShoppingItemService)
 @ApiBearerAuth()
 export class ShoppingItemController {
   constructor(private readonly shoppingItemService: ShoppingItemService) {}
@@ -40,6 +43,7 @@ export class ShoppingItemController {
   }
 
   @Patch(':id')
+  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'update item' })
   async update(
     @Param('id') id: number,

@@ -29,6 +29,10 @@ export class ShoppingItemService {
     return this.shoppingItemRepository.update(id, createShoppingItemDto);
   }
 
+  findOneById(id: number) {
+    return this.shoppingItemRepository.findOne(id);
+  }
+
   async remove(id: number) {
     await this.shoppingItemRepository.delete(id);
   }
