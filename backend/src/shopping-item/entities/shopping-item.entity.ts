@@ -15,16 +15,14 @@ export class ShoppingItem implements IShoppingItem {
   @Column()
   name: string;
 
-  @Column({ default: false })
-  isChecked: boolean;
-
-  @ManyToOne(() => Flat, (flat) => flat.shoppingItems, {
+  @ManyToOne(() => Flat, {
     onDelete: 'SET NULL',
   })
   flatId: number;
 
   @ManyToOne(() => Purchase, (purchase) => purchase.shoppingItems, {
     onDelete: 'SET NULL',
+    cascade: true,
   })
   purchaseId: number;
 }

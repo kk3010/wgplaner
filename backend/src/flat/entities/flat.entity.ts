@@ -23,12 +23,4 @@ export class Flat implements IFlat {
     eager: true,
   })
   members: User[];
-
-  @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.flatId, {
-    eager: true,
-  })
-  shoppingItems: ShoppingItem[];
-
-  @OneToMany(() => Purchase, (purchase) => purchase.flatId)
-  purchases: Purchase[];
 }

@@ -24,8 +24,8 @@ export class Purchase implements IPurchase {
   @Column()
   price: number;
 
-  @Column({ nullable: true })
-  buyerId?: number;
+  @Column()
+  buyerId: number;
 
   @Column({ default: false })
   isPaid: boolean;
@@ -35,6 +35,6 @@ export class Purchase implements IPurchase {
   })
   shoppingItems: ShoppingItem[];
 
-  @ManyToOne(() => Flat, (flat) => flat.purchases)
+  @ManyToOne(() => Flat)
   flatId: number;
 }

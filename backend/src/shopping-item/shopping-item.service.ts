@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { IUser } from '../interfaces/user.interface';
 import { Repository } from 'typeorm';
-import { CreateShoppingItemDto } from './dto/create-shopping-item.dto';
+import { ShoppingItemDto } from './dto/shopping-item.dto';
 import { ShoppingItem } from './entities/shopping-item.entity';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class ShoppingItemService {
     private shoppingItemRepository: Repository<ShoppingItem>,
   ) {}
 
-  create(flatId: number, createShoppingItemDto: CreateShoppingItemDto) {
+  create(flatId: number, createShoppingItemDto: ShoppingItemDto) {
     const shoppingItem = this.shoppingItemRepository.create({
       ...createShoppingItemDto,
       flatId,
@@ -26,16 +25,11 @@ export class ShoppingItemService {
     });
   }
 
-  async toggleCheck(ids: number[]) {
-    ids.map(async (itemId) => {
-      const item = await this.shoppingItemRepository.findOne(itemId);
-      this.shoppingItemRepository.update(itemId, {
-        isChecked: !item.isChecked,
-      });
-    });
+  update(id: number, createShoppingItemDto: ShoppingItemDto) {
+    return this.shoppingItemRepository.update(id, createShoppingItemDto);
   }
 
-  remove(id: number) {
-    return this.shoppingItemRepository.delete(id);
+  async remove(id: number) {
+    await this.shoppingItemRepository.delete(id);
   }
 }

@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ShoppingItemService } from './shopping-item.service';
-import { CreateShoppingItemDto } from './dto/create-shopping-item.dto';
+import { ShoppingItemDto } from './dto/shopping-item.dto';
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -16,7 +16,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
-import type { IUser } from '../interfaces/user.interface';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
@@ -29,7 +28,7 @@ export class ShoppingItemController {
   @ApiNotFoundResponse({ description: 'ShoppingItem could not be found' })
   create(
     @User('flatId') flatId: number,
-    @Body() createShoppingItemDto: CreateShoppingItemDto,
+    @Body() createShoppingItemDto: ShoppingItemDto,
   ) {
     return this.shoppingItemService.create(flatId, createShoppingItemDto);
   }
@@ -40,15 +39,17 @@ export class ShoppingItemController {
     return this.shoppingItemService.findUnpurchasedItems(id);
   }
 
-  // TODO check if path naming is correct
-  @Patch('check/:id')
-  @ApiOperation({ summary: 'update checked state of item' })
-  update(@Param('id') id: number) {
-    return this.shoppingItemService.toggleCheck([id]);
+  @Patch(':id')
+  @ApiOperation({ summary: 'update item' })
+  async update(
+    @Param('id') id: number,
+    @Body() ShoppingItemDto: ShoppingItemDto,
+  ) {
+    await this.shoppingItemService.update(id, ShoppingItemDto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'delete shoppingItem by id' })
+  @ApiOperation({ summary: 'delete shopping item' })
   remove(@Param('id') id: number) {
     return this.shoppingItemService.remove(id);
   }
