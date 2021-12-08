@@ -53,6 +53,7 @@ export class ShoppingItemController {
   }
 
   @Delete(':id')
+  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'delete shopping item' })
   remove(@Param('id') id: number) {
     return this.shoppingItemService.remove(id);

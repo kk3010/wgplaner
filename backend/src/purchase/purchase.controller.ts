@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '../user/user.decorator';
 import { PurchaseService } from './purchase.service';
@@ -13,9 +14,11 @@ import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IUser } from 'src/interfaces/user.interface';
+import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
 
 @ApiBearerAuth()
 @ApiTags('purchase')
+@SetService(PurchaseService)
 @Controller('purchase')
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
@@ -27,6 +30,7 @@ export class PurchaseController {
   }
 
   @Get(':id')
+  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'find one purchase' })
   findOne(@Param('id') id: number) {
     return this.purchaseService.find(id);
@@ -39,6 +43,7 @@ export class PurchaseController {
   }
 
   @Patch(':id')
+  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'update purchase name and price' })
   update(
     @Param('id') id: number,
@@ -48,6 +53,7 @@ export class PurchaseController {
   }
 
   @Delete(':id')
+  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'delete purchase' })
   remove(@Param('id') id: number) {
     return this.purchaseService.remove(id);
