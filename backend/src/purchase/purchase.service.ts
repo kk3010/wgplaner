@@ -33,7 +33,8 @@ export class PurchaseService {
   }
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
-    await this.purchaseRepository.update(id, updatePurchaseDto);
+    const purchase = await this.purchaseRepository.findOne(id);
+    await this.purchaseRepository.save({ ...purchase, ...updatePurchaseDto });
   }
 
   async remove(id: number) {
