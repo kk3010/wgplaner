@@ -100,7 +100,7 @@ describe('FlatService', () => {
     it('adds a user to the members list', async () => {
       const flat = generateFakeFlat();
       repository.findOne.mockResolvedValue(flat);
-      repository.update.mockImplementation(async (id, partial) =>
+      repository.save.mockImplementation(async (partial) =>
         Object.assign(flat, partial),
       );
       await service.addMember('token', user);
@@ -135,7 +135,7 @@ describe('FlatService', () => {
 
     it('removes a user from the members list', async () => {
       const flat = generateFakeFlat([user1, user2]);
-      repository.update.mockImplementation(async (id, partial) =>
+      repository.save.mockImplementation(async (partial) =>
         Object.assign(flat, partial),
       );
       await service.removeMember(flat, user1.id);

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FlatService } from './flat.service';
 import { CreateFlatDto } from './dto/create-flat.dto';
@@ -54,6 +56,7 @@ export class FlatController {
   }
 
   @Post('join/:token')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'join a flat' })
   addMember(@User() user: IUser, @Param('token') token: string) {
     return this.flatService.addMember(token, user);
