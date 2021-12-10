@@ -1,5 +1,5 @@
 import { datatype, animal } from 'faker';
-import { IShoppingItem } from '../src/interfaces/shopping-item.interface';
+import type { IShoppingItem } from '../src/interfaces/shopping-item.interface';
 
 export const generateFakeShoppingItem: (
   flatId?: number,
