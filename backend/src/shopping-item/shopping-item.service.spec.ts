@@ -6,6 +6,8 @@ import { generateFakeUser } from '../../test/user.mock';
 import { Repository } from 'typeorm';
 import { ShoppingItem } from './entities/shopping-item.entity';
 import { ShoppingItemService } from './shopping-item.service';
+import { generateFakeFlat } from '../../test/flat.mock';
+import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
 
 const mockShoppingItemRepositoryFactory: () => MockType<
   Repository<ShoppingItem>
@@ -60,6 +62,19 @@ describe('ShoppingItemService', () => {
       ).toEqual(expected);
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);
+    });
+  });
+
+  describe('findUnpurchasedItems', () => {
+    const flat = generateFakeFlat();
+    const shoppingItem1 = generateFakeShoppingItem(flat.id, null);
+    const shoppingItem2 = generateFakeShoppingItem(flat.id, 1);
+    const shoppingItem3 = generateFakeShoppingItem(flat.id, 1);
+
+    it('returns all unpurchased items of a flat', async () => {
+      const expected: IShoppingItem[] = [shoppingItem1, shoppingItem2];
+
+      expect(await service.findUnpurchasedItems(flat.id)).toEqual(expected);
     });
   });
 });

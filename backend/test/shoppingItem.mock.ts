@@ -1,17 +1,15 @@
 import { datatype, animal } from 'faker';
 import { IShoppingItem } from '../src/interfaces/shopping-item.interface';
 
-export const generateFakeShoppingItem: (flatId?: number) => IShoppingItem = (
-  flatId: number,
-) => {
+export const generateFakeShoppingItem: (
+  flatId?: number,
+  purchaseId?: number,
+) => IShoppingItem = (flatId: number, purchaseId: number) => {
   const shoppingItem = {
     id: datatype.number(),
     name: animal.rabbit(),
-    isChecked: false,
-    buyer: null,
-    isPayed: null,
-    price: null,
     flatId: flatId,
+    purchaseId: purchaseId,
   };
 
   return shoppingItem;
