@@ -1,11 +1,6 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { Reflector } from '@nestjs/core';
-import {
-  ClassSerializerInterceptor,
-  HttpStatus,
-  ValidationPipe,
-} from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import type { CanActivate, INestApplication } from '@nestjs/common';
 import { TokenService } from '../src/auth/services/token.service';
 import { AuthController } from '../src/auth/auth.controller';
@@ -18,6 +13,7 @@ import { LoginDto } from '../src/auth/dto/login.dto';
 import type { MockType } from './mockType';
 import type { IUser } from '../src/interfaces/user.interface';
 import { User } from '../src/user/entities/user.entity';
+import { registerGlobalPipes } from './registerGlobalPipes';
 
 const tokenServiceFactory: () => MockType<TokenService> = () => ({
   generateAccessToken: jest.fn(),
@@ -58,10 +54,7 @@ describe('Auth', () => {
 
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware());
-    app.useGlobalPipes(new ValidationPipe({ transform: true }));
-    app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector)),
-    );
+    registerGlobalPipes(app);
     tokenService = moduleRef.get(TokenService);
     userService = moduleRef.get(UserService);
     await app.init();

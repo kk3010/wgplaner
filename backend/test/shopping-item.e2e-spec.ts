@@ -1,10 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  HttpStatus,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { ShoppingItemController } from '../src/shopping-item/shopping-item.controller';
@@ -18,6 +12,7 @@ import type { IUser } from '../src/interfaces/user.interface';
 import type { IShoppingItem } from '../src/interfaces/shopping-item.interface';
 import { generateFakeShoppingItem } from './shoppingItem.mock';
 import { ShoppingItemDto } from '../src/shopping-item/dto/shopping-item.dto';
+import { registerGlobalPipes } from './registerGlobalPipes';
 
 const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   create: jest.fn(),
@@ -49,10 +44,7 @@ describe('Shopping item', () => {
     shoppingItemService = moduleRef.get(ShoppingItemService);
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware(user));
-    app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector)),
-    );
-    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    registerGlobalPipes(app);
     await app.init();
   });
 
