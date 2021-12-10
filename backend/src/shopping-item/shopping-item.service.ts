@@ -19,18 +19,18 @@ export class ShoppingItemService {
     return this.shoppingItemRepository.save(shoppingItem);
   }
 
-  async findUnpurchasedItems(flatId: number) {
-    return await this.shoppingItemRepository.find({
+  findUnpurchasedItems(flatId: number) {
+    return this.shoppingItemRepository.find({
       where: { flatId, purchaseId: null },
     });
   }
 
-  update(id: number, createShoppingItemDto: ShoppingItemDto) {
-    return this.shoppingItemRepository.update(id, createShoppingItemDto);
+  async update(id: number, createShoppingItemDto: ShoppingItemDto) {
+    await this.shoppingItemRepository.update(id, createShoppingItemDto);
   }
 
-  async findOneById(id: number) {
-    return await this.shoppingItemRepository.findOne(id);
+  findOneById(id: number) {
+    return this.shoppingItemRepository.findOne(id);
   }
 
   async remove(id: number) {

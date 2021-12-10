@@ -1,5 +1,5 @@
 import { IsNumber, IsArray } from 'class-validator';
-import { IShoppingItem } from 'src/interfaces/shopping-item.interface';
+import type { IShoppingItem } from '../../interfaces/shopping-item.interface';
 
 export class CreatePurchaseDto {
   name: string | null;

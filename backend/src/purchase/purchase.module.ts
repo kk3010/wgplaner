@@ -3,7 +3,7 @@ import { PurchaseService } from './purchase.service';
 import { PurchaseController } from './purchase.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Purchase } from './entities/purchase.entity';
-import { ShoppingItem } from 'src/shopping-item/entities/shopping-item.entity';
+import { ShoppingItem } from '../shopping-item/entities/shopping-item.entity';
 
 @Module({
   imports: [

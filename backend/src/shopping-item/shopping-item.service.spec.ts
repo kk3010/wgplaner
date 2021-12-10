@@ -66,15 +66,21 @@ describe('ShoppingItemService', () => {
   });
 
   describe('findUnpurchasedItems', () => {
-    const flat = generateFakeFlat();
-    const shoppingItem1 = generateFakeShoppingItem(flat.id, null);
-    const shoppingItem2 = generateFakeShoppingItem(flat.id, 1);
-    const shoppingItem3 = generateFakeShoppingItem(flat.id, 1);
-
     it('returns all unpurchased items of a flat', async () => {
-      const expected: IShoppingItem[] = [shoppingItem1, shoppingItem2];
+      const flat = generateFakeFlat();
+      const items = [
+        generateFakeShoppingItem(flat.id, null),
+        generateFakeShoppingItem(flat.id, 1),
+        generateFakeShoppingItem(flat.id, 1),
+      ];
+      const expected: IShoppingItem[] = [items[0]];
+
+      jest.spyOn(repository, 'find').mockResolvedValue(expected);
 
       expect(await service.findUnpurchasedItems(flat.id)).toEqual(expected);
+      expect(repository.find).toHaveBeenCalledWith({
+        where: { flatId: flat.id, purchaseId: null },
+      });
     });
   });
 });
