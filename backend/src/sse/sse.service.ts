@@ -12,7 +12,7 @@ export class SseService {
    * Emit an event for the flat.
    * @param flatId - The flat to publish this event for
    * @param eventName - The name used to identify the event
-   * @param data - The message to be sent, will be converted via {@link JSON.parse} when it is an object
+   * @param data - The message to be sent, will be converted via JSON.parse when it is an object
    */
   emit(flatId: number, eventName: string, data: string | object) {
     this.eventEmitter.emit(['sse', String(flatId)], { type: eventName, data });
