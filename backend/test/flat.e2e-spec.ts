@@ -81,6 +81,20 @@ describe('Flat', () => {
     });
   });
 
+  // TODO integrate guard for belongs to flat
+  // describe('/PATCH', () => {
+  //   it('should update the shopping item name', () => {
+  //     const body: UpdateFlatDto = {
+  //       name: 'Updated Flat',
+  //     };
+
+  //     return request(app.getHttpServer())
+  //       .patch(`/flat/${flat.id}`)
+  //       .send(body)
+  //       .expect(200);
+  //   });
+  // });
+
   afterAll(async () => {
     await app.close();
   });

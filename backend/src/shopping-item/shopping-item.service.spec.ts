@@ -16,7 +16,7 @@ const mockShoppingItemRepositoryFactory: () => MockType<
   find: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
-  delete: jest.fn(),
+  remove: jest.fn(),
   save: jest.fn(),
 });
 
@@ -83,4 +83,37 @@ describe('ShoppingItemService', () => {
       });
     });
   });
+
+  // TODO integrate with belongs to flat guard
+
+  // describe('update', () => {
+  //   it('updates the name of a shopping item', async () => {
+  //     const flat = generateFakeFlat();
+  //     const item = generateFakeShoppingItem(flat.id, null);
+
+  //     const expected: IShoppingItem = item;
+
+  //     jest.spyOn(repository, 'update').mockResolvedValue(expected);
+
+  //     expect(await service.findUnpurchasedItems(flat.id)).toEqual(expected);
+  //     expect(repository.find).toHaveBeenCalledWith({
+  //       where: { flatId: flat.id, purchaseId: null },
+  //     });
+  //   });
+  // });
+
+  // describe('delete', () => {
+  //   it('should delete the shopping item', async () => {
+  //     const flat = generateFakeFlat();
+  //     const items = [
+  //       generateFakeShoppingItem(flat.id, null),
+  //       generateFakeShoppingItem(flat.id, 1),
+  //       generateFakeShoppingItem(flat.id, 1),
+  //     ];
+  //     const expected: IShoppingItem[] = items.slice(0, 2);
+
+  //     jest.spyOn(repository, 'remove').mockResolvedValue(expected);
+  //     expect(repository.remove).toHaveBeenCalledWith(items[0].id);
+  //   });
+  // });
 });

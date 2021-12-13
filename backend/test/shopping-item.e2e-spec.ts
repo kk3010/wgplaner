@@ -98,6 +98,46 @@ describe('Shopping item', () => {
     });
   });
 
+  // describe('/PATCH', () => {
+  //   it('should update the shopping item name', () => {
+  //     const body: ShoppingItemDto = {
+  //       name: 'Updated Item',
+  //     };
+  //     const expected: IShoppingItem = {
+  //       id: 1,
+  //       name: 'body.name',
+  //       flatId: flat.id,
+  //       purchaseId: null,
+  //     };
+
+  //     jest.spyOn(shoppingItemService, 'update').mockResolvedValue(expected);
+
+  //     return request(app.getHttpServer())
+  //       .patch('/shopping-item/1')
+  //       .send(body)
+  //       .expect(200);
+  //   });
+
+  //   it('should fail when no name is provided', () => {
+  //     const body: ShoppingItemDto = { name: '' };
+  //     return request(app.getHttpServer())
+  //       .post('/shopping-item/1')
+  //       .send(body)
+  //       .expect(HttpStatus.BAD_REQUEST);
+  //   });
+  // });
+
+  // describe('/DELETE', () => {
+  //   it('should delete the shopping item', () => {
+  //     const expected: IShoppingItem = {
+  //       ...generateFakeShoppingItem(),
+  //       id: 1,
+  //     };
+  //     jest.spyOn(shoppingItemService, 'remove').mockResolvedValue(expected);
+  //     return request(app.getHttpServer()).del('/shopping-item/1').expect(200);
+  //   });
+  // });
+
   afterAll(async () => {
     await app.close();
   });
