@@ -4,10 +4,16 @@ import { MockType } from '../../test/mockType';
 import { Repository } from 'typeorm';
 import { Purchase } from './entities/purchase.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { generateFakeUser } from '../../test/user.mock';
+import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { CreatePurchaseDto } from './dto/create-purchase.dto';
+import type { IPurchase } from '../../src/interfaces/purchase.interface';
 
 const mockPurchaseRepositoryFactory: () => MockType<Repository<Purchase>> =
   () => ({
+    create: jest.fn(),
     find: jest.fn(),
+    save: jest.fn(),
   });
 
 describe('PurchaseService', () => {
@@ -31,5 +37,33 @@ describe('PurchaseService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    beforeEach(() => {
+      jest.spyOn(repository, 'create').mockImplementation((val) => val);
+      jest.spyOn(repository, 'save').mockImplementation(async (val) => val);
+    });
+
+    it('should create a new purchase', async () => {
+      const user = generateFakeUser(1);
+
+      const shoppingItem1 = generateFakeShoppingItem(user.flatId, 1);
+      const shoppingItem2 = generateFakeShoppingItem(user.flatId, 1);
+      const body: CreatePurchaseDto = {
+        name: 'Purchase',
+        price: 22.2,
+        shoppingItems: [shoppingItem1, shoppingItem2],
+      };
+      const expected: Omit<IPurchase, 'id' | 'isPaid'> = {
+        ...body,
+        flatId: user.flatId,
+        buyerId: user.id,
+      };
+
+      expect(await service.create(user, body)).toEqual(expected);
+      expect(repository.create).toHaveBeenCalledWith(expected);
+      expect(repository.save).toHaveBeenCalledWith(expected);
+    });
   });
 });
