@@ -39,7 +39,7 @@ export class WalletController {
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'returns wallet with the id' })
   findOne(@Param('id') id: number) {
-    return this.walletService.findOne(id);
+    return this.walletService.findOneById(id);
   }
 
   @Patch(':id')
