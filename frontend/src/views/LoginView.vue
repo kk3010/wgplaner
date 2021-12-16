@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import axios from 'axios'
+import { useAuth } from '@/composables/useAuth'
+import { useUser } from '@/composables/useUser'
+import { useRouter } from 'vue-router'
 
-const user = reactive({
+const { user } = useUser()
+const { login } = useAuth(user)
+const { push } = useRouter()
+
+const formUser = reactive({
   email: '',
   password: '',
 })
-function handleLogin() {
-  axios.post('/auth/login', user)
+async function handleLogin() {
+  await login(formUser.email, formUser.password)
+  await push('/flat')
 }
 </script>
 
@@ -20,7 +27,7 @@ function handleLogin() {
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.email"
+            v-model="formUser.email"
             name="email"
             placeholder="email"
             type="email"
@@ -29,7 +36,7 @@ function handleLogin() {
         <div class="form-control">
           <input
             class="input input-bordered input-accent mb-4"
-            v-model="user.password"
+            v-model="formUser.password"
             name="password"
             placeholder="password"
             type="password"
