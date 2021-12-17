@@ -1,12 +1,18 @@
 import { ref } from 'vue'
 import type { IFlat } from '@interfaces/flat.interface'
+import axios from 'axios'
 
 const flat = ref<IFlat>()
 
 export function useFlat() {
-  const createFlat: (name: string) => Promise<void> = (name: string) => {}
+  const createFlat: (name: string) => Promise<void> = async (name: string) => {
+    await axios.post('/flat', { name })
+  }
 
-  const getFlat: () => Promise<void> = () => {}
+  const getFlat: () => Promise<void> = async () => {
+    const { data } = await axios.get('/flat')
+    flat.value = data
+  }
 
   const updateFlat: (name: string) => Promise<void> = (flat) => {}
 

@@ -12,11 +12,12 @@ async function bootstrap() {
     const flatSeeder = ctx.get(FlatSeederService);
     const userSeeder = ctx.get(UserSeederService);
     const logger = new Logger('Seeder');
+    const password = 'abc123456';
     const testUser = await userService.create({
       email: 'test@test.de',
       firstName: 'Test',
       lastName: 'Mc Testface',
-      password: 'abc123456',
+      password,
     });
     const flat = await flatSeeder.create(testUser);
     const users = await userSeeder.create(flat.id);

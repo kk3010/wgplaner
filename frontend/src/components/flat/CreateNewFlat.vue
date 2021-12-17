@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import axios from 'axios'
+import { useFlat } from '@/composables/useFlat'
+import { useRouter } from 'vue-router'
 
 const name = ref('')
-function handleCreate() {
-  axios.post('/flat')
+const { push } = useRouter()
+const { createFlat } = useFlat()
+
+async function handleCreate() {
+  await createFlat(name.value)
+  await push('/')
 }
 </script>
 

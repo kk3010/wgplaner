@@ -8,19 +8,18 @@ import LoginView from './views/LoginView.vue'
 import JoinView from './views/JoinView.vue'
 
 import { useUser } from './composables/useUser'
-import { useFlat } from './composables/useFlat'
-const { user } = useUser()
-const { flat } = useFlat()
+const { user, getUser } = useUser()
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/auth',
-    beforeEnter() {
-      if (user.value && flat.value)
+    async beforeEnter() {
+      await getUser()
+      if (user.value && user.value.flatId)
         return {
           path: '/',
         }
-      else if (user.value && !flat.value)
+      else if (user.value && !user.value.flatId)
         return {
           path: '/flat',
         }
@@ -50,11 +49,13 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '',
-    beforeEnter() {
-      if (!user.value)
+    async beforeEnter() {
+      if (!user.value) await getUser()
+      if (!user.value) {
         return {
           path: '/auth',
         }
+      }
     },
     component: HomeView,
     children: [
