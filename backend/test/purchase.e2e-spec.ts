@@ -111,10 +111,14 @@ describe('Purchase', () => {
         id: 1,
       };
 
-      jest.spyOn(purchaseService, 'findOneById').mockResolvedValue(expected);
+      jest
+        .spyOn(purchaseService, 'findOneById')
+        .mockImplementation((id: number) => {
+          return [expected].find((item) => item.id === id);
+        });
 
       return request(app.getHttpServer())
-        .get(`/purchase/${expected.id}`)
+        .get(`/purchase/1`)
         .expect(HttpStatus.OK)
         .expect(expected);
     });
