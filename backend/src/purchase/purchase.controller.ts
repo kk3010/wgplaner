@@ -52,11 +52,4 @@ export class PurchaseController {
   ) {
     return this.purchaseService.update(id, updatePurchaseDto);
   }
-
-  @Delete(':id')
-  @UseGuards(BelongsToFlatGuard)
-  @ApiOperation({ summary: 'delete purchase' })
-  remove(@Param('id') id: number) {
-    return this.purchaseService.remove(id);
-  }
 }

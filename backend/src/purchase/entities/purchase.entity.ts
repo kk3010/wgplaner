@@ -3,6 +3,8 @@ import { ShoppingItem } from '../../shopping-item/entities/shopping-item.entity'
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -29,11 +31,19 @@ export class Purchase implements IPurchase {
 
   @Column()
   buyerId: number;
-
   @Exclude()
   @ApiHideProperty()
   @ManyToOne(() => User)
   buyer: User;
+
+  @Column('int', { array: true })
+  payerIds: number[];
+
+  @Exclude()
+  @ApiHideProperty()
+  @ManyToMany(() => User)
+  @JoinTable()
+  payers: User[];
 
   @Column({ default: false })
   isPaid: boolean;

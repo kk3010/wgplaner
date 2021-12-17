@@ -5,22 +5,26 @@ import { Repository } from 'typeorm';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { Purchase } from './entities/purchase.entity';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class PurchaseService {
   constructor(
     @InjectRepository(Purchase)
     private purchaseRepository: Repository<Purchase>,
+    private walletService: WalletService,
   ) {}
 
-  create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
-    const purchase = this.purchaseRepository.create({
+  async create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
+    let purchase = this.purchaseRepository.create({
       ...createPurchaseDto,
       flatId: user.flatId,
       buyerId: user.id,
     });
 
-    return this.purchaseRepository.save(purchase);
+    purchase = await this.purchaseRepository.save(purchase);
+    await this.updateAllAccounts(purchase);
+    return purchase;
   }
 
   async findOneById(id: number) {
@@ -37,10 +41,32 @@ export class PurchaseService {
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
     const purchase = await this.findOneById(id);
+
+    await this.updateAllAccounts(purchase, true);
+    await this.updateAllAccounts({ ...purchase, ...updatePurchaseDto });
+
     await this.purchaseRepository.save({ ...purchase, ...updatePurchaseDto });
   }
 
-  async remove(id: number) {
-    await this.purchaseRepository.delete(id);
+  async updateAllAccounts(purchase: Purchase, undo = false) {
+    const { price, payerIds, buyerId, flatId } = purchase;
+    const splitCosts = price / payerIds.length;
+    const factor = undo ? -1 : 1;
+
+    //Add amount to the wallet of the buyer
+    await this.walletService.updateBalance(
+      { id: buyerId, flatId } as IUser,
+      factor * price,
+    );
+
+    //Remove splittedCosts from the wallets of all payers
+    await Promise.all(
+      payerIds.map((id) =>
+        this.walletService.updateBalance(
+          { id, flatId } as IUser,
+          -factor * splitCosts,
+        ),
+      ),
+    );
   }
 }

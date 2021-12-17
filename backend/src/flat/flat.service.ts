@@ -11,12 +11,14 @@ import { UpdateFlatDto } from './dto/update-flat.dto';
 import { Flat } from './entities/flat.entity';
 import type { IUser } from '../interfaces/user.interface';
 import type { IFlat } from '../interfaces/flat.interface';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class FlatService {
   constructor(
     @InjectRepository(Flat)
     private flatRepository: Repository<Flat>,
+    private walletService: WalletService,
   ) {}
 
   async create(createFlatDto: CreateFlatDto, creator: IUser) {
@@ -31,6 +33,7 @@ export class FlatService {
       members: [creator],
       invitationToken: token,
     });
+    await this.walletService.create({ ...creator, flatId: flat.id });
     return this.flatRepository.save(flat);
   }
 
@@ -64,6 +67,8 @@ export class FlatService {
         'User is already a member of the flat',
       );
     }
+
+    await this.walletService.create({ ...user, flatId: flat.id });
 
     await this.flatRepository.save({
       ...flat,

@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IUser } from 'src/interfaces/user.interface';
-import { IWallet } from 'src/interfaces/wallet.interface';
+import type { IUser } from '../interfaces/user.interface';
+import type { IWallet } from '../interfaces/wallet.interface';
 import { Repository } from 'typeorm';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { Wallet } from './entities/wallet.entity';
 
 @Injectable()
@@ -17,19 +16,12 @@ export class WalletService {
     const wallet: IWallet = this.walletRepository.create({
       balance: 0,
       user: user,
+      flatId: user.flatId,
     });
-
     return this.walletRepository.save(wallet);
   }
 
-  async findAll(flatId: number) {
-    // const flat = await this.flatRepository.findOne(flatId);
-    // const wallets = new Array<IWallet>();
-    // flat.members.map(async (member) => {
-    //   wallets.push(
-    //     await this.walletRepository.findOne({ where: { user: member } }),
-    //   );
-    // });
+  findAll(flatId: number) {
     return this.walletRepository.find({ where: { flatId } });
   }
 
@@ -37,12 +29,14 @@ export class WalletService {
     return this.walletRepository.findOne(id);
   }
 
-  async update(id: number, updateWalletDto: UpdateWalletDto) {
-    const wallet = await this.walletRepository.findOne(id);
-    await this.walletRepository.save({ ...wallet, ...updateWalletDto });
+  findOneByUserId(userId: number, flatId: number) {
+    return this.walletRepository.findOne({ where: { userId, flatId } });
   }
 
-  async remove(id: number) {
-    await this.walletRepository.delete(id);
+  async updateBalance(user: IUser, value: number) {
+    const wallet = await this.findOneByUserId(user.id, user.flatId);
+    const balance = wallet.balance + value;
+
+    await this.walletRepository.update(wallet.id, { balance });
   }
 }

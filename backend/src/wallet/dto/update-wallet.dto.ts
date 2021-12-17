@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { IWallet } from 'src/interfaces/wallet.interface';
+import type { IWallet } from '../../interfaces/wallet.interface';
 
 export class UpdateWalletDto implements Pick<IWallet, 'balance'> {
   @IsNotEmpty()
