@@ -6,8 +6,12 @@ const user = ref<IUser>()
 
 export function useUser() {
   const getUser: () => Promise<void> = async () => {
-    const { data } = await axios('/user')
-    user.value = data
+    try {
+      const { data } = await axios('/user')
+      user.value = data
+    } catch (err) {
+      user.value = undefined
+    }
   }
 
   const updateUser: (user: Partial<IUser>) => Promise<void> = (user) => {}

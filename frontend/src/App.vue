@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onBeforeMount } from 'vue'
+import { useUser } from './composables/useUser'
+
+const { getUser } = useUser()
+
+onBeforeMount(async () => await getUser())
+</script>
 
 <template>
   <!-- mx center items-->

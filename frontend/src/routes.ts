@@ -7,13 +7,12 @@ import LoginView from './views/LoginView.vue'
 import JoinView from './views/JoinView.vue'
 
 import { useUser } from './composables/useUser'
-const { user, getUser } = useUser()
+const { user } = useUser()
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/auth',
     async beforeEnter() {
-      await getUser()
       if (user.value && user.value.flatId)
         return {
           path: '/',
@@ -49,7 +48,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '',
     async beforeEnter() {
-      if (!user.value) await getUser()
       if (!user.value) {
         return {
           path: '/auth',
