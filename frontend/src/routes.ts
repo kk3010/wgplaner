@@ -59,10 +59,6 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
     children: [
       {
-        path: 'cleaning',
-        component: CleaningScheduleView,
-      },
-      {
         path: 'shopping',
         component: ShoppingListView,
       },
