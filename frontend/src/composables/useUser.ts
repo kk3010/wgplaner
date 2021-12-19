@@ -14,9 +14,35 @@ export function useUser() {
     }
   }
 
-  const updateUser: (user: Partial<IUser>) => Promise<void> = (user) => {}
+  /*   const updateUser: (u: Partial<IUser>) => Promise<void> = async (u) => {
+    try {
+      const {...data} = u
+      user.value = data
+      await axios.patch('/user', user)
+      
+    } catch (err) {
+      user
+    }
+  } */
 
-  const deleteUser: () => Promise<void> = () => {}
+  const updateUser: (u: Partial<IUser>) => Promise<void> = async (u) => {
+    try {
+      const { id } = u
+      const { data } = await axios.patch(`/user/${id}`, u)
+      user.value = data
+    } catch (err) {
+      user.value = undefined
+    }
+  }
+
+  const deleteUser: () => Promise<void> = async () => {
+    try {
+      await axios.delete('/user')
+      user.value = undefined
+    } catch (err) {
+      user.value
+    }
+  }
 
   return { user, getUser, updateUser, deleteUser }
 }

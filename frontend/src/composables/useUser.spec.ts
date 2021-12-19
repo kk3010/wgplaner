@@ -41,7 +41,7 @@ describe('useUser', () => {
       expect(user.value).toEqual(expected)
     })
 
-    it('does net update user on failet request', async () => {
+    it('does not update user on failed request', async () => {
       mock.onPatch('/user').networkError()
       await expect(updateUser(expected)).rejects.toThrow()
       expect(mock.history.patch).toHaveLength(1)
