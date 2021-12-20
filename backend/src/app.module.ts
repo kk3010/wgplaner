@@ -9,6 +9,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SseModule } from './sse/sse.module';
 import { ShoppingItemModule } from './shopping-item/shopping-item.module';
 import { PurchaseModule } from './purchase/purchase.module';
+import { WalletModule } from './wallet/wallet.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -34,6 +35,7 @@ import * as Joi from 'joi';
     SseModule,
     ShoppingItemModule,
     PurchaseModule,
+    WalletModule,
   ],
 })
 export class AppModule {}

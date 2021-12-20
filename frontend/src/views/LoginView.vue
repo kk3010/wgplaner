@@ -1,41 +1,51 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import axios from 'axios'
+import { useAuth } from '@/composables/useAuth'
+import { useUser } from '@/composables/useUser'
+import { useRouter } from 'vue-router'
 
-const user = reactive({
+const { user } = useUser()
+const { login } = useAuth(user)
+const { push } = useRouter()
+
+const formUser = reactive({
   email: '',
   password: '',
 })
-function handleLogin() {
-  axios.post('/auth/login', user)
+async function handleLogin() {
+  await login(formUser.email, formUser.password)
+  await push('/flat')
 }
 </script>
 
 <template>
-  <div class="form-control">
-    <span class="m-4 ml-0 text-sm font-semibold uppercase label-text"> Login </span>
-    <form @submit.prevent="handleLogin">
-      <div class="form-control">
-        <input
-          class="input input-bordered input-accent mb-4"
-          v-model="user.email"
-          name="email"
-          placeholder="email"
-          type="email"
-        />
-      </div>
-      <div class="form-control">
-        <input
-          class="input input-bordered input-accent mb-4"
-          v-model="user.password"
-          name="password"
-          placeholder="password"
-          type="password"
-        />
-      </div>
-      <div class="form-control">
-        <button class="btn btn-square btn-outline p-4" type="submit">Login</button>
-      </div>
-    </form>
+  <div class="card text-center shadow-2xl">
+    <div class="card-body">
+      <h2 class="card-title uppercase">Login</h2>
+      <!-- .prevent hinders page reloading -->
+      <form @submit.prevent="handleLogin">
+        <div class="form-control">
+          <input
+            class="input input-bordered input-accent mb-4"
+            v-model="formUser.email"
+            name="email"
+            placeholder="email"
+            type="email"
+          />
+        </div>
+        <div class="form-control">
+          <input
+            class="input input-bordered input-accent mb-4"
+            v-model="formUser.password"
+            name="password"
+            placeholder="password"
+            type="password"
+          />
+        </div>
+        <div class="justify-end card-actions">
+          <button class="btn btn-outline" type="submit">Login</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
