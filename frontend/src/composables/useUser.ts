@@ -11,6 +11,7 @@ export function useUser() {
       user.value = data
     } catch (err) {
       user.value = undefined
+      throw err
     }
   }
 
@@ -18,22 +19,16 @@ export function useUser() {
     if (!user.value) {
       return
     }
-    try {
-      await axios.patch('/user', u)
-      user.value = { ...user.value, ...u }
-    } catch (err) {
-      user.value = undefined
-    }
+    await axios.patch('/user', u)
+    user.value = { ...user.value, ...u }
   }
 
   const deleteUser: () => Promise<void> = async () => {
     if (!user.value) {
       return
     }
-    try {
-      await axios.delete('/user')
-      user.value = undefined
-    } catch (err) {}
+    await axios.delete('/user')
+    user.value = undefined
   }
 
   return { user, getUser, updateUser, deleteUser }

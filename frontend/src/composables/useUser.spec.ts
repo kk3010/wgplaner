@@ -26,14 +26,15 @@ describe('useUser', () => {
 
     it('throws and does not set the user when request fails', async () => {
       mock.onGet('/user').networkError()
-      await getUser()
+      await expect(getUser()).rejects.toThrow()
       expect(user.value).toBeUndefined()
     })
   })
 
   describe('updateUser', () => {
+    const original = { id: 2 } as IUser
     beforeEach(() => {
-      user.value = { id: 2 } as IUser
+      user.value = original
     })
 
     it('PATCH /user', async () => {
@@ -45,9 +46,9 @@ describe('useUser', () => {
 
     it('does not update user on failed request', async () => {
       mock.onPatch('/user').networkError()
-      await updateUser(expected)
+      await expect(updateUser(expected)).rejects.toThrow()
       expect(mock.history.patch).toHaveLength(1)
-      expect(user.value).toBeUndefined()
+      expect(user.value).toEqual(original)
     })
   })
 
@@ -65,7 +66,7 @@ describe('useUser', () => {
 
     it('does not unset user on failed request', async () => {
       mock.onDelete('/user').networkError()
-      await deleteUser()
+      await expect(deleteUser()).rejects.toThrow()
       expect(mock.history.delete).toHaveLength(1)
       expect(user.value).toEqual(expected)
     })
