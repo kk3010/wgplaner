@@ -28,9 +28,7 @@ export function useFlat() {
     try {
       await axios.patch('/flat', { name: n })
       flat.value = { ...flat.value, ...{ name: n } }
-    } catch (err) {
-      flat.value
-    }
+    } catch (err) {}
   }
 
   const deleteFlat: () => Promise<void> = async () => {
@@ -40,9 +38,7 @@ export function useFlat() {
     try {
       await axios.delete('/flat')
       flat.value = undefined
-    } catch (err) {
-      flat.value
-    }
+    } catch (err) {}
   }
 
   const joinFlat: (token: string) => Promise<void> = async (token) => {
