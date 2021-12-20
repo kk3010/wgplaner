@@ -39,7 +39,7 @@ describe('useFlat', () => {
 
       it('does not set flat when request fails', async () => {
         mock.onPost(/\/flat\/join\/.+/).networkError()
-        await expect(joinFlat('token')).rejects.toThrow()
+        await joinFlat('token')
         expect(mock.history.post.length).toBe(1)
         expect(flat.value).toBeUndefined()
       })
@@ -50,12 +50,12 @@ describe('useFlat', () => {
         mock.onPost('/flat').reply(201, original)
         await createFlat('flat')
         expect(mock.history.post.length).toBe(1)
-        expect(flat.value).toBe(original)
+        expect(flat.value).toEqual(original)
       })
 
       it('does not set flat when request fails', async () => {
         mock.onPost('/flat').networkError()
-        await expect(createFlat('flat')).rejects.toThrow()
+        await createFlat('flat')
         expect(mock.history.post.length).toBe(1)
         expect(flat.value).toBeUndefined()
       })
@@ -66,12 +66,12 @@ describe('useFlat', () => {
         mock.onGet('/flat').reply(200, original)
         await getFlat()
         expect(mock.history.get.length).toBe(1)
-        expect(flat.value).toBe(original)
+        expect(flat.value).toEqual(original)
       })
 
       it('does not set flat when request fails', async () => {
         mock.onGet('/flat').networkError()
-        await expect(getFlat()).rejects.toThrow()
+        await getFlat()
         expect(mock.history.get.length).toBe(1)
         expect(flat.value).toBeUndefined()
       })
@@ -93,9 +93,9 @@ describe('useFlat', () => {
 
       it('does not update flat when request fails', async () => {
         mock.onPatch('/flat').networkError()
-        await expect(updateFlat('new name')).rejects.toThrow()
+        await updateFlat('new name')
         expect(mock.history.patch.length).toBe(1)
-        expect(flat.value).toBe(original)
+        expect(flat.value).toEqual(original)
       })
     })
 
@@ -108,9 +108,9 @@ describe('useFlat', () => {
       })
       it('does not unset flat when request fails', async () => {
         mock.onDelete('/flat').networkError()
-        await expect(deleteFlat()).rejects.toThrow()
+        await deleteFlat()
         expect(mock.history.delete.length).toBe(1)
-        expect(flat.value).toBe(original)
+        expect(flat.value).toEqual(original)
       })
     })
 
