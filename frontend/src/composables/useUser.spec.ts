@@ -8,23 +8,25 @@ const mock = new MockAdapter(axios)
 describe('useUser', () => {
   const { user, deleteUser, getUser, updateUser } = useUser()
   const expected = { id: 1 } as IUser
+  beforeEach(() => {
+    mock.reset()
+  })
 
   describe('getUser', () => {
     beforeEach(() => {
       user.value = undefined
-      mock.reset()
     })
 
     it('GET /user', async () => {
       mock.onGet('/user').reply(200, expected)
       await getUser()
       expect(mock.history.get).toHaveLength(1)
-      expect(user.value).toBe(expected)
+      expect(user.value).toEqual(expected)
     })
 
     it('throws and does not set the user when request fails', async () => {
       mock.onGet('/user').networkError()
-      await expect(getUser()).rejects.toThrow()
+      await getUser()
       expect(user.value).toBeUndefined()
     })
   })
@@ -43,7 +45,7 @@ describe('useUser', () => {
 
     it('does not update user on failed request', async () => {
       mock.onPatch('/user').networkError()
-      await expect(updateUser(expected)).rejects.toThrow()
+      await updateUser(expected)
       expect(mock.history.patch).toHaveLength(1)
       expect(user.value).toBeUndefined()
     })
@@ -63,9 +65,9 @@ describe('useUser', () => {
 
     it('does not unset user on failed request', async () => {
       mock.onDelete('/user').networkError()
-      await expect(deleteUser()).rejects.toThrow()
+      await deleteUser()
       expect(mock.history.delete).toHaveLength(1)
-      expect(user.value).toBe(expected)
+      expect(user.value).toEqual(expected)
     })
   })
 })
