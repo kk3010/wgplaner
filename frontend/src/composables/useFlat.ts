@@ -46,15 +46,11 @@ export function useFlat() {
   }
 
   const joinFlat: (token: string) => Promise<void> = async (token) => {
-    if (!flat.value) {
-      return
-    }
     try {
-      await axios.post(`flat/join/${token}`)
-      const { data } = await axios.get('/flat')
-      flat.value = data
+      await axios.post(`/flat/join/${token}`)
+      await getFlat()
     } catch (err) {
-      flat.value
+      flat.value = undefined
     }
   }
 
@@ -64,8 +60,8 @@ export function useFlat() {
     }
     try {
       await axios.delete(`/flat/${userId}`)
-      const index = flat.value?.members.findIndex((user) => user.id == userId)
-      flat.value?.members.splice(index, 1)
+      const members = flat.value.members.filter((user) => user.id !== userId)
+      flat.value = { ...flat.value, members }
     } catch (err) {}
   }
 

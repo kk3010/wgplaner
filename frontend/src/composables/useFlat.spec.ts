@@ -130,7 +130,7 @@ describe('useFlat', () => {
 
       it('does not remove user when request fails', async () => {
         mock.onDelete(/\/flat\/\d+/).networkError()
-        await expect(removeUser(123)).rejects.toThrow()
+        await removeUser(123)
         expect(mock.history.delete.length).toBe(1)
         expect(flat.value?.members).toHaveLength(1)
       })
