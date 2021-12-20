@@ -1,6 +1,5 @@
 import { IsNumber, IsArray } from 'class-validator';
-import type { IUser } from '../../interfaces/user.interface';
-import type { IShoppingItem } from '../../interfaces/shopping-item.interface';
+import { ShoppingItem } from '../../../src/shopping-item/entities/shopping-item.entity';
 
 export class CreatePurchaseDto {
   name?: string;
@@ -9,7 +8,7 @@ export class CreatePurchaseDto {
   price: number;
 
   @IsArray()
-  shoppingItems: IShoppingItem[];
+  shoppingItems: ShoppingItem[];
 
   @IsArray()
   payerIds: number[];

@@ -45,7 +45,7 @@ export class PurchaseController {
 
   @Patch(':id')
   @UseGuards(BelongsToFlatGuard)
-  @ApiOperation({ summary: 'update purchase name and price' })
+  @ApiOperation({ summary: 'update purchase balance by value' })
   update(
     @Param('id') id: number,
     @Body() updatePurchaseDto: UpdatePurchaseDto,
