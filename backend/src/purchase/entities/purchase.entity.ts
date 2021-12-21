@@ -38,7 +38,7 @@ export class Purchase implements IPurchase {
   @Column({ default: false })
   isPaid: boolean;
 
-  @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchaseId, {
+  @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchase, {
     eager: true,
   })
   shoppingItems: ShoppingItem[];

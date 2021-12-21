@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { IPurchase } from '../interfaces/purchase.interface';
 import type { IUser } from '../interfaces/user.interface';
 import { Repository } from 'typeorm';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
@@ -15,7 +14,7 @@ export class PurchaseService {
   ) {}
 
   create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
-    const purchase: IPurchase = this.purchaseRepository.create({
+    const purchase = this.purchaseRepository.create({
       ...createPurchaseDto,
       flatId: user.flatId,
       buyerId: user.id,
@@ -24,8 +23,12 @@ export class PurchaseService {
     return this.purchaseRepository.save(purchase);
   }
 
-  findOneById(id: number) {
-    return this.purchaseRepository.findOne(id);
+  async findOneById(id: number) {
+    const purchase = await this.purchaseRepository.findOne(id);
+    if (!purchase) {
+      throw new NotFoundException();
+    }
+    return purchase;
   }
 
   findAll(flatId: number) {

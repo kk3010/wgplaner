@@ -1,9 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  HttpStatus,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { createMockUserMiddleware } from './mock-user.middleware';
@@ -15,7 +10,7 @@ import { generateFakeFlat } from './flat.mock';
 import type { IUser } from '../src/interfaces/user.interface';
 import { generateFakeUser } from './user.mock';
 import { CreateFlatDto } from '../src/flat/dto/create-flat.dto';
-import { Reflector } from '@nestjs/core';
+import { registerGlobalPipes } from './registerGlobalPipes';
 
 const flatServiceFactory: () => MockType<FlatService> = () => ({
   create: jest.fn(),
@@ -44,10 +39,7 @@ describe('Flat', () => {
     flatService = moduleRef.get(FlatService);
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware(user));
-    app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector)),
-    );
-    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    registerGlobalPipes(app);
     await app.init();
   });
 
@@ -88,6 +80,20 @@ describe('Flat', () => {
         .expect(HttpStatus.BAD_REQUEST);
     });
   });
+
+  // TODO integrate guard for belongs to flat
+  // describe('/PATCH', () => {
+  //   it('should update the shopping item name', () => {
+  //     const body: UpdateFlatDto = {
+  //       name: 'Updated Flat',
+  //     };
+
+  //     return request(app.getHttpServer())
+  //       .patch(`/flat/${flat.id}`)
+  //       .send(body)
+  //       .expect(200);
+  //   });
+  // });
 
   afterAll(async () => {
     await app.close();

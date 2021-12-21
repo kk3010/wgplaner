@@ -8,6 +8,7 @@ import { ShoppingItem } from './entities/shopping-item.entity';
 import { ShoppingItemService } from './shopping-item.service';
 import { generateFakeFlat } from '../../test/flat.mock';
 import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { BelongsToFlatGuard } from '../flat/belongs-to-flat.guard';
 
 const mockShoppingItemRepositoryFactory: () => MockType<
   Repository<ShoppingItem>
@@ -33,7 +34,10 @@ describe('ShoppingItemService', () => {
           useFactory: mockShoppingItemRepositoryFactory,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(BelongsToFlatGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     service = module.get<ShoppingItemService>(ShoppingItemService);
     repository = module.get(getRepositoryToken(ShoppingItem));
@@ -81,6 +85,39 @@ describe('ShoppingItemService', () => {
       expect(repository.find).toHaveBeenCalledWith({
         where: { flatId: flat.id, purchaseId: null },
       });
+    });
+  });
+
+  describe('update', () => {
+    it('updates the name of a shopping item', async () => {
+      const flat = generateFakeFlat();
+      const item = generateFakeShoppingItem(flat.id, null);
+
+      const expected: IShoppingItem = { ...item, name: 'new' };
+
+      jest.spyOn(repository, 'update').mockResolvedValue(expected);
+      jest.spyOn(repository, 'findOne').mockResolvedValue(expected);
+
+      await service.update(item.id, { name: 'Updated Item' });
+      expect(await service.findOneById(item.id)).toEqual(expected);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete the shopping item', async () => {
+      const flat = generateFakeFlat();
+
+      const items = [
+        generateFakeShoppingItem(flat.id, null),
+        generateFakeShoppingItem(flat.id, null),
+        generateFakeShoppingItem(flat.id, null),
+      ];
+      const expected: IShoppingItem[] = items.slice(0, 3);
+
+      jest.spyOn(repository, 'find').mockResolvedValue(expected);
+
+      await service.remove(items[2].id);
+      expect(await service.findUnpurchasedItems(flat.id)).toEqual(expected);
     });
   });
 });
