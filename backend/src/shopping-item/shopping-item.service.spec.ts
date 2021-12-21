@@ -92,32 +92,17 @@ describe('ShoppingItemService', () => {
     it('updates the name of a shopping item', async () => {
       const flat = generateFakeFlat();
       const item = generateFakeShoppingItem(flat.id, null);
-
-      const expected: IShoppingItem = { ...item, name: 'new' };
-
-      jest.spyOn(repository, 'update').mockResolvedValue(expected);
-      jest.spyOn(repository, 'findOne').mockResolvedValue(expected);
-
       await service.update(item.id, { name: 'Updated Item' });
-      expect(await service.findOneById(item.id)).toEqual(expected);
+
+      expect(repository.update).toHaveBeenCalled();
     });
   });
 
   describe('delete', () => {
     it('should delete the shopping item', async () => {
-      const flat = generateFakeFlat();
+      await service.remove(1);
 
-      const items = [
-        generateFakeShoppingItem(flat.id, null),
-        generateFakeShoppingItem(flat.id, null),
-        generateFakeShoppingItem(flat.id, null),
-      ];
-      const expected: IShoppingItem[] = items.slice(0, 3);
-
-      jest.spyOn(repository, 'find').mockResolvedValue(expected);
-
-      await service.remove(items[2].id);
-      expect(await service.findUnpurchasedItems(flat.id)).toEqual(expected);
+      expect(repository.delete).toHaveBeenCalledWith(1);
     });
   });
 });
