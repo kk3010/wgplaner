@@ -34,7 +34,6 @@ export class ShoppingItem implements IShoppingItem {
 
   @ManyToOne(() => Purchase, (purchase) => purchase.shoppingItems, {
     onDelete: 'SET NULL',
-    cascade: true,
   })
   @Exclude()
   @ApiHideProperty()
