@@ -3,10 +3,12 @@ import { ShoppingItemService } from './shopping-item.service';
 import { ShoppingItemController } from './shopping-item.controller';
 import { ShoppingItem } from './entities/shopping-item.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ShoppingItemSeederService } from './shopping-item-seeder.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ShoppingItem])],
   controllers: [ShoppingItemController],
-  providers: [ShoppingItemService],
+  providers: [ShoppingItemService, ShoppingItemSeederService],
+  exports: [ShoppingItemSeederService],
 })
 export class ShoppingItemModule {}

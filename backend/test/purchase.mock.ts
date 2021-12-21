@@ -10,7 +10,7 @@ export const generateFakePurchase: (
   const purchase: IPurchase = {
     id: datatype.number(),
     name: commerce.department(),
-    price: datatype.number(),
+    price: datatype.number(250),
     buyerId,
     isPaid: false,
     flatId,
