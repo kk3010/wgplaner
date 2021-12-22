@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { useFlat } from '@/composables/useFlat'
+
 const routes = [
   {
     link: '/shopping',
     text: 'shopping',
   },
 ]
+
+const { flat } = useFlat()
 </script>
 
 <template>
@@ -13,7 +17,7 @@ const routes = [
     <aside class="bg-base-100 text-base-content">
       <div class="py-1 inset-x-0 top-0 sticky z-50">
         <div class="navbar justify-center">
-          <RouterLink class="font-bold text-3xl btn btn-ghost" to="/"> Mi Casa </RouterLink>
+          <RouterLink class="font-bold text-3xl btn btn-ghost" to="/"> {{ flat?.name }}</RouterLink>
         </div>
       </div>
       <ul class="menu p-4 space-y-2">

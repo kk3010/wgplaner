@@ -1,5 +1,24 @@
 <script setup lang="ts">
-function handleJoin() {}
+import { ref } from 'vue'
+import { useFlat } from '@/composables/useFlat'
+import { useRouter } from 'vue-router'
+
+const err = ref<string>()
+const token = ref<string>()
+const { joinFlat } = useFlat()
+const { push } = useRouter()
+
+async function handleJoin() {
+  if (!token.value) {
+    return
+  }
+  try {
+    await joinFlat(token.value)
+    await push('/')
+  } catch (e) {
+    err.value = 'Wrong token string. Please enter the correct one'
+  }
+}
 </script>
 
 <template>
@@ -10,11 +29,13 @@ function handleJoin() {}
     <div class="form-control">
       <input
         class="input input-bordered input-accent mt-4"
-        name="url"
+        v-model="token"
+        name="invitationToken"
         placeholder="Paste your invitation link"
-        type="url"
+        type="text"
       />
     </div>
+    <p class="text-red-400 mt-4" v-if="err">{{ err }}</p>
     <div class="justify-center card-actions">
       <button class="btn btn-lg btn-outline btn-accent" type="submit">Join</button>
     </div>
