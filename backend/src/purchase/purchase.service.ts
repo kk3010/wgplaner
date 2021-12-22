@@ -16,8 +16,11 @@ export class PurchaseService {
   ) {}
 
   async create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
+    const { payers, shoppingItems, ...dto } = createPurchaseDto;
     let purchase = this.purchaseRepository.create({
-      ...createPurchaseDto,
+      ...dto,
+      payers: payers.map((id) => ({ id })),
+      shoppingItems: shoppingItems.map((id) => ({ id })),
       flatId: user.flatId,
       buyerId: user.id,
     });
@@ -40,12 +43,17 @@ export class PurchaseService {
   }
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
+    const { payers, ...dto } = updatePurchaseDto;
     const purchase = await this.findOneById(id);
 
     await this.updateAllAccounts(purchase, true);
-    await this.updateAllAccounts({ ...purchase, ...updatePurchaseDto });
+    await this.updateAllAccounts({
+      ...purchase,
+      ...dto,
+      payers: payers.map((id) => ({ id } as IUser)),
+    });
 
-    await this.purchaseRepository.save({ ...purchase, ...updatePurchaseDto });
+    await this.purchaseRepository.save({ ...purchase, ...dto });
   }
 
   async updateAllAccounts(purchase: Purchase, undo = false) {

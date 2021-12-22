@@ -4,6 +4,7 @@ import type { IUser } from '../interfaces/user.interface';
 import type { IWallet } from '../interfaces/wallet.interface';
 import { Repository } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class WalletService {
@@ -12,10 +13,15 @@ export class WalletService {
     private walletRepository: Repository<Wallet>,
   ) {}
 
+  @OnEvent('flat.join')
+  async handleFlatJoin(payload: { userId: number; flatId: number }) {
+    await this.create({ id: payload.userId, flatId: payload.flatId } as IUser);
+  }
+
   create(user: IUser) {
     const wallet: IWallet = this.walletRepository.create({
       balance: 0,
-      user: user,
+      userId: user.id,
       flatId: user.flatId,
     });
     return this.walletRepository.save(wallet);
