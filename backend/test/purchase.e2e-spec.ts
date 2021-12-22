@@ -60,19 +60,26 @@ describe('Purchase', () => {
 
   describe('/POST', () => {
     it('should create a purchase', () => {
-      const shoppingItem1 = generateFakeShoppingItem(flat.id, 1);
-      const shoppingItem2 = generateFakeShoppingItem(flat.id, 1);
+      const shoppingItems = [
+        generateFakeShoppingItem(flat.id, 1),
+        generateFakeShoppingItem(flat.id, 1),
+      ];
+
       const body: CreatePurchaseDto = {
         name: 'Purchase',
         price: 22.2,
-        shoppingItems: [shoppingItem1, shoppingItem2],
+        shoppingItems: shoppingItems.map(({ id }) => id),
+        payers: [user.id],
       };
+
       const expected: IPurchase = {
         ...body,
         id: 1,
         buyerId: user.id,
         flatId: flat.id,
         isPaid: false,
+        payers: [user],
+        shoppingItems,
       };
 
       jest.spyOn(purchaseService, 'create').mockResolvedValue(expected);
@@ -104,12 +111,9 @@ describe('Purchase', () => {
     });
 
     it('should return a purchase by id', () => {
-      const expected: IPurchase = {
-        ...generateFakePurchase(flat.id, 1, [
-          generateFakeShoppingItem(flat.id, 1),
-        ]),
-        id: 1,
-      };
+      const expected = generateFakePurchase(flat.id, 1, [
+        generateFakeShoppingItem(flat.id, 1),
+      ]);
 
       jest
         .spyOn(purchaseService, 'findOneById')
@@ -118,7 +122,7 @@ describe('Purchase', () => {
         });
 
       return request(app.getHttpServer())
-        .get(`/purchase/1`)
+        .get(`/purchase/${expected.id}`)
         .expect(HttpStatus.OK)
         .expect(expected);
     });

@@ -43,17 +43,25 @@ export class PurchaseService {
   }
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
-    const { payers, ...dto } = updatePurchaseDto;
     const purchase = await this.findOneById(id);
+    const payersAsObject = updatePurchaseDto.payers?.map(
+      (id) => ({ id } as IUser),
+    );
 
-    await this.updateAllAccounts(purchase, true);
-    await this.updateAllAccounts({
+    // when the payers have been changed, undo old wallet update and apply with new price and payers
+    if (payersAsObject) {
+      await this.updateAllAccounts(purchase, true);
+      await this.updateAllAccounts({
+        ...purchase,
+        payers: payersAsObject,
+      });
+    }
+
+    await this.purchaseRepository.save({
       ...purchase,
-      ...dto,
-      payers: payers.map((id) => ({ id } as IUser)),
+      ...updatePurchaseDto,
+      payers: payersAsObject ?? purchase.payers,
     });
-
-    await this.purchaseRepository.save({ ...purchase, ...dto });
   }
 
   async updateAllAccounts(purchase: Purchase, undo = false) {
