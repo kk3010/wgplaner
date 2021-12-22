@@ -36,12 +36,7 @@ export class Purchase implements IPurchase {
   @ManyToOne(() => User)
   buyer: User;
 
-  @Column('int', { array: true })
-  payerIds: number[];
-
-  @Exclude()
-  @ApiHideProperty()
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { eager: true })
   @JoinTable()
   payers: User[];
 

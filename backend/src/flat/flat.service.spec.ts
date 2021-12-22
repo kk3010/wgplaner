@@ -10,6 +10,7 @@ import { generateFakeUser } from '../../test/user.mock';
 import { generateFakeFlat } from '../../test/flat.mock';
 import type { IFlat } from '../interfaces/flat.interface';
 import type { IUser } from '../interfaces/user.interface';
+import { WalletService } from '../wallet/wallet.service';
 
 const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({
   create: jest.fn(),
@@ -20,9 +21,14 @@ const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({
   save: jest.fn(),
 });
 
+const mockWalletServiceFactory: () => MockType<WalletService> = () => ({
+  create: jest.fn(),
+});
+
 describe('FlatService', () => {
   let service: FlatService;
   let repository: MockType<Repository<Flat>>;
+  let walletSevice: MockType<WalletService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,11 +38,16 @@ describe('FlatService', () => {
           provide: getRepositoryToken(Flat),
           useFactory: mockFlatRepositoryFactory,
         },
+        {
+          provide: WalletService,
+          useFactory: mockWalletServiceFactory,
+        },
       ],
     }).compile();
 
     service = module.get<FlatService>(FlatService);
     repository = module.get(getRepositoryToken(Flat));
+    walletSevice = module.get(WalletService);
   });
 
   it('should be defined', () => {
@@ -58,7 +69,7 @@ describe('FlatService', () => {
       ).rejects.toThrowError(UnprocessableEntityException);
     });
 
-    it('should create a new flat', async () => {
+    it('should create a new flat and wallet for creator', async () => {
       const creator = generateFakeUser();
 
       const expected: Omit<IFlat, 'id'> = {
@@ -72,6 +83,7 @@ describe('FlatService', () => {
       );
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);
+      expect(walletSevice.create).toHaveBeenCalled();
     });
   });
 

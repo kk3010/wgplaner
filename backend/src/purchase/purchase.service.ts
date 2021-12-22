@@ -49,8 +49,8 @@ export class PurchaseService {
   }
 
   async updateAllAccounts(purchase: Purchase, undo = false) {
-    const { price, payerIds, buyerId, flatId } = purchase;
-    const splitCosts = price / payerIds.length;
+    const { price, payers, buyerId, flatId } = purchase;
+    const splitCosts = price / payers.length;
     const factor = undo ? -1 : 1;
 
     //Add amount to the wallet of the buyer
@@ -61,9 +61,9 @@ export class PurchaseService {
 
     //Remove splittedCosts from the wallets of all payers
     await Promise.all(
-      payerIds.map((id) =>
+      payers.map((payer) =>
         this.walletService.updateBalance(
-          { id, flatId } as IUser,
+          { ...payer, flatId } as IUser,
           -factor * splitCosts,
         ),
       ),
