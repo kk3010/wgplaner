@@ -1,24 +1,32 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { IShoppingItem } from '@interfaces/shopping-item.interface'
+import { ref, toRef, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
+import NewItemRow from './NewItemRow.vue'
+import ItemRow from './ItemRow.vue'
+import type { NewShoppingItem, UpdateShoppingItem } from '../../composables/useShoppingItems'
+import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 
 const allChecked = ref(false)
 
 const props = defineProps<{
   items: IShoppingItem[]
-  modelValue: IShoppingItem[]
+  checked: number[]
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', items: IShoppingItem[]): void
+  (event: 'update:checked', items: IShoppingItem[]): void
+  (event: 'create', item: NewShoppingItem): void
+  (event: 'update', item: UpdateShoppingItem): void
 }>()
 
-const checked = useVModel(props, 'modelValue', emit)
+const checkedModel = useVModel(props, 'checked', emit)
 
-watchEffect(() => {
-  checked.value = allChecked.value ? props.items : []
-})
+watch(allChecked, (all) => (checkedModel.value = all ? props.items.map(({ id }) => id) : []))
+
+watch(
+  toRef(props, 'items'),
+  (items) => (checkedModel.value = checkedModel.value.filter((item) => items.some(({ id }) => id === item))),
+)
 </script>
 
 <template>
@@ -32,18 +40,24 @@ watchEffect(() => {
         </th>
         <th>Quantity</th>
         <th>What</th>
+        <th></th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="item in items" :key="item.id">
-        <th>
-          <label title="select">
-            <input type="checkbox" class="checkbox" :value="item" v-model="checked" />
-          </label>
-        </th>
-        <td>{{ item.quantity }}</td>
-        <td class="font-bold truncate">{{ item.name }}</td>
-      </tr>
-    </tbody>
+    <transition-group tag="tbody" name="shopping-list">
+      <NewItemRow @create="$emit('create', $event)" key="newRow" />
+      <ItemRow
+        v-for="item in items"
+        :key="item.id"
+        :item="item"
+        v-model:checked="checkedModel"
+        @update="$emit('update', $event)"
+      />
+    </transition-group>
   </table>
 </template>
+
+<style>
+.shopping-list-move {
+  @apply transition-transform;
+}
+</style>

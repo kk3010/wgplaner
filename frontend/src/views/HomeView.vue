@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SideMenu from '@/components/SideMenu.vue'
 import MenuComponent from '@/components/MenuComponent.vue'
+import { useFlat } from '../composables/useFlat'
 
 const drawerOpen = ref(false)
+const { getFlat } = useFlat()
+
+onMounted(async () => {
+  await getFlat()
+})
 </script>
 
 <template>
