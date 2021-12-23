@@ -11,17 +11,11 @@ import type { IUser } from '../interfaces/user.interface';
 @Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
-  @Get('all')
+
+  @Get()
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'gets all wallets from the flat of the user' })
   findAll(@User('flatId') flatId: number) {
     return this.walletService.findAll(flatId);
-  }
-
-  @Get()
-  @UseGuards(BelongsToFlatGuard)
-  @ApiOperation({ summary: 'returns wallet with the id' })
-  findOne(@User() user: IUser) {
-    return this.walletService.findOneByUserId(user.id, user.flatId);
   }
 }

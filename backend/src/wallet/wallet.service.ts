@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { IUser } from '../interfaces/user.interface';
-import type { IWallet } from '../interfaces/wallet.interface';
 import { Repository } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -19,7 +18,7 @@ export class WalletService {
   }
 
   create(user: IUser) {
-    const wallet: IWallet = this.walletRepository.create({
+    const wallet = this.walletRepository.create({
       balance: 0,
       userId: user.id,
       flatId: user.flatId,
