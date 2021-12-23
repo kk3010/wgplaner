@@ -6,6 +6,7 @@ import RegisterView from './views/RegisterView.vue'
 import LoginView from './views/LoginView.vue'
 import JoinView from './views/JoinView.vue'
 import SettingsView from './views/SettingsView.vue'
+import MembersView from './views/MembersView.vue'
 
 import { useUser } from './composables/useUser'
 const { user } = useUser()
@@ -64,6 +65,10 @@ const routes: RouteRecordRaw[] = [
     },
     component: HomeView,
     children: [
+      {
+        path: 'members',
+        component: MembersView,
+      },
       {
         path: 'shopping',
         component: ShoppingListView,
