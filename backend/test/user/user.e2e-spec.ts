@@ -1,14 +1,14 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { UserService } from '../src/user/user.service';
+import { UserService } from '../../src/user/user.service';
 import { createMockUserMiddleware } from './mock-user.middleware';
 import { generateFakeUser } from './user.mock';
-import { UserController } from '../src/user/user.controller';
-import { UpdateUserDto } from '../src/user/dto/update-user.dto';
+import { UserController } from '../../src/user/user.controller';
+import { UpdateUserDto } from '../../src/user/dto/update-user.dto';
 import type { INestApplication } from '@nestjs/common';
-import type { MockType } from './mockType';
-import type { IUser } from '../src/interfaces/user.interface';
-import { registerGlobalPipes } from './registerGlobalPipes';
+import type { MockType } from '../mockType';
+import type { IUser } from '../../src/interfaces/user.interface';
+import { registerGlobalPipes } from '../registerGlobalPipes';
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   findById: jest.fn(),

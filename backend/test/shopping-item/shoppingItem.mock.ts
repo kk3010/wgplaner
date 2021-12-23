@@ -1,5 +1,5 @@
 import { datatype, commerce } from 'faker';
-import type { IShoppingItem } from '../src/interfaces/shopping-item.interface';
+import type { IShoppingItem } from '../../src/interfaces/shopping-item.interface';
 
 export const generateFakeShoppingItem: (
   flatId?: number,
@@ -8,7 +8,6 @@ export const generateFakeShoppingItem: (
   const shoppingItem = {
     id: datatype.number(),
     name: commerce.productName(),
-    quantity: datatype.number(5),
     flatId: flatId,
     purchaseId: purchaseId,
   };

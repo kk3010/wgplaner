@@ -4,7 +4,7 @@ import { WalletService } from './wallet.service';
 import { Wallet } from './entities/wallet.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateFakeWallet } from '../../test/wallet/wallet.mock';
-import { generateFakeUser } from '../../test/user.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
 import type { MockType } from '../../test/mockType';
 import type { IUser } from '../interfaces/user.interface';
 

@@ -1,16 +1,16 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { createMockUserMiddleware } from './mock-user.middleware';
-import { FlatService } from '../src/flat/flat.service';
-import { FlatController } from '../src/flat/flat.controller';
-import type { MockType } from './mockType';
-import type { IFlat } from '../src/interfaces/flat.interface';
+import { createMockUserMiddleware } from '../user/mock-user.middleware';
+import { FlatService } from '../../src/flat/flat.service';
+import { FlatController } from '../../src/flat/flat.controller';
+import type { MockType } from '../mockType';
+import type { IFlat } from '../../src/interfaces/flat.interface';
 import { generateFakeFlat } from './flat.mock';
-import type { IUser } from '../src/interfaces/user.interface';
-import { generateFakeUser } from './user.mock';
-import { CreateFlatDto } from '../src/flat/dto/create-flat.dto';
-import { registerGlobalPipes } from './registerGlobalPipes';
+import type { IUser } from '../../src/interfaces/user.interface';
+import { generateFakeUser } from '../user/user.mock';
+import { CreateFlatDto } from '../../src/flat/dto/create-flat.dto';
+import { registerGlobalPipes } from '../registerGlobalPipes';
 
 const flatServiceFactory: () => MockType<FlatService> = () => ({
   create: jest.fn(),

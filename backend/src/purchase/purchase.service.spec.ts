@@ -4,11 +4,11 @@ import { MockType } from '../../test/mockType';
 import { Repository } from 'typeorm';
 import { Purchase } from './entities/purchase.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { generateFakeUser } from '../../test/user.mock';
-import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
+import { generateFakeShoppingItem } from '../../test/shopping-item/shoppingItem.mock';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import type { IPurchase } from '../../src/interfaces/purchase.interface';
-import { generateFakePurchase } from '../../test/purchase.mock';
+import { generateFakePurchase } from '../../test/purchase/purchase.mock';
 import { WalletService } from '../wallet/wallet.service';
 
 const mockPurchaseRepositoryFactory: () => MockType<Repository<Purchase>> =

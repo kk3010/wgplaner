@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import type { MockType } from '../../../test/mockType';
 import { UserService } from '../../user/user.service';
 import { JwtStrategy } from './jwt.strategy';
-import { generateFakeUser } from '../../../test/user.mock';
+import { generateFakeUser } from '../../../test/user/user.mock';
 
 const configServiceFactory: () => MockType<ConfigService> = () => ({
   get: jest.fn().mockReturnValue('value'),

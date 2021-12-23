@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PurchaseService } from './purchase.service';
-import { generateFakePurchase } from '../../test/purchase.mock';
+import { generateFakePurchase } from '../../test/purchase/purchase.mock';
 import type { IUser } from '../interfaces/user.interface';
 import type { IShoppingItem } from '../interfaces/shopping-item.interface';
 

@@ -1,19 +1,19 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { generateFakeUser } from './user.mock';
-import { generateFakeFlat } from './flat.mock';
-import { createMockUserMiddleware } from './mock-user.middleware';
-import type { MockType } from './mockType';
-import type { IFlat } from '../src/interfaces/flat.interface';
-import type { IUser } from '../src/interfaces/user.interface';
-import type { IPurchase } from '../src/interfaces/purchase.interface';
-import { generateFakeShoppingItem } from './shoppingItem.mock';
-import { registerGlobalPipes } from './registerGlobalPipes';
-import { PurchaseService } from '../src/purchase/purchase.service';
-import { PurchaseController } from '../src/purchase/purchase.controller';
-import { CreatePurchaseDto } from '../src/purchase/dto/create-purchase.dto';
-import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
+import { generateFakeUser } from '../user/user.mock';
+import { generateFakeFlat } from '../flat/flat.mock';
+import { createMockUserMiddleware } from '../user/mock-user.middleware';
+import type { MockType } from '../mockType';
+import type { IFlat } from '../../src/interfaces/flat.interface';
+import type { IUser } from '../../src/interfaces/user.interface';
+import type { IPurchase } from '../../src/interfaces/purchase.interface';
+import { generateFakeShoppingItem } from '../shopping-item/shoppingItem.mock';
+import { registerGlobalPipes } from '../registerGlobalPipes';
+import { PurchaseService } from '../../src/purchase/purchase.service';
+import { PurchaseController } from '../../src/purchase/purchase.controller';
+import { CreatePurchaseDto } from '../../src/purchase/dto/create-purchase.dto';
+import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
 import { generateFakePurchase } from './purchase.mock';
 
 const purchaseServiceFactory: () => MockType<PurchaseService> = () => ({

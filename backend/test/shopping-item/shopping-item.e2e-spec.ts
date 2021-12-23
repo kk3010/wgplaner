@@ -1,21 +1,21 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { ShoppingItemController } from '../src/shopping-item/shopping-item.controller';
-import { ShoppingItemService } from '../src/shopping-item/shopping-item.service';
-import { generateFakeUser } from './user.mock';
-import { generateFakeFlat } from './flat.mock';
-import { createMockUserMiddleware } from './mock-user.middleware';
-import type { MockType } from './mockType';
-import type { IFlat } from '../src/interfaces/flat.interface';
-import type { IUser } from '../src/interfaces/user.interface';
-import type { IShoppingItem } from '../src/interfaces/shopping-item.interface';
+import { ShoppingItemController } from '../../src/shopping-item/shopping-item.controller';
+import { ShoppingItemService } from '../../src/shopping-item/shopping-item.service';
+import { generateFakeUser } from '../user/user.mock';
+import { generateFakeFlat } from '../flat/flat.mock';
+import { createMockUserMiddleware } from '../user/mock-user.middleware';
+import type { MockType } from '../mockType';
+import type { IFlat } from '../../src/interfaces/flat.interface';
+import type { IUser } from '../../src/interfaces/user.interface';
+import type { IShoppingItem } from '../../src/interfaces/shopping-item.interface';
 import { generateFakeShoppingItem } from './shoppingItem.mock';
-import { ShoppingItemDto } from '../src/shopping-item/dto/shopping-item.dto';
-import { registerGlobalPipes } from './registerGlobalPipes';
-import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
-import { SseService } from '../src/sse/sse.service';
-import { UpdateShoppingItemDto } from '../src/shopping-item/dto/update-shopping-item.dto';
+import { ShoppingItemDto } from '../../src/shopping-item/dto/shopping-item.dto';
+import { registerGlobalPipes } from '../registerGlobalPipes';
+import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
+import { SseService } from '../../src/sse/sse.service';
+import { UpdateShoppingItemDto } from '../../src/shopping-item/dto/update-shopping-item.dto';
 
 const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   create: jest.fn(),
