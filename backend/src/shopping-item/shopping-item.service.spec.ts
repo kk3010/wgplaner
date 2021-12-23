@@ -56,13 +56,17 @@ describe('ShoppingItemService', () => {
     it('should create a new shopping item', async () => {
       const user = generateFakeUser();
 
-      const expected: Pick<IShoppingItem, 'name' | 'flatId'> = {
+      const expected: Pick<IShoppingItem, 'name' | 'flatId' | 'quantity'> = {
         name: 'Eier',
+        quantity: 1,
         flatId: user.flatId,
       };
 
       expect(
-        await service.create(user.flatId, { name: expected.name }),
+        await service.create(user.flatId, {
+          name: expected.name,
+          quantity: expected.quantity,
+        }),
       ).toEqual(expected);
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);

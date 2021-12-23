@@ -23,6 +23,7 @@ import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
 import type { IUser } from '../interfaces/user.interface';
 import { SseService } from '../sse/sse.service';
 import { HttpCode } from '@nestjs/common';
+import { UpdateShoppingItemDto } from './dto/update-shopping-item.dto';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
@@ -64,7 +65,7 @@ export class ShoppingItemController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: number,
-    @Body() ShoppingItemDto: ShoppingItemDto,
+    @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
     await this.shoppingItemService.update(id, ShoppingItemDto);
   }

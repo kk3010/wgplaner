@@ -17,6 +17,9 @@ export class ShoppingItem implements IShoppingItem {
   @Column()
   name: string;
 
+  @Column()
+  quantity: number;
+
   @Exclude()
   @ApiHideProperty()
   @Column()

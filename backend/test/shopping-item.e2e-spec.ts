@@ -15,6 +15,7 @@ import { ShoppingItemDto } from '../src/shopping-item/dto/shopping-item.dto';
 import { registerGlobalPipes } from './registerGlobalPipes';
 import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
 import { SseService } from '../src/sse/sse.service';
+import { UpdateShoppingItemDto } from '../src/shopping-item/dto/update-shopping-item.dto';
 
 const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   create: jest.fn(),
@@ -90,9 +91,11 @@ describe('Shopping item', () => {
     it('should create a shopping item and emit sse event', async () => {
       const body: ShoppingItemDto = {
         name: 'Item',
+        quantity: 1,
       };
       const expected: IShoppingItem = {
         id: 1,
+        quantity: 1,
         name: body.name,
         flatId: flat.id,
         purchaseId: null,
@@ -107,7 +110,7 @@ describe('Shopping item', () => {
     });
 
     it('should fail when no name is provided', () => {
-      const body: ShoppingItemDto = { name: '' };
+      const body: ShoppingItemDto = { name: '', quantity: 1 };
       return request(app.getHttpServer())
         .post('/shopping-item')
         .send(body)
@@ -117,7 +120,7 @@ describe('Shopping item', () => {
 
   describe('/PATCH', () => {
     it('should update the shopping item name', () => {
-      const body: ShoppingItemDto = {
+      const body: UpdateShoppingItemDto = {
         name: 'Updated Item',
       };
 
@@ -125,15 +128,6 @@ describe('Shopping item', () => {
         .patch('/shopping-item/1')
         .send(body)
         .expect(HttpStatus.NO_CONTENT);
-    });
-
-    it('should fail when no name is provided', () => {
-      const body: ShoppingItemDto = { name: '' };
-
-      return request(app.getHttpServer())
-        .patch('/shopping-item/1')
-        .send(body)
-        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 

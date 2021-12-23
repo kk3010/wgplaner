@@ -8,6 +8,7 @@ export const generateFakeShoppingItem: (
   const shoppingItem = {
     id: datatype.number(),
     name: commerce.productName(),
+    quantity: datatype.number(5),
     flatId: flatId,
     purchaseId: purchaseId,
   };
