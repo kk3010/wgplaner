@@ -24,10 +24,12 @@ async function bootstrap() {
       password,
     });
     const flat = await flatSeeder.create(testUser);
+    testUser.flatId = flat.id;
     const users = await userSeeder.create(flat.id);
     logger.log(`Test user: \n email: ${testUser.email} password: ${password}`);
+    await shoppingItemSeeder.create(flat.id);
     await Promise.all(
-      users.map(async (user) => {
+      [...users, testUser].map(async (user) => {
         const items = await shoppingItemSeeder.create(flat.id);
         return purchaseSeeder.create(user, items);
       }),
