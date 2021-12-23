@@ -69,7 +69,7 @@ describe('PurchaseService', () => {
         payers: [user.id],
       };
 
-      const expected: Omit<IPurchase, 'id' | 'isPaid'> = {
+      const expected: Omit<IPurchase, 'id'> = {
         ...body,
         flatId: user.flatId,
         buyerId: user.id,

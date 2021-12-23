@@ -7,7 +7,6 @@ export interface IPurchase {
   price: number;
   buyerId: number;
   payers: IUser[];
-  isPaid: boolean;
   shoppingItems: IShoppingItem[];
   flatId?: number;
 }

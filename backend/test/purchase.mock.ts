@@ -14,7 +14,6 @@ export const generateFakePurchase: (
     name: commerce.department(),
     price: datatype.number(250),
     buyerId,
-    isPaid: false,
     flatId,
     shoppingItems,
     payers,

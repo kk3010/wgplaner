@@ -40,9 +40,6 @@ export class Purchase implements IPurchase {
   @JoinTable()
   payers: User[];
 
-  @Column({ default: false })
-  isPaid: boolean;
-
   @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchase, {
     eager: true,
   })

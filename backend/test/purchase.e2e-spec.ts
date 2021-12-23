@@ -77,7 +77,6 @@ describe('Purchase', () => {
         id: 1,
         buyerId: user.id,
         flatId: flat.id,
-        isPaid: false,
         payers: [user],
         shoppingItems,
       };
