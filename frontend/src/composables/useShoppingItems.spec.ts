@@ -60,7 +60,7 @@ describe('useShoppingItems', () => {
 
     it('throws on error and leaves item untouched', async () => {
       mock.onAny().networkError()
-      await expect(updateItem({ id: item.id, name: 'abc' })).rejects.toThrow()
+      await expect(updateItem({ id: item.id, name: 'abc', quantity: 1 })).rejects.toThrow()
       expect(shoppingItems.value).toHaveLength(1)
       expect(shoppingItems.value[0]).toEqual(item)
     })

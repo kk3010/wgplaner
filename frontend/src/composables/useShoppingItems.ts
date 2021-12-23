@@ -2,7 +2,8 @@ import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 import { ref } from 'vue'
 import axios from 'axios'
 
-type RequestItem = Pick<IShoppingItem, 'name' | 'quantity'>
+export type UpdateShoppingItem = Pick<IShoppingItem, 'id' | 'name' | 'quantity'>
+export type NewShoppingItem = Omit<UpdateShoppingItem, 'id'>
 
 const shoppingItems = ref<IShoppingItem[]>([])
 
@@ -12,12 +13,12 @@ export function useShoppingItems() {
     shoppingItems.value = data
   }
 
-  const createItem: (item: RequestItem) => Promise<void> = async (item) => {
+  const createItem: (item: NewShoppingItem) => Promise<void> = async (item) => {
     const { data } = await axios.post<IShoppingItem>('/shopping-item', item)
     shoppingItems.value = [...shoppingItems.value, data]
   }
 
-  const updateItem: (partial: Partial<RequestItem> & Pick<IShoppingItem, 'id'>) => Promise<void> = async (partial) => {
+  const updateItem: (partial: UpdateShoppingItem) => Promise<void> = async (partial) => {
     await axios.patch<never>(`/shopping-item/${partial.id}`, partial)
     const copy = [...shoppingItems.value]
     const i = copy.findIndex(({ id }) => id === partial.id)
