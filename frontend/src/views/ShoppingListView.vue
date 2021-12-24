@@ -19,7 +19,7 @@ const handleDelete = async () => {
 </script>
 
 <template>
-  <div class="relative overflow-x-auto">
+  <div>
     <ShoppingList
       class="w-full"
       v-model:checked="checked"

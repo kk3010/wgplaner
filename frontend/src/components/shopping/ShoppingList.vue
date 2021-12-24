@@ -12,6 +12,9 @@ enum SelectionState {
   ALL,
 }
 
+const table = ref()
+const list = ref()
+
 const props = defineProps<{
   items: IShoppingItem[]
   checked: number[]
@@ -54,10 +57,13 @@ const handleSelectAll = () => {
     checkedModel.value = props.items.map(({ id }) => id)
   }
 }
+
+const toggleOverflow = (state: boolean) =>
+  [table, list].map((elem) => elem.value?.classList.toggle('overflow-x-hidden', state))
 </script>
 
 <template>
-  <table class="table">
+  <table class="table" ref="table">
     <thead>
       <tr>
         <th>
@@ -65,7 +71,7 @@ const handleSelectAll = () => {
             <input
               type="checkbox"
               class="checkbox"
-              :class="{ 'bg-neutral-content': selectionState === SelectionState.SOME }"
+              :class="{ 'bg-base-content': selectionState === SelectionState.SOME }"
               :checked="selectionState === SelectionState.ALL"
               @change="handleSelectAll"
             />
@@ -76,21 +82,39 @@ const handleSelectAll = () => {
         <th></th>
       </tr>
     </thead>
-    <transition-group tag="tbody" name="shopping-list">
-      <NewItemRow @create="$emit('create', $event)" key="newRow" />
-      <ItemRow
-        v-for="item in items"
-        :key="item.id"
-        :item="item"
-        v-model:checked="checkedModel"
-        @update="$emit('update', $event)"
-      />
-    </transition-group>
+    <tbody ref="list">
+      <transition-group
+        name="shopping-list"
+        @before-enter="toggleOverflow(true)"
+        @before-leave="toggleOverflow(true)"
+        @after-enter="toggleOverflow(false)"
+        @after-leave="toggleOverflow(false)"
+      >
+        <NewItemRow @create="$emit('create', $event)" key="newRow" />
+        <ItemRow
+          v-for="item in items"
+          :key="item.id"
+          class="transition duration-300"
+          :item="item"
+          v-model:checked="checkedModel"
+          @update="$emit('update', $event)"
+        />
+      </transition-group>
+    </tbody>
   </table>
 </template>
 
 <style>
-.shopping-list-move {
-  @apply transition-transform;
+.shopping-list-enter-from,
+.shopping-list-leave-to {
+  @apply opacity-0 translate-x-[100%];
+}
+
+.shopping-list-enter-active {
+  @apply ease-out;
+}
+
+.shopping-list-leave-active {
+  @apply ease-in;
 }
 </style>
