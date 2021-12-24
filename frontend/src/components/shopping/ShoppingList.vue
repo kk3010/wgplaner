@@ -24,6 +24,7 @@ const emit = defineEmits<{
   (event: 'update:checked', items: IShoppingItem[]): void
   (event: 'create', item: NewShoppingItem): void
   (event: 'update', item: UpdateShoppingItem): void
+  (event: 'delete', item: IShoppingItem): void
 }>()
 
 const checkedModel = useVModel(props, 'checked', emit)
@@ -63,7 +64,7 @@ const toggleOverflow = (state: boolean) =>
 </script>
 
 <template>
-  <table class="table" ref="table">
+  <table class="table table-compact table-zebra" ref="table">
     <thead>
       <tr>
         <th>
@@ -94,10 +95,10 @@ const toggleOverflow = (state: boolean) =>
         <ItemRow
           v-for="item in items"
           :key="item.id"
-          class="transition duration-300"
           :item="item"
           v-model:checked="checkedModel"
           @update="$emit('update', $event)"
+          @delete="$emit('delete', $event)"
         />
       </transition-group>
     </tbody>

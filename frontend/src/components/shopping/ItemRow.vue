@@ -2,7 +2,7 @@
 import { PencilIcon } from '@heroicons/vue/outline'
 import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 import { ref, reactive } from 'vue'
-import { useVModel, onClickOutside } from '@vueuse/core'
+import { useVModel, onClickOutside, useSwipe } from '@vueuse/core'
 
 const props = defineProps<{
   item: IShoppingItem
@@ -12,6 +12,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'update:checked'): void
   (event: 'update', item: IShoppingItem): void
+  (event: 'delete', data: IShoppingItem): void
 }>()
 
 const changedItem = reactive({ ...props.item })
@@ -29,18 +30,40 @@ const handleUpdate = () => {
   }
 }
 
+const left = ref(0)
+
+const { lengthX, coordsStart, isSwiping } = useSwipe(row, {
+  threshold: 20,
+  onSwipe() {
+    if (lengthX.value < 0) {
+      left.value = Math.abs(lengthX.value) / (row.value.offsetWidth - coordsStart.x)
+    } else {
+      left.value = 0
+    }
+    row.value.style = `transform: translate(${left.value * 100}%)`
+  },
+  onSwipeEnd() {
+    if (left.value >= 0.5) {
+      emit('delete', props.item)
+      row.value.style = `transform: translate(100%)`
+    } else {
+      row.value.style = ''
+    }
+  },
+})
+
 onClickOutside(row, handleUpdate)
 </script>
 
 <template>
-  <tr ref="row" @keydown="$event.key === 'Enter' && handleUpdate()">
+  <tr ref="row" :class="{ 'transition duration-300': !isSwiping }" @keydown="$event.key === 'Enter' && handleUpdate()">
     <template v-if="editing">
       <th></th>
       <td>
-        <input type="number" class="input input-bordered" v-model.number="changedItem.quantity" />
+        <input type="number" class="input input-bordered w-16 lg:w-auto" v-model.number="changedItem.quantity" />
       </td>
       <td>
-        <input type="text" class="input input-bordered" v-model="changedItem.name" />
+        <input type="text" class="input input-bordered w-20 lg:w-auto" v-model="changedItem.name" />
       </td>
       <td></td>
     </template>

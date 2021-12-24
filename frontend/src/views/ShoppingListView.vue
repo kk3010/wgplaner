@@ -21,10 +21,11 @@ const handleDelete = async () => {
 <template>
   <div>
     <ShoppingList
-      class="w-full"
+      class="w-full overflow-scroll"
       v-model:checked="checked"
       :items="shoppingItems.sort((a, b) => b.id - a.id)"
       @create="createItem"
+      @delete="deleteItem($event.id)"
       @update="updateItem"
     />
     <transition name="scale">

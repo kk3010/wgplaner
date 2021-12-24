@@ -15,9 +15,9 @@ onMounted(async () => {
 <template>
   <div class="drawer drawer-mobile">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" v-model="drawerOpen" />
-    <main class="flex flex-col drawer-content overflow-hidden">
+    <main class="flex flex-col drawer-content lg:overflow-hidden">
       <MenuComponent />
-      <div class="p-4 lg:p-10">
+      <div class="p-2 md:p-4 lg:p-10">
         <router-view></router-view>
       </div>
     </main>

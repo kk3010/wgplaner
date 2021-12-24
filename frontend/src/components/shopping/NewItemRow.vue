@@ -29,11 +29,10 @@ onClickOutside(row, handleSave)
   <tr ref="row" @keydown="$event.key === 'Enter' && handleSave()">
     <td></td>
     <td>
-      <input type="number" class="input input-bordered" v-model.number="item.quantity" min="1" />
+      <input type="number" class="input input-bordered w-16 lg:w-auto" v-model.number="item.quantity" min="1" />
     </td>
-    <td>
-      <input type="text" placeholder="name" class="input input-bordered" v-model="item.name" />
+    <td colspan="0" class="inline-flex">
+      <input type="text" placeholder="name" class="input input-bordered w-28 lg:w-auto" v-model="item.name" />
     </td>
-    <td></td>
   </tr>
 </template>
