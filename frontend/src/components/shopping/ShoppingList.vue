@@ -6,7 +6,11 @@ import ItemRow from './ItemRow.vue'
 import type { NewShoppingItem, UpdateShoppingItem } from '../../composables/useShoppingItems'
 import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 
-const allChecked = ref(false)
+enum SelectionState {
+  NONE,
+  SOME,
+  ALL,
+}
 
 const props = defineProps<{
   items: IShoppingItem[]
@@ -21,12 +25,35 @@ const emit = defineEmits<{
 
 const checkedModel = useVModel(props, 'checked', emit)
 
-watch(allChecked, (all) => (checkedModel.value = all ? props.items.map(({ id }) => id) : []))
+const selectionState = ref<SelectionState>(SelectionState.NONE)
 
+watch(checkedModel, (checked) => {
+  switch (checked.length) {
+    case 0:
+      selectionState.value = SelectionState.NONE
+      break
+    case props.items.length:
+      selectionState.value = SelectionState.ALL
+      break
+    default:
+      selectionState.value = SelectionState.SOME
+      break
+  }
+})
+
+// evict ids from checked array when they do not longer exist in props.items
 watch(
   toRef(props, 'items'),
   (items) => (checkedModel.value = checkedModel.value.filter((item) => items.some(({ id }) => id === item))),
 )
+
+const handleSelectAll = () => {
+  if (selectionState.value === SelectionState.ALL) {
+    checkedModel.value = []
+  } else {
+    checkedModel.value = props.items.map(({ id }) => id)
+  }
+}
 </script>
 
 <template>
@@ -35,7 +62,13 @@ watch(
       <tr>
         <th>
           <label title="select all">
-            <input type="checkbox" class="checkbox" v-model="allChecked" />
+            <input
+              type="checkbox"
+              class="checkbox"
+              :class="{ 'bg-neutral-content': selectionState === SelectionState.SOME }"
+              :checked="selectionState === SelectionState.ALL"
+              @change="handleSelectAll"
+            />
           </label>
         </th>
         <th>Quantity</th>
