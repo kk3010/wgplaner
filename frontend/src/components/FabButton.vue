@@ -12,7 +12,7 @@ onClickOutside(target, () => toggle(false))
 <template>
   <div class="fixed bottom-4 right-4 md:bottom-8 md:right-8 lg:bottom-16 lg:right-16" ref="target">
     <transition name="fab-buttons">
-      <div v-show="shown" class="flex flex-col items-center mb-2 origin-bottom space-y-2">
+      <div v-show="shown" class="flex flex-col items-center mb-2 origin-bottom">
         <slot></slot>
       </div>
     </transition>
