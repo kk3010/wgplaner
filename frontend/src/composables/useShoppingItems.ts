@@ -5,9 +5,9 @@ import axios from 'axios'
 export type UpdateShoppingItem = Pick<IShoppingItem, 'id' | 'name' | 'quantity'>
 export type NewShoppingItem = Omit<UpdateShoppingItem, 'id'>
 
-const shoppingItems = ref<IShoppingItem[]>([])
-
 export function useShoppingItems() {
+  const shoppingItems = ref<IShoppingItem[]>([])
+
   const fetchItems: () => Promise<void> = async () => {
     const { data } = await axios.get<IShoppingItem[]>('/shopping-item')
     shoppingItems.value = data
