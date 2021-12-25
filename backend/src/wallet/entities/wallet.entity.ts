@@ -13,6 +13,15 @@ import {
 import { Flat } from '../../flat/entities/flat.entity';
 import { Exclude } from 'class-transformer';
 
+class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity()
 @Unique(['userId', 'flatId'])
 export class Wallet implements IWallet {
@@ -23,7 +32,11 @@ export class Wallet implements IWallet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   balance: number;
 
   @Column()

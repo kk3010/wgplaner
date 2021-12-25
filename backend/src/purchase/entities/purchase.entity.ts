@@ -14,6 +14,15 @@ import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
 
+class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity()
 export class Purchase implements IPurchase {
   constructor(params: Partial<Purchase>) {
@@ -26,7 +35,11 @@ export class Purchase implements IPurchase {
   @Column({ nullable: true })
   name?: string;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
   @Column()

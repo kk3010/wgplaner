@@ -3,7 +3,6 @@ import { WalletService } from './wallet.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
-import type { IUser } from '../interfaces/user.interface';
 
 @ApiBearerAuth()
 @ApiTags('wallet')
