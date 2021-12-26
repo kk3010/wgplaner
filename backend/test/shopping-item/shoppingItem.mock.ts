@@ -5,12 +5,11 @@ export const generateFakeShoppingItem: (
   flatId?: number,
   purchaseId?: number,
 ) => IShoppingItem = (flatId: number, purchaseId: number) => {
-  const shoppingItem = {
+  return {
     id: datatype.number(),
     name: commerce.productName(),
     flatId: flatId,
     purchaseId: purchaseId,
+    quantity: 1,
   };
-
-  return shoppingItem;
 };
