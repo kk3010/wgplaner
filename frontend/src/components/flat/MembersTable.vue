@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { IUser } from '@interfaces/user.interface'
 import { useVModel } from '@vueuse/core'
+import { useUser } from '../../composables/useUser'
+
+const { user } = useUser()
 
 const props = defineProps<{
   members: IUser[]
@@ -36,8 +39,11 @@ const model = useVModel(props, 'modelValue', emit)
                 <span>{{ member.firstName[0] + member.lastName[0] }}</span>
               </div>
             </div>
-            <div class="font-bold">
-              {{ [member.firstName, member.lastName].join(' ') }}
+            <div>
+              <span class="font-bold">
+                {{ [member.firstName, member.lastName].join(' ') }}
+              </span>
+              <span v-if="member.id === user?.id" class="ml-2">(Me)</span>
             </div>
           </div>
         </td>
