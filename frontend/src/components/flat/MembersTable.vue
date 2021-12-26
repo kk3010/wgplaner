@@ -4,7 +4,7 @@ import { useVModel } from '@vueuse/core'
 
 const props = defineProps<{
   members: IUser[]
-  modelValue: IUser[]
+  modelValue: number[]
 }>()
 
 const emit = defineEmits<{
@@ -24,12 +24,12 @@ const model = useVModel(props, 'modelValue', emit)
     </thead>
     <tbody>
       <tr v-for="member in members" :key="member.id">
-        <th class="transition" :class="{ '!bg-gray-200 text-gray-500': !model.includes(member) }">
+        <th class="transition" :class="{ '!bg-gray-200 text-gray-500': !model.includes(member.id) }">
           <label>
-            <input type="checkbox" class="checkbox" :value="member" v-model="model" />
+            <input type="checkbox" class="checkbox" :value="member.id" v-model="model" />
           </label>
         </th>
-        <td class="transition" :class="{ '!bg-gray-200 text-gray-500': !model.includes(member) }">
+        <td class="transition" :class="{ '!bg-gray-200 text-gray-500': !model.includes(member.id) }">
           <div class="flex items-center space-x-2">
             <div class="avatar placeholder">
               <div class="bg-neutral-focus text-neutral-content w-12 h-12 mask mask-squircle uppercase">

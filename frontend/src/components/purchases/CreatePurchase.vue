@@ -17,7 +17,7 @@ const accept = ref()
 
 const { shoppingItems } = toRefs(props)
 
-const payers = ref<IUser[]>(props.members)
+const payers = ref<number[]>(props.members.map((u) => u.id))
 
 const purchase = reactive({
   name: '',
@@ -27,7 +27,7 @@ const purchase = reactive({
 })
 
 const handleSubmit = () => {
-  emit('create', { ...purchase, payers: purchase.payers.map(({ id }) => id) })
+  emit('create', purchase)
 }
 </script>
 
@@ -47,7 +47,7 @@ const handleSubmit = () => {
           </label>
           <label class="input-group">
             <input
-              min="1"
+              min="0"
               step="any"
               name="price"
               id="price"
