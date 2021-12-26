@@ -6,10 +6,11 @@ import { Repository } from 'typeorm';
 import { Flat } from './entities/flat.entity';
 import { FlatService } from './flat.service';
 import { MockType } from '../../test/mockType';
-import { generateFakeUser } from '../../test/user.mock';
-import { generateFakeFlat } from '../../test/flat.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
+import { generateFakeFlat } from '../../test/flat/flat.mock';
 import type { IFlat } from '../interfaces/flat.interface';
 import type { IUser } from '../interfaces/user.interface';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({
   create: jest.fn(),
@@ -20,9 +21,14 @@ const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({
   save: jest.fn(),
 });
 
+const mockEventEmitterFactory: () => MockType<EventEmitter2> = () => ({
+  emit: jest.fn(),
+});
+
 describe('FlatService', () => {
   let service: FlatService;
   let repository: MockType<Repository<Flat>>;
+  let eventEmitter: MockType<EventEmitter2>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,11 +38,16 @@ describe('FlatService', () => {
           provide: getRepositoryToken(Flat),
           useFactory: mockFlatRepositoryFactory,
         },
+        {
+          provide: EventEmitter2,
+          useFactory: mockEventEmitterFactory,
+        },
       ],
     }).compile();
 
     service = module.get<FlatService>(FlatService);
     repository = module.get(getRepositoryToken(Flat));
+    eventEmitter = module.get(EventEmitter2);
   });
 
   it('should be defined', () => {
@@ -47,7 +58,9 @@ describe('FlatService', () => {
     beforeEach(() => {
       jest.spyOn(crypto, 'randomUUID').mockReturnValue('token');
       jest.spyOn(repository, 'create').mockImplementation((val) => val);
-      jest.spyOn(repository, 'save').mockImplementation(async (val) => val);
+      jest
+        .spyOn(repository, 'save')
+        .mockImplementation(async (val) => ({ id: 1, ...val }));
     });
 
     it('should throw UnprocessableEntityException when user belongs to another flat', async () => {
@@ -58,7 +71,7 @@ describe('FlatService', () => {
       ).rejects.toThrowError(UnprocessableEntityException);
     });
 
-    it('should create a new flat', async () => {
+    it('should create a new flat and emit the event', async () => {
       const creator = generateFakeUser();
 
       const expected: Omit<IFlat, 'id'> = {
@@ -67,11 +80,17 @@ describe('FlatService', () => {
         members: [creator],
       };
 
-      expect(await service.create({ name: expected.name }, creator)).toEqual(
-        expected,
-      );
+      const result = await service.create({ name: expected.name }, creator);
+      expect(result).toEqual({
+        ...expected,
+        id: 1,
+      });
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);
+      expect(eventEmitter.emit).toHaveBeenCalledWith('flat.join', {
+        userId: creator.id,
+        flatId: result.id,
+      });
     });
   });
 
@@ -97,7 +116,7 @@ describe('FlatService', () => {
       );
     });
 
-    it('adds a user to the members list', async () => {
+    it('adds a user to the members list and emits the event', async () => {
       const flat = generateFakeFlat();
       repository.findOne.mockResolvedValue(flat);
       repository.save.mockImplementation(async (partial) =>
@@ -105,6 +124,10 @@ describe('FlatService', () => {
       );
       await service.addMember('token', user);
       expect(flat.members).toEqual([user]);
+      expect(eventEmitter.emit).toHaveBeenCalledWith('flat.join', {
+        userId: user.id,
+        flatId: flat.id,
+      });
     });
   });
 

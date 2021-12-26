@@ -7,7 +7,7 @@ import axios from 'axios'
 import { useAuth } from './composables/useAuth'
 import { useUser } from './composables/useUser'
 
-const { user } = useUser()
+const { user, getUser } = useUser()
 const { addAxiosAuth } = useAuth(user)
 
 addAxiosAuth()
@@ -19,8 +19,12 @@ const router = createRouter({
   routes: routes, // short for `routes: routes`
 })
 
-const app = createApp(App)
+getUser()
+  .catch()
+  .finally(() => {
+    const app = createApp(App)
 
-app.use(router)
+    app.use(router)
 
-app.mount('#app')
+    app.mount('#app')
+  })

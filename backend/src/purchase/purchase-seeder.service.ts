@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PurchaseService } from './purchase.service';
-import { generateFakePurchase } from '../../test/purchase.mock';
+import { generateFakePurchase } from '../../test/purchase/purchase.mock';
 import type { IUser } from '../interfaces/user.interface';
 import type { IShoppingItem } from '../interfaces/shopping-item.interface';
 
@@ -15,8 +15,13 @@ export class PurchaseSeederService {
           user.flatId,
           user.id,
           items,
+          [user],
         );
-        return this.purchaseService.create(user, purchase);
+        return this.purchaseService.create(user, {
+          ...purchase,
+          shoppingItems: items.map(({ id }) => id),
+          payers: purchase.payers.map(({ id }) => id),
+        });
       }),
     );
   }

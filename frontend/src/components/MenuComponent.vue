@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ThemeDropdown from './ThemeDropdown.vue'
+import { MenuIcon } from '@heroicons/vue/outline'
 </script>
 
 <template>
@@ -18,16 +19,8 @@ import ThemeDropdown from './ThemeDropdown.vue'
   >
     <div class="navbar">
       <div class="flex-none lg:hidden">
-        <!-- menu button -->
         <label class="btn btn-square btn-ghost" for="my-drawer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            class="inline-block w-6 h-6 stroke-current"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
+          <MenuIcon class="w-6 h-6" />
         </label>
       </div>
 

@@ -1,20 +1,21 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { ShoppingItemController } from '../src/shopping-item/shopping-item.controller';
-import { ShoppingItemService } from '../src/shopping-item/shopping-item.service';
-import { generateFakeUser } from './user.mock';
-import { generateFakeFlat } from './flat.mock';
-import { createMockUserMiddleware } from './mock-user.middleware';
-import type { MockType } from './mockType';
-import type { IFlat } from '../src/interfaces/flat.interface';
-import type { IUser } from '../src/interfaces/user.interface';
-import type { IShoppingItem } from '../src/interfaces/shopping-item.interface';
+import { ShoppingItemController } from '../../src/shopping-item/shopping-item.controller';
+import { ShoppingItemService } from '../../src/shopping-item/shopping-item.service';
+import { generateFakeUser } from '../user/user.mock';
+import { generateFakeFlat } from '../flat/flat.mock';
+import { createMockUserMiddleware } from '../user/mock-user.middleware';
+import type { MockType } from '../mockType';
+import type { IFlat } from '../../src/interfaces/flat.interface';
+import type { IUser } from '../../src/interfaces/user.interface';
+import type { IShoppingItem } from '../../src/interfaces/shopping-item.interface';
 import { generateFakeShoppingItem } from './shoppingItem.mock';
-import { ShoppingItemDto } from '../src/shopping-item/dto/shopping-item.dto';
-import { registerGlobalPipes } from './registerGlobalPipes';
-import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
-import { SseService } from '../src/sse/sse.service';
+import { ShoppingItemDto } from '../../src/shopping-item/dto/shopping-item.dto';
+import { registerGlobalPipes } from '../registerGlobalPipes';
+import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
+import { SseService } from '../../src/sse/sse.service';
+import { UpdateShoppingItemDto } from '../../src/shopping-item/dto/update-shopping-item.dto';
 
 const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   create: jest.fn(),
@@ -90,9 +91,11 @@ describe('Shopping item', () => {
     it('should create a shopping item and emit sse event', async () => {
       const body: ShoppingItemDto = {
         name: 'Item',
+        quantity: 1,
       };
       const expected: IShoppingItem = {
         id: 1,
+        quantity: 1,
         name: body.name,
         flatId: flat.id,
         purchaseId: null,
@@ -107,7 +110,7 @@ describe('Shopping item', () => {
     });
 
     it('should fail when no name is provided', () => {
-      const body: ShoppingItemDto = { name: '' };
+      const body: ShoppingItemDto = { name: '', quantity: 1 };
       return request(app.getHttpServer())
         .post('/shopping-item')
         .send(body)
@@ -117,7 +120,7 @@ describe('Shopping item', () => {
 
   describe('/PATCH', () => {
     it('should update the shopping item name', () => {
-      const body: ShoppingItemDto = {
+      const body: UpdateShoppingItemDto = {
         name: 'Updated Item',
       };
 
@@ -125,15 +128,6 @@ describe('Shopping item', () => {
         .patch('/shopping-item/1')
         .send(body)
         .expect(HttpStatus.NO_CONTENT);
-    });
-
-    it('should fail when no name is provided', () => {
-      const body: ShoppingItemDto = { name: '' };
-
-      return request(app.getHttpServer())
-        .patch('/shopping-item/1')
-        .send(body)
-        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 

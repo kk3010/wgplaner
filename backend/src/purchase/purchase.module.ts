@@ -3,14 +3,11 @@ import { PurchaseService } from './purchase.service';
 import { PurchaseController } from './purchase.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Purchase } from './entities/purchase.entity';
-import { ShoppingItem } from '../shopping-item/entities/shopping-item.entity';
 import { PurchaseSeederService } from './purchase-seeder.service';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Purchase]),
-    TypeOrmModule.forFeature([ShoppingItem]),
-  ],
+  imports: [TypeOrmModule.forFeature([Purchase]), WalletModule],
   controllers: [PurchaseController],
   providers: [PurchaseService, PurchaseSeederService],
   exports: [PurchaseSeederService],

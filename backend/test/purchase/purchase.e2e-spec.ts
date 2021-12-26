@@ -1,19 +1,19 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { generateFakeUser } from './user.mock';
-import { generateFakeFlat } from './flat.mock';
-import { createMockUserMiddleware } from './mock-user.middleware';
-import type { MockType } from './mockType';
-import type { IFlat } from '../src/interfaces/flat.interface';
-import type { IUser } from '../src/interfaces/user.interface';
-import type { IPurchase } from '../src/interfaces/purchase.interface';
-import { generateFakeShoppingItem } from './shoppingItem.mock';
-import { registerGlobalPipes } from './registerGlobalPipes';
-import { PurchaseService } from '../src/purchase/purchase.service';
-import { PurchaseController } from '../src/purchase/purchase.controller';
-import { CreatePurchaseDto } from '../src/purchase/dto/create-purchase.dto';
-import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
+import { generateFakeUser } from '../user/user.mock';
+import { generateFakeFlat } from '../flat/flat.mock';
+import { createMockUserMiddleware } from '../user/mock-user.middleware';
+import type { MockType } from '../mockType';
+import type { IFlat } from '../../src/interfaces/flat.interface';
+import type { IUser } from '../../src/interfaces/user.interface';
+import type { IPurchase } from '../../src/interfaces/purchase.interface';
+import { generateFakeShoppingItem } from '../shopping-item/shoppingItem.mock';
+import { registerGlobalPipes } from '../registerGlobalPipes';
+import { PurchaseService } from '../../src/purchase/purchase.service';
+import { PurchaseController } from '../../src/purchase/purchase.controller';
+import { CreatePurchaseDto } from '../../src/purchase/dto/create-purchase.dto';
+import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
 import { generateFakePurchase } from './purchase.mock';
 
 const purchaseServiceFactory: () => MockType<PurchaseService> = () => ({
@@ -60,19 +60,25 @@ describe('Purchase', () => {
 
   describe('/POST', () => {
     it('should create a purchase', () => {
-      const shoppingItem1 = generateFakeShoppingItem(flat.id, 1);
-      const shoppingItem2 = generateFakeShoppingItem(flat.id, 1);
+      const shoppingItems = [
+        generateFakeShoppingItem(flat.id, 1),
+        generateFakeShoppingItem(flat.id, 1),
+      ];
+
       const body: CreatePurchaseDto = {
         name: 'Purchase',
         price: 22.2,
-        shoppingItems: [shoppingItem1, shoppingItem2],
+        shoppingItems: shoppingItems.map(({ id }) => id),
+        payers: [user.id],
       };
+
       const expected: IPurchase = {
         ...body,
         id: 1,
         buyerId: user.id,
         flatId: flat.id,
-        isPaid: false,
+        payers: [user],
+        shoppingItems,
       };
 
       jest.spyOn(purchaseService, 'create').mockResolvedValue(expected);
@@ -104,12 +110,9 @@ describe('Purchase', () => {
     });
 
     it('should return a purchase by id', () => {
-      const expected: IPurchase = {
-        ...generateFakePurchase(flat.id, 1, [
-          generateFakeShoppingItem(flat.id, 1),
-        ]),
-        id: 1,
-      };
+      const expected = generateFakePurchase(flat.id, 1, [
+        generateFakeShoppingItem(flat.id, 1),
+      ]);
 
       jest
         .spyOn(purchaseService, 'findOneById')
@@ -118,7 +121,7 @@ describe('Purchase', () => {
         });
 
       return request(app.getHttpServer())
-        .get(`/purchase/1`)
+        .get(`/purchase/${expected.id}`)
         .expect(HttpStatus.OK)
         .expect(expected);
     });

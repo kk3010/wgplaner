@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { Repository } from 'typeorm';
 import type { MockType } from '../../test/mockType';
 import { UnprocessableEntityException } from '@nestjs/common';
-import { generateFakeUser } from '../../test/user.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
 import * as bcrypt from 'bcrypt';
 import type { IUser } from '../interfaces/user.interface';
 

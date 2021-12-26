@@ -4,11 +4,12 @@ import { MockType } from '../../test/mockType';
 import { Repository } from 'typeorm';
 import { Purchase } from './entities/purchase.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { generateFakeUser } from '../../test/user.mock';
-import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
+import { generateFakeShoppingItem } from '../../test/shopping-item/shoppingItem.mock';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import type { IPurchase } from '../../src/interfaces/purchase.interface';
-import { generateFakePurchase } from '../../test/purchase.mock';
+import { generateFakePurchase } from '../../test/purchase/purchase.mock';
+import { WalletService } from '../wallet/wallet.service';
 
 const mockPurchaseRepositoryFactory: () => MockType<Repository<Purchase>> =
   () => ({
@@ -19,9 +20,14 @@ const mockPurchaseRepositoryFactory: () => MockType<Repository<Purchase>> =
     delete: jest.fn(),
   });
 
+const mockWalletServiceFactory: () => MockType<WalletService> = () => ({
+  updateBalance: jest.fn(),
+});
+
 describe('PurchaseService', () => {
   let service: PurchaseService;
   let repository: MockType<Repository<Purchase>>;
+  let walletService: MockType<WalletService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,11 +37,16 @@ describe('PurchaseService', () => {
           provide: getRepositoryToken(Purchase),
           useFactory: mockPurchaseRepositoryFactory,
         },
+        {
+          provide: WalletService,
+          useFactory: mockWalletServiceFactory,
+        },
       ],
     }).compile();
 
     service = module.get<PurchaseService>(PurchaseService);
     repository = module.get(getRepositoryToken(Purchase));
+    walletService = module.get(WalletService);
   });
 
   it('should be defined', () => {
@@ -43,30 +54,36 @@ describe('PurchaseService', () => {
   });
 
   describe('create', () => {
-    beforeEach(() => {
-      jest.spyOn(repository, 'create').mockImplementation((val) => val);
-      jest.spyOn(repository, 'save').mockImplementation(async (val) => val);
-    });
-
     it('should create a new purchase', async () => {
       const user = generateFakeUser(1);
 
-      const shoppingItem1 = generateFakeShoppingItem(user.flatId, 1);
-      const shoppingItem2 = generateFakeShoppingItem(user.flatId, 1);
+      const shoppingItems = [
+        generateFakeShoppingItem(user.flatId, 1),
+        generateFakeShoppingItem(user.flatId, 1),
+      ];
+
       const body: CreatePurchaseDto = {
         name: 'Purchase',
         price: 22.2,
-        shoppingItems: [shoppingItem1, shoppingItem2],
+        shoppingItems: shoppingItems.map(({ id }) => id),
+        payers: [user.id],
       };
-      const expected: Omit<IPurchase, 'id' | 'isPaid'> = {
+
+      const expected: Omit<IPurchase, 'id'> = {
         ...body,
         flatId: user.flatId,
         buyerId: user.id,
+        shoppingItems,
+        payers: [user],
       };
 
+      jest.spyOn(repository, 'create').mockResolvedValue(expected);
+      jest.spyOn(repository, 'save').mockResolvedValue(expected);
+
       expect(await service.create(user, body)).toEqual(expected);
-      expect(repository.create).toHaveBeenCalledWith(expected);
-      expect(repository.save).toHaveBeenCalledWith(expected);
+      expect(repository.create).toHaveBeenCalled();
+      expect(repository.save).toHaveBeenCalled();
+      expect(walletService.updateBalance).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -101,13 +118,6 @@ describe('PurchaseService', () => {
       expect(repository.save).toHaveBeenCalledWith({
         ...expected,
         name: 'test',
-      });
-    });
-
-    describe('remove', () => {
-      it('calls repository.delete', async () => {
-        await service.remove(1);
-        expect(repository.delete).toBeCalledWith(1);
       });
     });
   });

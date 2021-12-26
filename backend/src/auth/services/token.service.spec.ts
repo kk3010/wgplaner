@@ -4,7 +4,7 @@ import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokensService } from './refresh-tokens.service';
 import { ConfigService } from '@nestjs/config';
-import { generateFakeUser } from '../../../test/user.mock';
+import { generateFakeUser } from '../../../test/user/user.mock';
 import type { MockType } from '../../../test/mockType';
 import type { IUser } from '../../interfaces/user.interface';
 import type { SignOptions } from 'jsonwebtoken';

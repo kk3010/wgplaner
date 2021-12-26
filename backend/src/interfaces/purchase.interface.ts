@@ -1,11 +1,12 @@
-import { IShoppingItem } from './shopping-item.interface';
+import type { IUser } from './user.interface';
+import type { IShoppingItem } from './shopping-item.interface';
 
 export interface IPurchase {
   id: number;
   name?: string;
   price: number;
   buyerId: number;
-  isPaid: boolean;
+  payers: IUser[];
   shoppingItems: IShoppingItem[];
   flatId?: number;
 }

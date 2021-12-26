@@ -3,6 +3,8 @@ import { ShoppingItem } from '../../shopping-item/entities/shopping-item.entity'
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -11,6 +13,15 @@ import type { IPurchase } from '../../interfaces/purchase.interface';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
+
+class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
 
 @Entity()
 export class Purchase implements IPurchase {
@@ -24,19 +35,23 @@ export class Purchase implements IPurchase {
   @Column({ nullable: true })
   name?: string;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
   @Column()
   buyerId: number;
-
   @Exclude()
   @ApiHideProperty()
   @ManyToOne(() => User)
   buyer: User;
 
-  @Column({ default: false })
-  isPaid: boolean;
+  @ManyToMany(() => User, { eager: true })
+  @JoinTable()
+  payers: User[];
 
   @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchase, {
     eager: true,

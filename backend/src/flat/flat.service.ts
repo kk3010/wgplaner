@@ -11,12 +11,14 @@ import { UpdateFlatDto } from './dto/update-flat.dto';
 import { Flat } from './entities/flat.entity';
 import type { IUser } from '../interfaces/user.interface';
 import type { IFlat } from '../interfaces/flat.interface';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class FlatService {
   constructor(
     @InjectRepository(Flat)
     private flatRepository: Repository<Flat>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async create(createFlatDto: CreateFlatDto, creator: IUser) {
@@ -26,12 +28,17 @@ export class FlatService {
 
     const token = randomUUID();
 
-    const flat = this.flatRepository.create({
+    let flat = this.flatRepository.create({
       ...createFlatDto,
       members: [creator],
       invitationToken: token,
     });
-    return this.flatRepository.save(flat);
+    flat = await this.flatRepository.save(flat);
+    this.eventEmitter.emit('flat.join', {
+      userId: creator.id,
+      flatId: flat.id,
+    });
+    return flat;
   }
 
   async findOneById(flatId: number) {
@@ -64,6 +71,11 @@ export class FlatService {
         'User is already a member of the flat',
       );
     }
+
+    this.eventEmitter.emit('flat.join', {
+      userId: user.id,
+      flatId: flat.id,
+    });
 
     await this.flatRepository.save({
       ...flat,

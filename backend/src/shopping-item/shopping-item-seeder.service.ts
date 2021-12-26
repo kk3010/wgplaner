@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ShoppingItemService } from './shopping-item.service';
-import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { generateFakeShoppingItem } from '../../test/shopping-item/shoppingItem.mock';
 
 @Injectable()
 export class ShoppingItemSeederService {

@@ -5,22 +5,29 @@ import { Repository } from 'typeorm';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { Purchase } from './entities/purchase.entity';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class PurchaseService {
   constructor(
     @InjectRepository(Purchase)
     private purchaseRepository: Repository<Purchase>,
+    private walletService: WalletService,
   ) {}
 
-  create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
-    const purchase = this.purchaseRepository.create({
-      ...createPurchaseDto,
+  async create(user: IUser, createPurchaseDto: CreatePurchaseDto) {
+    const { payers, shoppingItems, ...dto } = createPurchaseDto;
+    let purchase = this.purchaseRepository.create({
+      ...dto,
+      payers: payers.map((id) => ({ id })),
+      shoppingItems: shoppingItems.map((id) => ({ id })),
       flatId: user.flatId,
       buyerId: user.id,
     });
 
-    return this.purchaseRepository.save(purchase);
+    purchase = await this.purchaseRepository.save(purchase);
+    await this.updateAllAccounts(purchase);
+    return purchase;
   }
 
   async findOneById(id: number) {
@@ -37,10 +44,45 @@ export class PurchaseService {
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
     const purchase = await this.findOneById(id);
-    await this.purchaseRepository.save({ ...purchase, ...updatePurchaseDto });
+    const payersAsObject = updatePurchaseDto.payers?.map(
+      (id) => ({ id } as IUser),
+    );
+
+    // when the payers have been changed, undo old wallet update and apply with new price and payers
+    if (payersAsObject) {
+      await this.updateAllAccounts(purchase, true);
+      await this.updateAllAccounts({
+        ...purchase,
+        payers: payersAsObject,
+      });
+    }
+
+    await this.purchaseRepository.save({
+      ...purchase,
+      ...updatePurchaseDto,
+      payers: payersAsObject ?? purchase.payers,
+    });
   }
 
-  async remove(id: number) {
-    await this.purchaseRepository.delete(id);
+  async updateAllAccounts(purchase: Purchase, undo = false) {
+    const { price, payers, buyerId, flatId } = purchase;
+    const splitCosts = price / payers.length;
+    const factor = undo ? -1 : 1;
+
+    //Add amount to the wallet of the buyer
+    await this.walletService.updateBalance(
+      { id: buyerId, flatId } as IUser,
+      factor * price,
+    );
+
+    //Remove splittedCosts from the wallets of all payers
+    await Promise.all(
+      payers.map((payer) =>
+        this.walletService.updateBalance(
+          { ...payer, flatId } as IUser,
+          -factor * splitCosts,
+        ),
+      ),
+    );
   }
 }

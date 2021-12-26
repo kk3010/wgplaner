@@ -1,9 +1,29 @@
-import { User } from 'src/user/entities/user.entity';
-import { IWallet } from 'src/interfaces/wallet.interface';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Flat } from 'src/flat/entities/flat.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
+import { User } from '../../user/entities/user.entity';
+import type { IWallet } from '../../interfaces/wallet.interface';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
+import { Flat } from '../../flat/entities/flat.entity';
+import { Exclude } from 'class-transformer';
+
+class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
 
 @Entity()
+@Unique(['userId', 'flatId'])
 export class Wallet implements IWallet {
   constructor(params: Partial<Wallet>) {
     Object.assign(this, params);
@@ -12,12 +32,27 @@ export class Wallet implements IWallet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   balance: number;
 
+  @Column()
+  userId: number;
+
+  @Column()
+  flatId: number;
+
   @OneToOne(() => User)
+  @JoinColumn()
+  @Exclude()
+  @ApiHideProperty()
   user: User;
 
-  @OneToOne(() => Flat)
-  flatId: number;
+  @ManyToOne(() => Flat)
+  @Exclude()
+  @ApiHideProperty()
+  flat: Flat;
 }

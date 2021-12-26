@@ -2,12 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import type { IShoppingItem } from '../interfaces/shopping-item.interface';
 import type { MockType } from '../../test/mockType';
-import { generateFakeUser } from '../../test/user.mock';
+import { generateFakeUser } from '../../test/user/user.mock';
 import { Repository } from 'typeorm';
 import { ShoppingItem } from './entities/shopping-item.entity';
 import { ShoppingItemService } from './shopping-item.service';
-import { generateFakeFlat } from '../../test/flat.mock';
-import { generateFakeShoppingItem } from '../../test/shoppingItem.mock';
+import { generateFakeFlat } from '../../test/flat/flat.mock';
+import { generateFakeShoppingItem } from '../../test/shopping-item/shoppingItem.mock';
 import { BelongsToFlatGuard } from '../flat/belongs-to-flat.guard';
 
 const mockShoppingItemRepositoryFactory: () => MockType<
@@ -56,13 +56,17 @@ describe('ShoppingItemService', () => {
     it('should create a new shopping item', async () => {
       const user = generateFakeUser();
 
-      const expected: Pick<IShoppingItem, 'name' | 'flatId'> = {
+      const expected: Pick<IShoppingItem, 'name' | 'flatId' | 'quantity'> = {
         name: 'Eier',
+        quantity: 1,
         flatId: user.flatId,
       };
 
       expect(
-        await service.create(user.flatId, { name: expected.name }),
+        await service.create(user.flatId, {
+          name: expected.name,
+          quantity: expected.quantity,
+        }),
       ).toEqual(expected);
       expect(repository.create).toHaveBeenCalledWith(expected);
       expect(repository.save).toHaveBeenCalledWith(expected);

@@ -12,17 +12,18 @@ const { user } = useUser()
 const routes: RouteRecordRaw[] = [
   {
     path: '/auth',
-    async beforeEnter() {
-      if (user.value && user.value.flatId)
+    beforeEnter() {
+      if (user.value && user.value.flatId) {
         return {
           path: '/',
         }
-      else if (user.value && !user.value.flatId)
+      }
+      if (user.value && !user.value.flatId) {
         return {
           path: '/flat',
         }
+      }
     },
-    redirect: '/register',
     component: AuthView,
     children: [
       {
@@ -36,10 +37,16 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/flat',
         beforeEnter() {
-          if (!user.value)
+          if (!user.value) {
             return {
               path: '/register',
             }
+          }
+          if (user.value.flatId) {
+            return {
+              path: '/',
+            }
+          }
         },
         component: JoinView,
       },
@@ -47,10 +54,10 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '',
-    async beforeEnter() {
+    beforeEnter() {
       if (!user.value) {
         return {
-          path: '/auth',
+          path: '/register',
         }
       }
     },
