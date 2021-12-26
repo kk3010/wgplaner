@@ -14,12 +14,12 @@ export type RegisterRequest = Pick<IUser, 'email' | 'firstName' | 'lastName' | '
 let accessToken: string | null = null
 let axiosInterceptor: number | null = null
 
-export function useAuth(user: Ref<IUser | undefined>) {
-  // wrapper for access token to make axios always uses the new one
-  const getAccessToken = () => accessToken
-  const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN)
-  const setRefreshToken = (value: string) => localStorage.setItem(REFRESH_TOKEN, value)
+const getAccessToken = () => accessToken
+// wrapper for access token to make axios always uses the new one
+const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN)
+const setRefreshToken = (value: string) => localStorage.setItem(REFRESH_TOKEN, value)
 
+export function useAuth(user: Ref<IUser | undefined>) {
   const setTokens = (data: TokenAuthResponse) => {
     if (data.refresh_token) {
       setRefreshToken(data.refresh_token)
@@ -79,5 +79,5 @@ export function useAuth(user: Ref<IUser | undefined>) {
     user.value = undefined
   }
 
-  return { login, logout, register, addAxiosAuth }
+  return { login, logout, register, addAxiosAuth, getAccessToken }
 }
