@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { ShoppingItemService } from './shopping-item.service';
 import { ShoppingItemDto } from './dto/shopping-item.dto';
@@ -20,6 +22,7 @@ import { User } from '../user/user.decorator';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
 import type { IUser } from '../interfaces/user.interface';
 import { SseService } from '../sse/sse.service';
+import { HttpCode } from '@nestjs/common';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
@@ -58,6 +61,7 @@ export class ShoppingItemController {
   @Patch(':id')
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'update item' })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: number,
     @Body() ShoppingItemDto: ShoppingItemDto,
@@ -68,11 +72,16 @@ export class ShoppingItemController {
   @Delete(':id')
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'delete shopping item' })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@User() user: IUser, @Param('id') id: number) {
-    await this.shoppingItemService.remove(id);
-    this.sseService.emit(user.flatId, 'shopping-item.delete', {
-      id,
-      user: user.id,
-    });
+    try {
+      await this.shoppingItemService.remove(id);
+      this.sseService.emit(user.flatId, 'shopping-item.delete', {
+        id,
+        user: user.id,
+      });
+    } catch (e) {
+      throw new HttpException('item not found', HttpStatus.BAD_REQUEST);
+    }
   }
 }
