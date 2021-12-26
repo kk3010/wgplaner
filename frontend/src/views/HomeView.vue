@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import SideMenu from '@/components/SideMenu.vue'
 import MenuComponent from '@/components/MenuComponent.vue'
 import { useFlat } from '../composables/useFlat'
+import ToastAlert from '@/components/ToastAlert.vue'
 
 const drawerOpen = ref(false)
 const { getFlat } = useFlat()
@@ -22,5 +23,6 @@ onMounted(async () => {
       </div>
     </main>
     <SideMenu @click="drawerOpen = false" />
+    <ToastAlert />
   </div>
 </template>

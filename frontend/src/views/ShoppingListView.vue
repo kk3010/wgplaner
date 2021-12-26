@@ -7,12 +7,14 @@ import { TrashIcon, ShoppingCartIcon } from '@heroicons/vue/outline'
 import CreatePurchase from '@/components/purchases/CreatePurchase.vue'
 import { type CreatePurchase as CreatePurchaseType, usePurchases } from '../composables/usePurchases'
 import { useFlat } from '../composables/useFlat'
+import { useToast } from '../composables/useToast';
 
 const { createItem, deleteItem, fetchItems, shoppingItems, updateItem } = useShoppingItems()
 const { createPurchase } = usePurchases()
 const { flat } = useFlat()
 
 const checked = ref<number[]>([])
+const { notify } = useToast()
 
 onMounted(async () => {
   await fetchItems()
@@ -25,6 +27,7 @@ const handleDelete = async () => {
 const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
   await createPurchase(purchase)
   shoppingItems.value = shoppingItems.value.filter(({ id }) => !purchase.shoppingItems.includes(id))
+  notify('Purchase created', 'success')
 }
 </script>
 
