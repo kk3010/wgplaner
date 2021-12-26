@@ -2,6 +2,7 @@
 import { reactive, ref, toRefs } from 'vue'
 import type { CreatePurchase } from '@/composables/usePurchases'
 import type { IUser } from '@interfaces/user.interface'
+import MembersTable from '../flat/MembersTable.vue'
 
 const props = defineProps<{
   members: IUser[]
@@ -14,11 +15,13 @@ const emit = defineEmits<{
 
 const accept = ref()
 
-const { members, shoppingItems } = toRefs(props)
+const { shoppingItems } = toRefs(props)
+
+const payers = ref<IUser[]>(props.members)
 
 const purchase = reactive({
   name: '',
-  payers: members,
+  payers,
   shoppingItems,
   price: 1,
 })
@@ -36,7 +39,7 @@ const handleSubmit = () => {
           <label for="name" class="form-label">
             <span class="label-text">Name</span>
           </label>
-          <input name="name" type="text" class="input input-bordered" v-model="purchase.name" />
+          <input id="name" name="name" type="text" class="input input-bordered" v-model="purchase.name" />
         </div>
         <div class="form-control">
           <label for="price" class="form-label">
@@ -47,12 +50,19 @@ const handleSubmit = () => {
               min="1"
               step="any"
               name="price"
+              id="price"
               type="number"
               class="input input-bordered"
               v-model.number="purchase.price"
             />
             <span>€</span>
           </label>
+        </div>
+        <div class="form-control">
+          <label for="payers" class="form-label">
+            <span class="label-text">Payers</span>
+          </label>
+          <MembersTable class="w-full" id="payers" :members="members" v-model="payers" />
         </div>
         <div class="modal-action">
           <label ref="accept" for="create-purchase-modal" class="btn btn-primary" @click="handleSubmit">Create</label>
