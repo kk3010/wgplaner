@@ -11,10 +11,12 @@
     "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit --watchAll=false"
   },
   "dependencies": {
+    "@types/event-source-polyfill": "^1.0.0",
     "@vueuse/core": "^7.1.1",
     "axios": "^0.24.0",
     "axios-auth-refresh": "^3.2.1",
     "daisyui": "^1.16.2",
+    "event-source-polyfill": "^1.0.25",
     "theme-change": "^2.0.2",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12"

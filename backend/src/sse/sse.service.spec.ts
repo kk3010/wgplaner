@@ -21,7 +21,7 @@ describe('SseService', () => {
     it('should emit the event via observable on flat channel', (done) => {
       const msg = {};
       const observable = service.sseStream(1);
-      observable.subscribe((data) => {
+      observable.subscribe(({ data }) => {
         expect(data).toEqual({ type: 'test', data: msg });
         done();
       });

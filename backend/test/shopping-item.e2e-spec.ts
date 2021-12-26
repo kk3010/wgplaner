@@ -14,6 +14,7 @@ import { generateFakeShoppingItem } from './shoppingItem.mock';
 import { ShoppingItemDto } from '../src/shopping-item/dto/shopping-item.dto';
 import { registerGlobalPipes } from './registerGlobalPipes';
 import { BelongsToFlatGuard } from '../src/flat/belongs-to-flat.guard';
+import { SseService } from '../src/sse/sse.service';
 
 const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   create: jest.fn(),
@@ -23,11 +24,16 @@ const shoppingItemServiceFactory: () => MockType<ShoppingItemService> = () => ({
   remove: jest.fn(),
 });
 
+const sseServiceFactory: () => MockType<SseService> = () => ({
+  emit: jest.fn(),
+});
+
 describe('Shopping item', () => {
   let app: INestApplication;
   let user: IUser;
   let flat: IFlat;
   let shoppingItemService: MockType<ShoppingItemService>;
+  let sseService: MockType<SseService>;
 
   beforeAll(async () => {
     user = generateFakeUser();
@@ -40,6 +46,10 @@ describe('Shopping item', () => {
           provide: ShoppingItemService,
           useFactory: shoppingItemServiceFactory,
         },
+        {
+          provide: SseService,
+          useFactory: sseServiceFactory,
+        },
       ],
     })
       .overrideGuard(BelongsToFlatGuard)
@@ -47,6 +57,7 @@ describe('Shopping item', () => {
       .compile();
 
     shoppingItemService = moduleRef.get(ShoppingItemService);
+    sseService = moduleRef.get(SseService);
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware(user));
     registerGlobalPipes(app);
@@ -76,7 +87,7 @@ describe('Shopping item', () => {
   });
 
   describe('/POST', () => {
-    it('should create a shopping item', () => {
+    it('should create a shopping item and emit sse event', async () => {
       const body: ShoppingItemDto = {
         name: 'Item',
       };
@@ -87,11 +98,12 @@ describe('Shopping item', () => {
         purchaseId: null,
       };
       jest.spyOn(shoppingItemService, 'create').mockResolvedValue(expected);
-      return request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/shopping-item')
         .send(body)
         .expect(HttpStatus.CREATED)
         .expect(expected);
+      expect(sseService.emit).toHaveBeenCalled();
     });
 
     it('should fail when no name is provided', () => {
@@ -112,7 +124,7 @@ describe('Shopping item', () => {
       return request(app.getHttpServer())
         .patch('/shopping-item/1')
         .send(body)
-        .expect(HttpStatus.OK);
+        .expect(HttpStatus.NO_CONTENT);
     });
 
     it('should fail when no name is provided', () => {
@@ -126,8 +138,18 @@ describe('Shopping item', () => {
   });
 
   describe('/DELETE', () => {
-    it('should delete the shopping item', () => {
-      return request(app.getHttpServer()).del('/shopping-item/1').expect(200);
+    it('should delete the shopping item and emit sse event', async () => {
+      await request(app.getHttpServer())
+        .del('/shopping-item/1')
+        .expect(HttpStatus.NO_CONTENT);
+      expect(sseService.emit).toHaveBeenCalled();
+    });
+
+    it('should fail with 400 Bad Request when item cannot be found', () => {
+      jest.spyOn(shoppingItemService, 'remove').mockRejectedValue(new Error());
+      return request(app.getHttpServer())
+        .del('/shopping-item/1')
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 
