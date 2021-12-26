@@ -18,22 +18,35 @@ import {
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
+import type { IUser } from '../interfaces/user.interface';
+import { SseService } from '../sse/sse.service';
 
 @Controller('shopping-item')
 @ApiTags('shopping-item')
 @SetService(ShoppingItemService)
 @ApiBearerAuth()
 export class ShoppingItemController {
-  constructor(private readonly shoppingItemService: ShoppingItemService) {}
+  constructor(
+    private readonly shoppingItemService: ShoppingItemService,
+    private readonly sseService: SseService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'create shopping item' })
   @ApiNotFoundResponse({ description: 'ShoppingItem could not be found' })
-  create(
-    @User('flatId') flatId: number,
+  async create(
+    @User() user: IUser,
     @Body() createShoppingItemDto: ShoppingItemDto,
   ) {
-    return this.shoppingItemService.create(flatId, createShoppingItemDto);
+    const item = await this.shoppingItemService.create(
+      user.flatId,
+      createShoppingItemDto,
+    );
+    this.sseService.emit(user.flatId, 'shopping-item.create', {
+      item,
+      user: user.firstName,
+    });
+    return item;
   }
 
   @Get()
@@ -55,7 +68,11 @@ export class ShoppingItemController {
   @Delete(':id')
   @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'delete shopping item' })
-  remove(@Param('id') id: number) {
-    return this.shoppingItemService.remove(id);
+  async remove(@User() user: IUser, @Param('id') id: number) {
+    await this.shoppingItemService.remove(id);
+    this.sseService.emit(user.flatId, 'shopping-item.delete', {
+      id,
+      user: user.id,
+    });
   }
 }

@@ -25,7 +25,7 @@ export class SseService {
    */
   sseStream(flatId: number): Observable<MessageEvent> {
     return new Observable((subscriber) => {
-      const handler: ListenerFn = (msg) => subscriber.next(msg);
+      const handler: ListenerFn = (data) => subscriber.next({ data });
       this.eventEmitter.on(['sse', String(flatId)], handler);
       return () =>
         this.eventEmitter.removeListener(['sse', String(flatId)], handler);
