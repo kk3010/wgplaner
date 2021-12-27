@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { reactive, ref, toRefs } from 'vue'
+import { computed, reactive, ref, toRefs } from 'vue'
 import type { CreatePurchase } from '@/composables/usePurchases'
 import type { IUser } from '@interfaces/user.interface'
+import MembersTable from '../flat/MembersTable.vue'
 
 const props = defineProps<{
   members: IUser[]
@@ -14,29 +15,33 @@ const emit = defineEmits<{
 
 const accept = ref()
 
-const { members, shoppingItems } = toRefs(props)
+const { shoppingItems } = toRefs(props)
+
+const payers = ref<number[]>(props.members.map((u) => u.id))
 
 const purchase = reactive({
   name: '',
-  payers: members,
+  payers,
   shoppingItems,
   price: 1,
 })
 
 const handleSubmit = () => {
-  emit('create', { ...purchase, payers: purchase.payers.map(({ id }) => id) })
+  emit('create', purchase)
 }
+
+const submitEnabled = computed(() => payers.value.length > 0)
 </script>
 
 <template>
   <div class="modal">
     <div class="modal-box">
-      <form class="space-y-4" @keydown="$event.key === 'Enter' && accept.click()" @submit.prevent="handleSubmit">
+      <form class="space-y-4" @keydown="$event.key === 'Enter' && submitEnabled && accept.click()">
         <div class="form-control">
           <label for="name" class="form-label">
             <span class="label-text">Name</span>
           </label>
-          <input name="name" type="text" class="input input-bordered" v-model="purchase.name" />
+          <input id="name" name="name" type="text" class="input input-bordered" v-model="purchase.name" />
         </div>
         <div class="form-control">
           <label for="price" class="form-label">
@@ -44,9 +49,10 @@ const handleSubmit = () => {
           </label>
           <label class="input-group">
             <input
-              min="1"
+              min="0"
               step="any"
               name="price"
+              id="price"
               type="number"
               class="input input-bordered"
               v-model.number="purchase.price"
@@ -54,8 +60,22 @@ const handleSubmit = () => {
             <span>€</span>
           </label>
         </div>
+        <div class="form-control">
+          <label for="payers" class="form-label">
+            <span class="label-text">Payers</span>
+          </label>
+          <MembersTable class="w-full" id="payers" :members="members" v-model="payers" />
+        </div>
         <div class="modal-action">
-          <label ref="accept" for="create-purchase-modal" class="btn btn-primary" @click="handleSubmit">Create</label>
+          <label
+            ref="accept"
+            for="create-purchase-modal"
+            class="btn"
+            :class="[submitEnabled ? 'btn-primary' : 'btn-disabled pointer-events-none']"
+            :aria-disabled="!submitEnabled"
+            @click="handleSubmit"
+            >Create</label
+          >
           <label for="create-purchase-modal" class="btn">Close</label>
         </div>
       </form>
