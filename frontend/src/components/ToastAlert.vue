@@ -7,7 +7,7 @@ const { toasts } = useToast()
 
 <template>
   <teleport to="body">
-    <div class="absolute flex flex-col space-y-2 p-2 top-10 right-2 sm:right-4 md:right-8 max-w-xs">
+    <div class="absolute stack p-2 top-10 right-2 sm:right-4 md:right-8 max-w-xs">
       <transition-group name="toasts">
         <div v-for="toast in toasts" :key="toast.id" class="bg-base-100 transition rounded-box">
           <div

@@ -17,7 +17,7 @@ export function useToast() {
     const id = Symbol()
     const toasted = { message, type, id }
     toasts.value.push(toasted)
-    setTimeout(() => removeToast(toasted), 20000)
+    setTimeout(() => removeToast(toasted), 2500)
   }
 
   return { toasts, notify }
