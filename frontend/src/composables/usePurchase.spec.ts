@@ -1,7 +1,7 @@
 import MockAdapter from 'axios-mock-adapter'
 import axios from 'axios'
 import type { IPurchase } from '@interfaces/purchase.interface'
-import { type UpdatePurchase, type CreatePurchase, usePurchases } from './usePurchases'
+import { type UpdatePurchase, type CreatePurchase, type Transfer, usePurchases } from './usePurchases';
 
 const mock = new MockAdapter(axios)
 
@@ -15,7 +15,7 @@ const genPurchase: () => IPurchase = () => ({
   flatId: 1,
 })
 
-const { purchases, createPurchase, fetchPurchases, updatePurchase } = usePurchases()
+const { purchases, createPurchase, fetchPurchases, updatePurchase, transferMoney } = usePurchases()
 
 describe('usePurchases', () => {
   let oldRef: IPurchase[]
@@ -81,6 +81,21 @@ describe('usePurchases', () => {
       mock.onAny().networkError()
       await expect(createPurchase(item)).rejects.toThrow()
       expect(purchases.value).toHaveLength(0)
+    })
+  })
+
+  describe('transferMoney', () => {
+    
+    it('create purchase with other user as payer and no shopping items', async () => {
+      const expected: Transfer = {
+        price: 100,
+        payers: [1],
+      }
+      mock.onPost('/purchase').reply(200, (val: Partial<IPurchase>) => ({ ...genPurchase(), ...val }))
+      await transferMoney(expected.payers[0], expected.price)
+      expect(purchases.value).toHaveLength(1)
+      expect(purchases.value).not.toBe(oldRef)
+
     })
   })
 })
