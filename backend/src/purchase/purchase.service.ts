@@ -20,7 +20,7 @@ export class PurchaseService {
     let purchase = this.purchaseRepository.create({
       ...dto,
       payers: payers.map((id) => ({ id })),
-      shoppingItems: shoppingItems.map((id) => ({ id })),
+      shoppingItems: shoppingItems?.map((id) => ({ id })),
       flatId: user.flatId,
       buyerId: user.id,
     });

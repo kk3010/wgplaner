@@ -7,9 +7,9 @@ export class CreatePurchaseDto {
   price: number;
 
   @IsArray()
-  @ArrayMinSize(1)
   @ArrayUnique()
-  shoppingItems: number[];
+  @ArrayMinSize(1)
+  shoppingItems?: number[];
 
   @IsArray()
   @ArrayMinSize(1)
