@@ -2,6 +2,7 @@
 import { IUser } from '@interfaces/user.interface'
 import { useVModel } from '@vueuse/core'
 import { useUser } from '../../composables/useUser'
+import UserAvatar from '../user/UserAvatar.vue'
 
 const { user } = useUser()
 
@@ -34,11 +35,7 @@ const model = useVModel(props, 'modelValue', emit)
         </th>
         <td class="transition" :class="model.includes(member.id) ? 'bg-neutral-focus' : '!bg-neutral text-gray-400'">
           <div class="flex items-center space-x-2">
-            <div class="avatar placeholder">
-              <div class="bg-neutral-focus text-neutral-content w-12 h-12 mask mask-squircle uppercase">
-                <span>{{ member.firstName[0] + member.lastName[0] }}</span>
-              </div>
-            </div>
+            <UserAvatar :user="member" />
             <div>
               <span class="font-bold">
                 {{ [member.firstName, member.lastName].join(' ') }}
