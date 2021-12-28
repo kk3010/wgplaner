@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useAuth, RegisterRequest } from '@/composables/useAuth'
 import { useUser } from '@/composables/useUser'
 import { useRouter } from 'vue-router'
+import type { AxiosError } from 'axios'
 
 const { user } = useUser()
 const { register } = useAuth(user)
@@ -15,9 +16,15 @@ const formUser = reactive<RegisterRequest>({
   password: '',
 })
 
+const error = ref()
+
 async function handleRegistration() {
-  await register(formUser)
-  await push('/flat')
+  try {
+    await register(formUser)
+    await push('/flat')
+  } catch (e) {
+    error.value = (e as AxiosError)?.response?.data?.message ?? 'Something went wrong'
+  }
 }
 </script>
 
@@ -63,11 +70,14 @@ async function handleRegistration() {
             minlength="8"
           />
         </div>
+        <div class="text-error mb-2" v-if="error">
+          {{ error }}
+        </div>
         <div class="mb-4">
-          <span
-            >I already have an account. Go to
-            <router-link to="/login" class="font-semibold text-green-500">LOGIN</router-link>.</span
-          >
+          <span>
+            Already have an account? Go to
+            <router-link to="/login" class="font-semibold link-accent">LOGIN</router-link>
+          </span>
         </div>
         <div class="justify-end card-actions">
           <button class="btn btn-outline" type="submit">Sign up</button>

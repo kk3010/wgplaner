@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useUser } from '@/composables/useUser'
 import { useRouter } from 'vue-router'
+import type { AxiosError } from 'axios'
 
 const { user } = useUser()
 const { login } = useAuth(user)
@@ -12,9 +13,16 @@ const formUser = reactive({
   email: '',
   password: '',
 })
+
+const error = ref()
+
 async function handleLogin() {
-  await login(formUser.email, formUser.password)
-  await push('/flat')
+  try {
+    await login(formUser.email, formUser.password)
+    await push('/flat')
+  } catch (e) {
+    error.value = (e as AxiosError)?.response?.status === 401 ? 'Wrong Credentials' : 'Something went wrong'
+  }
 }
 </script>
 
@@ -41,6 +49,15 @@ async function handleLogin() {
             placeholder="password"
             type="password"
           />
+        </div>
+        <div class="text-error mb-2" v-if="error">
+          {{ error }}
+        </div>
+        <div>
+          <span>
+            No account yet? Go to
+            <router-link to="/register" class="font-semibold link-accent">REGISTER</router-link>
+          </span>
         </div>
         <div class="justify-end card-actions">
           <button class="btn btn-outline" type="submit">Login</button>
