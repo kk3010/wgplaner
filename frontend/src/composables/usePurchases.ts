@@ -4,14 +4,16 @@ import axios from 'axios'
 
 export type UpdatePurchase = {
   id: number
-  name: string
+  name?: string
   price: number
   payers: number[]
 }
 
-export type CreatePurchase = Omit<UpdatePurchase, 'id'> & {
+export type CreatePurchase = Transfer & {
   shoppingItems: number[]
 }
+
+export type Transfer = Omit<UpdatePurchase, 'id'>
 
 export function usePurchases() {
   const purchases = ref<IPurchase[]>([])
@@ -35,10 +37,16 @@ export function usePurchases() {
     purchases.value = copy
   }
 
-  const createPurchase: (purchase: CreatePurchase) => Promise<void> = async (purchase: CreatePurchase) => {
-    const { data } = await axios.post<never>('/purchase', purchase)
+  const createPurchase: (purchase: Transfer) => Promise<void> = async (purchase) => {
+    const { data } = await axios.post<IPurchase>('/purchase', purchase)
     purchases.value = [...purchases.value, data]
   }
 
-  return { purchases, fetchPurchases, fetchPurchaseById, updatePurchase, createPurchase }
+  const transferMoney: (to: number, amount: number) => Promise<void> = (to, amount) =>
+    createPurchase({
+      payers: [to],
+      price: -amount,
+    })
+
+  return { purchases, fetchPurchases, fetchPurchaseById, updatePurchase, createPurchase, transferMoney }
 }

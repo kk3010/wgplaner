@@ -38,10 +38,15 @@ export class WalletService {
     return this.walletRepository.findOne({ where: { userId, flatId } });
   }
 
+  /**
+   * Update a wallet's balance.
+   * @param user - The user whose wallet we'll be updating
+   * @param value - The amount to add or subtract
+   */
   async updateBalance(user: IUser, value: number) {
-    const wallet = await this.findOneByUserId(user.id, user.flatId);
-    const balance = wallet.balance + value;
-
-    await this.walletRepository.update(wallet.id, { balance });
+    await this.walletRepository.update(
+      { userId: user.id, flatId: user.flatId },
+      { balance: () => `wallet.balance + ${value}` },
+    );
   }
 }

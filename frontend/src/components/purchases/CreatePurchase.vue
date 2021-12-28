@@ -35,7 +35,7 @@ const submitEnabled = computed(() => payers.value.length > 0)
 
 <template>
   <div class="modal">
-    <div class="modal-box">
+    <div class="modal-box max-h-screen overflow-auto">
       <form class="space-y-4" @keydown="$event.key === 'Enter' && submitEnabled && accept.click()">
         <div class="form-control">
           <label for="name" class="form-label">

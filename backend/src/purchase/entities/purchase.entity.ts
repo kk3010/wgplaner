@@ -44,6 +44,7 @@ export class Purchase implements IPurchase {
 
   @Column()
   buyerId: number;
+
   @Exclude()
   @ApiHideProperty()
   @ManyToOne(() => User)
@@ -55,6 +56,7 @@ export class Purchase implements IPurchase {
 
   @OneToMany(() => ShoppingItem, (shoppingItem) => shoppingItem.purchase, {
     eager: true,
+    nullable: true,
   })
   shoppingItems: ShoppingItem[];
 

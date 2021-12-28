@@ -109,18 +109,4 @@ describe('WalletService', () => {
       expect(repository.findOne).toHaveBeenCalled();
     });
   });
-
-  describe('updateBalance', () => {
-    it('sets the new amount to oldAmount + value', async () => {
-      const user = generateFakeUser(1);
-      const wallet = generateFakeWallet(user);
-      jest
-        .spyOn(service, 'findOneByUserId')
-        .mockResolvedValue(wallet as Wallet);
-      await service.updateBalance(user, 100);
-      expect(repository.update).toHaveBeenCalledWith(wallet.id, {
-        balance: wallet.balance + 100,
-      });
-    });
-  });
 });

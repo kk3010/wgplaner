@@ -19,7 +19,7 @@ const model = useVModel(props, 'modelValue', emit)
 </script>
 
 <template>
-  <table class="table">
+  <table class="table table-compact">
     <thead>
       <tr>
         <th></th>
@@ -28,12 +28,18 @@ const model = useVModel(props, 'modelValue', emit)
     </thead>
     <tbody>
       <tr v-for="member in members" :key="member.id">
-        <th class="transition" :class="model.includes(member.id) ? 'bg-neutral-focus' : '!bg-neutral text-gray-400'">
+        <th
+          class="transition"
+          :class="model.includes(member.id) ? 'bg-neutral-focus' : '!bg-base-300 text-base-content'"
+        >
           <label>
             <input type="checkbox" class="checkbox" :value="member.id" v-model="model" />
           </label>
         </th>
-        <td class="transition" :class="model.includes(member.id) ? 'bg-neutral-focus' : '!bg-neutral text-gray-400'">
+        <td
+          class="transition"
+          :class="model.includes(member.id) ? 'bg-neutral-focus' : '!bg-base-300 text-base-content'"
+        >
           <div class="flex items-center space-x-2">
             <UserAvatar :user="member" />
             <div>

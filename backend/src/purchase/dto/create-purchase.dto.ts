@@ -1,4 +1,10 @@
-import { IsNumber, IsArray, ArrayMinSize, ArrayUnique } from 'class-validator';
+import {
+  IsNumber,
+  IsArray,
+  ArrayMinSize,
+  ArrayUnique,
+  IsOptional,
+} from 'class-validator';
 
 export class CreatePurchaseDto {
   name?: string;
@@ -6,10 +12,11 @@ export class CreatePurchaseDto {
   @IsNumber()
   price: number;
 
+  @IsOptional()
   @IsArray()
-  @ArrayMinSize(1)
   @ArrayUnique()
-  shoppingItems: number[];
+  @ArrayMinSize(1)
+  shoppingItems?: number[];
 
   @IsArray()
   @ArrayMinSize(1)
