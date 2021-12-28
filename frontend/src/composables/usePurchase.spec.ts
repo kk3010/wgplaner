@@ -52,7 +52,7 @@ describe('usePurchases', () => {
     })
 
     it('PATCH /purchase/:id and update list', async () => {
-      mock.onPatch('/purchase/' + update.id).reply(200)
+      mock.onPatch('/purchase/' + update.id).reply(204)
       await updatePurchase(update)
       const expected = { ...item, ...update }
       expect(purchases.value).toEqual([expected])
@@ -71,7 +71,7 @@ describe('usePurchases', () => {
   describe('createPurchase', () => {
     const item: CreatePurchase = { name: 'test', payers: [], price: 1, shoppingItems: [] }
     it('POST /purchase and reassign list', async () => {
-      mock.onPost('/purchase').reply(200, (val: Partial<IPurchase>) => ({ ...genPurchase(), ...val }))
+      mock.onPost('/purchase').reply(({ data }) => [201, { ...genPurchase(), ...JSON.parse(data) }])
       await createPurchase(item)
       expect(purchases.value).toHaveLength(1)
       expect(purchases.value).not.toBe(oldRef)
@@ -91,10 +91,10 @@ describe('usePurchases', () => {
         price: 100,
         payers: [1],
       }
-      mock.onPost('/purchase').reply(200, (val: Partial<IPurchase>) => ({ ...genPurchase(), ...val }))
+      mock.onPost('/purchase').reply(({ data }) => [201, { ...genPurchase(), ...JSON.parse(data) }])
       await transferMoney(expected.payers[0], expected.price)
       expect(purchases.value).toHaveLength(1)
-      expect(purchases.value[0].price).toBe(-100)
+      expect(purchases.value[0].price).toBe(-expected.price)
       expect(purchases.value).not.toBe(oldRef)
 
     })

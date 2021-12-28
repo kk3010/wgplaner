@@ -38,7 +38,7 @@ export function usePurchases() {
   }
 
   const createPurchase: (purchase: Transfer) => Promise<void> = async (purchase) => {
-    const { data } = await axios.post<never>('/purchase', purchase)
+    const { data } = await axios.post<IPurchase>('/purchase', purchase)
     purchases.value = [...purchases.value, data]
   }
 

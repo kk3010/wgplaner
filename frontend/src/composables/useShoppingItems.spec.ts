@@ -49,7 +49,7 @@ describe('useShoppingItems', () => {
     })
 
     it('PATCH /shopping-item/:id and update list', async () => {
-      mock.onPatch('/shopping-item/' + item.id).reply(200)
+      mock.onPatch('/shopping-item/' + item.id).reply(204)
       const update = { id: item.id, name: 'new name', quantity: 5 }
       await updateItem(update)
       const expected = { ...item, ...update }
@@ -68,7 +68,7 @@ describe('useShoppingItems', () => {
 
   describe('createItem', () => {
     it('POST /shopping-item and reassign list', async () => {
-      mock.onPost('/shopping-item').reply(200, (val: Partial<IShoppingItem>) => ({ ...genItem(), ...val }))
+      mock.onPost('/shopping-item').reply(({ data }) => [201, { ...genItem(), ...JSON.parse(data) }])
       const item = { name: 'test', quantity: 2 }
       await createItem(item)
       expect(shoppingItems.value).toHaveLength(1)
