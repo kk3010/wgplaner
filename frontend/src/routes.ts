@@ -67,6 +67,10 @@ const routes: RouteRecordRaw[] = [
         path: 'shopping',
         component: ShoppingListView,
       },
+      {
+        path: 'split',
+        component: () => import('./views/SplitView.vue'),
+      },
     ],
   },
 ]

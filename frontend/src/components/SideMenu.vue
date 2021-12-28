@@ -4,7 +4,11 @@ import { useFlat } from '@/composables/useFlat'
 const routes = [
   {
     link: '/shopping',
-    text: 'shopping',
+    text: 'Shopping',
+  },
+  {
+    link: '/split',
+    text: 'Split',
   },
 ]
 
