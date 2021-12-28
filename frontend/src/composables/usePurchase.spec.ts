@@ -86,7 +86,7 @@ describe('usePurchases', () => {
 
   describe('transferMoney', () => {
     
-    it('create purchase with other user as payer and no shopping items', async () => {
+    it('create purchase with negative amount and no shopping items', async () => {
       const expected: Transfer = {
         price: 100,
         payers: [1],
@@ -94,6 +94,7 @@ describe('usePurchases', () => {
       mock.onPost('/purchase').reply(200, (val: Partial<IPurchase>) => ({ ...genPurchase(), ...val }))
       await transferMoney(expected.payers[0], expected.price)
       expect(purchases.value).toHaveLength(1)
+      expect(purchases.value[0].price).toBe(-100)
       expect(purchases.value).not.toBe(oldRef)
 
     })

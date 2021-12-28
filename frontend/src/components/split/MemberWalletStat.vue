@@ -1,16 +1,22 @@
 <script lang="ts" setup>
-import type { IUser } from '@interfaces/user.interface'
-import type { IWallet } from '@interfaces/wallet.interface'
 import UserAvatar from '../user/UserAvatar.vue'
+import { TransitionPresets, useTransition } from '@vueuse/core'
+import type { IUser } from '@interfaces/user.interface'
+import { toRef } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   user: IUser
-  wallet: IWallet
+  balance: number
 }>()
 
 defineEmits<{
   (event: 'payback'): void
 }>()
+
+const balance = useTransition(toRef(props, 'balance'), {
+  duration: 500,
+  transition: TransitionPresets.easeInOutCubic,
+})
 </script>
 
 <template>
@@ -19,8 +25,8 @@ defineEmits<{
       <UserAvatar :user="user" />
     </div>
     <div class="stat-title">{{ user?.firstName }}</div>
-    <div class="stat-value" :class="wallet.balance >= 0 ? 'text-green-600' : 'text-red-700'">
-      {{ wallet.balance.toFixed(2) }}
+    <div class="stat-value" :class="balance >= 0 ? 'text-green-600' : 'text-red-700'">
+      {{ balance.toFixed(2) }}
     </div>
     <div class="stat-actions">
       <slot :user="user" />

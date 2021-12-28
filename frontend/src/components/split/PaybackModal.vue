@@ -17,7 +17,7 @@ const submitEnabled = computed(() => amount.value > 0)
         <label class="label">
           <span class="label-text">Amount</span>
         </label>
-        <input type="text" class="input input-bordered" placeholder="username" v-model="amount" />
+        <input type="text" class="input input-bordered" placeholder="username" v-model.number="amount" />
       </div>
       <div class="modal-action">
         <label

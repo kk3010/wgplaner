@@ -45,7 +45,7 @@ export function usePurchases() {
   const transferMoney: (to: number, amount: number) => Promise<void> = (to, amount) =>
     createPurchase({
       payers: [to],
-      price: amount,
+      price: -amount,
     })
 
   return { purchases, fetchPurchases, fetchPurchaseById, updatePurchase, createPurchase, transferMoney }

@@ -3,16 +3,16 @@ import {
   IsArray,
   ArrayMinSize,
   ArrayUnique,
-  IsPositive,
+  IsOptional,
 } from 'class-validator';
 
 export class CreatePurchaseDto {
   name?: string;
 
   @IsNumber()
-  @IsPositive()
   price: number;
 
+  @IsOptional()
   @IsArray()
   @ArrayUnique()
   @ArrayMinSize(1)
