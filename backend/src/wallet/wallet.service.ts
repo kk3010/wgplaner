@@ -40,21 +40,13 @@ export class WalletService {
 
   /**
    * Update a wallet's balance.
-   * Uses pessimistic locking to prevent race conditions.
    * @param user - The user whose wallet we'll be updating
    * @param value - The amount to add or subtract
    */
   async updateBalance(user: IUser, value: number) {
-    await this.walletRepository.manager.transaction(async (manager) => {
-      const builder = manager
-        .createQueryBuilder(Wallet, 'wallet')
-        .setLock('pessimistic_write');
-      await builder
-        .update(Wallet)
-        .set({ balance: () => `wallet.balance + ${value}` })
-        .where('userId = :id', { id: user.id })
-        .andWhere('flatId = :flat', { flat: user.flatId })
-        .execute();
-    });
+    await this.walletRepository.update(
+      { userId: user.id, flatId: user.flatId },
+      { balance: () => `wallet.balance + ${value}` },
+    );
   }
 }
