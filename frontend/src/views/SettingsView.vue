@@ -35,12 +35,19 @@ const userState = reactive({
 
 <template>
     <div class="flex flex-col items-center w-full max-w-sm mx-auto space-y-4">
-        <UserAvatar class="!w-20 !h-20" :user="user!" />
-        <div class="relative">
+        <UserAvatar class="!w-20 !h-20" :user="userState" />
+        <div class="relative flex flex-col space-y-2 items-center">
             <label for="color" class="btn btn-outline btn-xs">
                 Change Color
             </label>
-            <input type="color" id="color" class="absolute top-0 left-0 invisible opacity-0" :value="userState.color" @change="updateUser({color: userState.color})" @input="setColor">
+            <input type="color" id="color" class="absolute top-0 left-0 invisible opacity-0" v-model="userState.color" @change="updateUser({color: userState.color})" @input="setColor">
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text mr-2  w-12">Dunkel</span>
+                    <input type="checkbox" checked="checked" v-model="userState.textWhite" class="toggle block" @change="updateUser({textWhite: userState.textWhite})">
+                    <span class="label-text ml-2 w-12">Hell</span>
+                </label>
+            </div>
         </div>
         <form @submit.prevent="updateUser({ firstName: userState.firstName })">
             <div class="form-control">
