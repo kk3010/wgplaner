@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, type StyleValue } from 'vue'
 import type { IUser } from '@interfaces/user.interface'
 
 const props = defineProps<{
@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const userStyle = computed(() => ({
   '--user-background': props.user.color,
-}))
+} as StyleValue))
 </script>
 
 <template>

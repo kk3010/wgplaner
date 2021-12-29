@@ -73,9 +73,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('./views/SplitView.vue'),
       },
       {
-        path: "/profile",
+        path: '/profile',
         component: SettingsView,
-      }
+      },
     ],
   },
 ]

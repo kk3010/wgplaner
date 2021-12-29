@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import ThemeDropdown from './ThemeDropdown.vue'
 import { MenuIcon } from '@heroicons/vue/outline'
-import { useUser } from "@/composables/useUser";
-import { useAuth } from "@/composables/useAuth";
-import UserAvatar from "./user/UserAvatar.vue"
-import { useRouter } from 'vue-router';
+import { useUser } from '@/composables/useUser'
+import { useAuth } from '@/composables/useAuth'
+import UserAvatar from './user/UserAvatar.vue'
+import { useRouter } from 'vue-router'
 
 const { user } = useUser()
-const { logout } = useAuth(user);
+const { logout } = useAuth(user)
 const { push } = useRouter()
 
-const  confirmLogout = () =>  {
-  if(window.confirm('Are you sure you want to logout?')) {
+const confirmLogout = () => {
+  if (window.confirm('Are you sure you want to logout?')) {
     logout()
     push('/')
   }
@@ -48,23 +48,25 @@ const  confirmLogout = () =>  {
         <button class="btn btn-square" v-if="user">
           <UserAvatar :user="user" />
         </button>
-        <ul class="mt-16
-        p-2
-        top-px
-        overflow-y-auto
-        shadow
-        menu
-        compact
-        dropdown-content
-        bg-base-100
-        text-base-content
-        rounded-box
-        font-semibold">
-          <li ><router-link to="/profile">Profile</router-link></li>
+        <ul
+          class="
+            mt-16
+            p-2
+            top-px
+            overflow-y-auto
+            shadow
+            menu
+            compact
+            dropdown-content
+            bg-base-100
+            text-base-content
+            rounded-box
+            font-semibold
+          "
+        >
+          <li><router-link to="/profile">Profile</router-link></li>
           <li @click="confirmLogout">
-            <router-link to="">
-              Logout
-            </router-link>
+            <router-link to=""> Logout </router-link>
           </li>
         </ul>
       </div>
