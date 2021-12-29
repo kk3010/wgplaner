@@ -24,7 +24,10 @@ import { RefreshTokensService } from './services/refresh-tokens.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: '60m' },
+        signOptions: {
+          expiresIn:
+            configService.get('NODE_ENV') === 'development' ? '60m' : '5m',
+        },
       }),
     }),
   ],

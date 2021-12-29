@@ -24,6 +24,9 @@ import * as Joi from 'joi';
     ConfigModule.forRoot({
       cache: true,
       validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .default('development'),
         JWT_SECRET: Joi.string().required(),
         FRONTEND_URL: Joi.string().required(),
       }),
