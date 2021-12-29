@@ -1,6 +1,21 @@
 <script setup lang="ts">
 import ThemeDropdown from './ThemeDropdown.vue'
 import { MenuIcon } from '@heroicons/vue/outline'
+import { useUser } from "@/composables/useUser";
+import { useAuth } from "@/composables/useAuth";
+import UserAvatar from "./user/UserAvatar.vue"
+import { useRouter } from 'vue-router';
+
+const { user } = useUser()
+const { logout } = useAuth(user);
+const { push } = useRouter()
+
+const  confirmLogout = () =>  {
+  if(window.confirm('Are you sure you want to logout?')) {
+    logout()
+    push('/')
+  }
+}
 </script>
 
 <template>
@@ -29,12 +44,29 @@ import { MenuIcon } from '@heroicons/vue/outline'
       </div>
 
       <!-- user avatar -->
-      <div class="flex-none">
-        <div class="avatar">
-          <div class="rounded-full w-10 h-10 m-1">
-            <img src="https://i.pravatar.cc/500?img=32" />
-          </div>
-        </div>
+      <div class="flex-none dropdown dropdown-end">
+        <button class="btn btn-square" v-if="user">
+          <UserAvatar :user="user" />
+        </button>
+        <ul class="mt-16
+        p-2
+        top-px
+        overflow-y-auto
+        shadow
+        menu
+        compact
+        dropdown-content
+        bg-base-100
+        text-base-content
+        rounded-box
+        font-semibold">
+          <li ><router-link to="/profile">Profile</router-link></li>
+          <li @click="confirmLogout">
+            <router-link to="">
+              Logout
+            </router-link>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
