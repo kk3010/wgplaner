@@ -1,4 +1,4 @@
-import { IsOptional, IsHexColor } from "class-validator";
+import { IsOptional, IsHexColor, IsBoolean } from 'class-validator';
 import { PartialType, OmitType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
@@ -7,5 +7,9 @@ export class UpdateUserDto extends PartialType(
 ) {
   @IsOptional()
   @IsHexColor()
-  color?: string
+  color?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  textColor?: boolean;
 }

@@ -36,5 +36,8 @@ export class User implements IUser {
   flat?: Flat;
 
   @Column({ nullable: true })
-  color?: string
+  color?: string;
+
+  @Column({ nullable: true })
+  textWhite?: boolean;
 }

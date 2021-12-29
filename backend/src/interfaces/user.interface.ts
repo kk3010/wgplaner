@@ -5,5 +5,6 @@ export interface IUser {
   email: string;
   password: string;
   flatId?: number | null;
-  color?: string
+  color?: string;
+  textWhite?: boolean;
 }
