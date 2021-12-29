@@ -43,7 +43,7 @@ const handlePayback = async (amount: number) => {
 
 <template>
   <div class="flex flex-col">
-    <div v-if="userBalance" class="mb-4">
+    <div v-if="userBalance !== undefined" class="mb-4">
       <h2 class="text-xl font-bold mb-4">My Balance</h2>
       <div class="text-6xl md:text-8xl text-center" :class="userBalance >= 0 ? 'text-green-600' : 'text-red-700'">
         {{ userBalance.toFixed(2) }}
