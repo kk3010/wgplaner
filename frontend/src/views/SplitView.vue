@@ -3,6 +3,7 @@ import { useWallets } from '@/composables/useWallet'
 import { onMounted, computed, ref } from 'vue'
 import { usePurchases } from '../composables/usePurchases'
 import MemberWalletStat from '@/components/split/MemberWalletStat.vue'
+import Spending from '@/components/split/Spending.vue'
 import { useFlat } from '../composables/useFlat'
 import { useUser } from '../composables/useUser'
 import PaybackModal from '@/components/split/PaybackModal.vue'
@@ -11,9 +12,11 @@ import { TransitionPresets, useTransition } from '@vueuse/core'
 const { user } = useUser()
 const { flat } = useFlat()
 const { wallets, fetchWallets } = useWallets()
-const { transferMoney } = usePurchases()
+const { purchases, fetchPurchases, transferMoney } = usePurchases()
 
 onMounted(async () => await fetchWallets())
+onMounted(async () => await fetchPurchases())
+console.log(purchases)
 
 const memberWallets = computed(() => {
   const members = flat.value?.members
@@ -69,6 +72,19 @@ const handlePayback = async (amount: number) => {
           <input type="checkbox" id="payback-modal" class="modal-toggle" />
           <PaybackModal @submit="handlePayback" />
         </MemberWalletStat>
+      </div>
+    </div>
+    <div>
+      <h2 class="text-xl font-bold my-4">All Purchases</h2>
+      <div class="stats w-full shadow grid-flow-row md:grid-flow-col">
+        <Spending
+          v-for="purchase in purchases"
+          :key="purchase.id"
+          :balance="purchase.price"
+          :purchase="purchase"
+          :user="purchase.payers[0]"
+        >
+        </Spending>
       </div>
     </div>
   </div>
