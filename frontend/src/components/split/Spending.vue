@@ -1,32 +1,22 @@
 <script lang="ts" setup>
 import UserAvatar from '../user/UserAvatar.vue'
-import { TransitionPresets, useTransition } from '@vueuse/core'
-import type { IUser } from '@interfaces/user.interface'
-import { toRef } from 'vue'
 import { IPurchase } from '@interfaces/purchase.interface'
 
-const props = defineProps<{
-  user: IUser
-  balance: number
+defineProps<{
   purchase: IPurchase
 }>()
-
-const balance = useTransition(toRef(props, 'balance'), {
-  duration: 500,
-  transition: TransitionPresets.easeInOutCubic,
-})
 </script>
 
 <template>
-  <div class="card shadow-lg collapse collapse-arrow">
+  <div class="card shadow-lg collapse collapse-arrow col-span-1">
     <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium flex-row">
+    <div class="collapse-title text-xl font-medium">
       <h2 class="card-title">{{ purchase.name }}</h2>
-      <span class="badge badge-outline mb-2" v-if="purchase.shoppingItems?.length > 0">Purchase</span>
-      <span class="badge badge-outline mb-2" v-else>Transaction</span>
+      <span class="badge badge-outline mb-4" v-if="purchase.shoppingItems?.length > 0">Purchase</span>
+      <span class="badge badge-outline mb-4" v-else>Transaction</span>
       <div class="ml-0">
-        <div class="stat-value" :class="balance <= 0 ? 'text-green-600' : 'text-red-700'">
-          {{ -balance.toFixed(2) }} €
+        <div class="stat-value" :class="purchase.price <= 0 ? 'text-green-600' : 'text-red-700'">
+          {{ purchase.price.toFixed(2) }} €
         </div>
       </div>
     </div>
@@ -35,7 +25,7 @@ const balance = useTransition(toRef(props, 'balance'), {
       <UserAvatar class="m-1" v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
       <br />
       <br />
-      <h3 class="card-title">Purchased Items:</h3>
+      <h3 class="card-title" v-if="purchase.shoppingItems?.length > 0">Purchased Items:</h3>
       <p v-for="item in purchase.shoppingItems" :key="item.id">{{ item.name }}</p>
     </div>
   </div>

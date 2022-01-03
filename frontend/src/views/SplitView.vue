@@ -1,22 +1,26 @@
 <script lang="ts" setup>
 import { useWallets } from '@/composables/useWallet'
 import { onMounted, computed, ref } from 'vue'
-import { usePurchases } from '../composables/usePurchases'
 import MemberWalletStat from '@/components/split/MemberWalletStat.vue'
 import Spending from '@/components/split/Spending.vue'
 import { useFlat } from '../composables/useFlat'
 import { useUser } from '../composables/useUser'
 import PaybackModal from '@/components/split/PaybackModal.vue'
 import { TransitionPresets, useTransition } from '@vueuse/core'
+import AddButton from '@/components/AddButton.vue'
+import { CashIcon } from '@heroicons/vue/outline'
+import CreatePurchase from '@/components/purchases/CreatePurchase.vue'
+import { type CreatePurchase as CreatePurchaseType, usePurchases } from '../composables/usePurchases'
+import { useToast } from '../composables/useToast';
 
 const { user } = useUser()
 const { flat } = useFlat()
 const { wallets, fetchWallets } = useWallets()
-const { purchases, fetchPurchases, transferMoney } = usePurchases()
+const { purchases, createPurchase, fetchPurchases, transferMoney } = usePurchases()
+const { notify } = useToast()
 
 onMounted(async () => await fetchWallets())
 onMounted(async () => await fetchPurchases())
-console.log(purchases)
 
 const memberWallets = computed(() => {
   const members = flat.value?.members
@@ -41,6 +45,13 @@ const paybackUser = ref<number>()
 const handlePayback = async (amount: number) => {
   await transferMoney(paybackUser.value!, amount)
   await fetchWallets()
+}
+
+const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
+  await createPurchase(purchase).then(() => {
+    fetchPurchases()
+  })
+  notify('Purchase created', 'success')
 }
 </script>
 
@@ -76,16 +87,24 @@ const handlePayback = async (amount: number) => {
     </div>
     <div>
       <h2 class="text-xl font-bold my-4">All Purchases</h2>
-      <div class="stats w-full shadow grid-flow-row md:grid-flow-col">
-        <Spending
-          v-for="purchase in purchases"
-          :key="purchase.id"
-          :balance="purchase.price"
-          :purchase="purchase"
-          :user="purchase.payers[0]"
-        >
-        </Spending>
+      <div class="stats w-full shadow grid-flow-row md:grid-flow-col gap-5">
+        <Spending v-for="purchase in purchases" :key="purchase.id" :purchase="purchase"> </Spending>
       </div>
     </div>
   </div>
+  <teleport to="body">
+    <transition name="scale">
+      <AddButton class="z-10">
+        <label
+          for="create-purchase-modal"
+          class="btn btn-circle btn-secondary modal-button mb-2"
+          title="create purchase"
+        >
+          <CashIcon class="h-6 w-6" />
+        </label>
+        <input type="checkbox" id="create-purchase-modal" class="modal-toggle" />
+        <CreatePurchase v-if="flat" @create="handleCreatePurchase" :members="flat.members" />
+      </AddButton>
+    </transition>
+  </teleport>
 </template>
