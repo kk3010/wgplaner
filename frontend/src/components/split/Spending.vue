@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="card shadow-lg collapse collapse-arrow col-span-1">
+  <div class="card shadow-lg collapse collapse-arrow col-span-1 w-full">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       <h2 class="card-title">{{ purchase.name }}</h2>
