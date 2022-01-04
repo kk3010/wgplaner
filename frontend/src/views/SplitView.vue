@@ -48,9 +48,8 @@ const handlePayback = async (amount: number) => {
 }
 
 const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
-  await createPurchase(purchase).then(() => {
-    fetchPurchases()
-  })
+  await createPurchase(purchase)
+  await fetchPurchases()
   notify('Purchase created', 'success')
 }
 </script>
@@ -87,7 +86,7 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
     </div>
     <div>
       <h2 class="text-xl font-bold my-4">All Purchases</h2>
-      <div class="stats w-full shadow grid-flow-row md:grid-flow-col gap-5 flex flex-wrap">
+      <div class="stats w-full grid-flow-row md:grid-flow-col gap-5 flex flex-wrap">
         <Spending v-for="purchase in purchases" :key="purchase.id" :purchase="purchase"> </Spending>
       </div>
     </div>

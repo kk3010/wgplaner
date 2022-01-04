@@ -12,8 +12,10 @@ defineProps<{
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       <h2 class="card-title">{{ purchase.name }}</h2>
-      <span class="badge badge-outline mb-4" v-if="purchase.shoppingItems?.length > 0">Purchase</span>
-      <span class="badge badge-outline mb-4" v-else>Transaction</span>
+      <span class="badge badge-outline mb-4" v-if="purchase.shoppingItems && purchase.shoppingItems.length > 0"
+        >Purchase</span
+      >
+      <span class="badge badge-outline mb-4" v-else>Spending</span>
       <div class="ml-0">
         <div class="stat-value" :class="purchase.price <= 0 ? 'text-green-600' : 'text-red-700'">
           {{ purchase.price.toFixed(2) }} €
@@ -22,11 +24,13 @@ defineProps<{
     </div>
     <div class="collapse-content">
       <h3 class="card-title">Payers:</h3>
-      <UserAvatar class="m-1" v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
-      <br />
-      <br />
-      <h3 class="card-title" v-if="purchase.shoppingItems?.length > 0">Purchased Items:</h3>
-      <p v-for="item in purchase.shoppingItems" :key="item.id">{{ item.name }}</p>
+      <div class="mb-6" v-if="purchase.payers && purchase.payers.length > 0">
+        <UserAvatar class="m-1" v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
+      </div>
+      <div class="mb-3">
+        <h3 class="card-title" v-if="purchase.shoppingItems && purchase.shoppingItems.length > 0">Purchased Items:</h3>
+        <p v-for="item in purchase.shoppingItems" :key="item.id">{{ item.quantity }}x {{ item.name }}</p>
+      </div>
     </div>
   </div>
 </template>
