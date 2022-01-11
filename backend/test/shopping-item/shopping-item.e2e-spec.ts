@@ -119,15 +119,16 @@ describe('Shopping item', () => {
   });
 
   describe('/PATCH', () => {
-    it('should update the shopping item name', () => {
+    it('should update the shopping item name', async () => {
       const body: UpdateShoppingItemDto = {
         name: 'Updated Item',
       };
 
-      return request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch('/shopping-item/1')
         .send(body)
         .expect(HttpStatus.NO_CONTENT);
+      expect(sseService.emit).toHaveBeenCalled();
     });
   });
 

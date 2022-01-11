@@ -4,7 +4,7 @@ import { FlatController } from './flat.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Flat } from './entities/flat.entity';
 import { FlatSeederService } from './flat-seeder.service';
-import { SseService } from 'src/sse/sse.service';
+import { SseService } from '../sse/sse.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Flat])],

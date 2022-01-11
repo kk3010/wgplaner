@@ -61,9 +61,11 @@ export class ShoppingItemController {
   @ApiOperation({ summary: 'update item' })
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
+    @User() user: IUser,
     @Param('id') id: number,
     @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
+    this.sseService.emit(user, 'shopping-item.update', { id });
     await this.shoppingItemService.update(id, ShoppingItemDto);
   }
 

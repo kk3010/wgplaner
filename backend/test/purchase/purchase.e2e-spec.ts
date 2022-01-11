@@ -15,6 +15,7 @@ import { PurchaseController } from '../../src/purchase/purchase.controller';
 import { CreatePurchaseDto } from '../../src/purchase/dto/create-purchase.dto';
 import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
 import { generateFakePurchase } from './purchase.mock';
+import { SseService } from '../../src/sse/sse.service';
 
 const purchaseServiceFactory: () => MockType<PurchaseService> = () => ({
   create: jest.fn(),
@@ -25,11 +26,16 @@ const purchaseServiceFactory: () => MockType<PurchaseService> = () => ({
   remove: jest.fn(),
 });
 
+const sseServiceFactory: () => MockType<SseService> = () => ({
+  emit: jest.fn(),
+});
+
 describe('Purchase', () => {
   let app: INestApplication;
   let user: IUser;
   let flat: IFlat;
   let purchaseService: MockType<PurchaseService>;
+  let sseService: MockType<SseService>;
 
   beforeAll(async () => {
     user = generateFakeUser();
@@ -42,12 +48,17 @@ describe('Purchase', () => {
           provide: PurchaseService,
           useFactory: purchaseServiceFactory,
         },
+        {
+          provide: SseService,
+          useFactory: sseServiceFactory,
+        },
       ],
     })
       .overrideGuard(BelongsToFlatGuard)
       .useValue({ canActivate: () => true })
       .compile();
     purchaseService = moduleRef.get(PurchaseService);
+    sseService = moduleRef.get(SseService);
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware(user));
     registerGlobalPipes(app);
@@ -59,7 +70,7 @@ describe('Purchase', () => {
   });
 
   describe('/POST', () => {
-    it('should create a purchase', () => {
+    it('should create a purchase', async () => {
       const shoppingItems = [
         generateFakeShoppingItem(flat.id, 1),
         generateFakeShoppingItem(flat.id, 1),
@@ -82,11 +93,12 @@ describe('Purchase', () => {
       };
 
       jest.spyOn(purchaseService, 'create').mockResolvedValue(expected);
-      return request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/purchase')
         .send(body)
         .expect(HttpStatus.CREATED)
         .expect(expected);
+      expect(sseService.emit).toHaveBeenCalled();
     });
   });
 

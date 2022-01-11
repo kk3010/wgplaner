@@ -14,7 +14,7 @@ import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { IUser } from '../interfaces/user.interface';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
-import { SseService } from 'src/sse/sse.service';
+import { SseService } from '../sse/sse.service';
 
 @ApiBearerAuth()
 @ApiTags('purchase')
@@ -23,20 +23,20 @@ import { SseService } from 'src/sse/sse.service';
 export class PurchaseController {
   constructor(
     private readonly purchaseService: PurchaseService,
-    private readonly sseService: SseService
-    ) {}
+    private readonly sseService: SseService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'create new purchase with items' })
   async create(
-    @User() user: IUser, 
-    @Body() createPurchaseDto: CreatePurchaseDto) {
+    @User() user: IUser,
+    @Body() createPurchaseDto: CreatePurchaseDto,
+  ) {
     const purchase = await this.purchaseService.create(user, createPurchaseDto);
-    this.sseService.emit(user.flatId, 'purchase.crate',{
+    this.sseService.emit(user, 'purchase.create', {
       purchase,
-      user: user.firstName,
     });
-    return purchase
+    return purchase;
   }
 
   @Get(':id')
@@ -62,10 +62,9 @@ export class PurchaseController {
     @Body() updatePurchaseDto: UpdatePurchaseDto,
   ) {
     const purchase = await this.purchaseService.update(id, updatePurchaseDto);
-    this.sseService.emit(user.flatId, 'purchse.update',{
+    this.sseService.emit(user, 'purchase.update', {
       purchase,
-      user: user.firstName
-    })
-    return purchase
+    });
+    return purchase;
   }
 }
