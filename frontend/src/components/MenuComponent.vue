@@ -45,7 +45,7 @@ const confirmLogout = () => {
 
       <!-- user avatar -->
       <div class="flex-none dropdown dropdown-end">
-        <button class="btn btn-square" v-if="user">
+        <button class="btn btn-square btn-ghost rounded" v-if="user">
           <UserAvatar :user="user" />
         </button>
         <ul

@@ -42,7 +42,7 @@ const userState = reactive({
       />
       <div class="form-control">
         <label class="label cursor-pointer">
-          <span class="label-text mr-2 w-12">Dunkel</span>
+          <span class="label-text mr-2 w-12">Dark</span>
           <input
             type="checkbox"
             checked="checked"
@@ -50,7 +50,7 @@ const userState = reactive({
             class="toggle block"
             @change="updateUser({ textWhite: userState.textWhite })"
           />
-          <span class="label-text ml-2 w-12">Hell</span>
+          <span class="label-text ml-2 w-12">Light</span>
         </label>
       </div>
     </div>
