@@ -34,4 +34,10 @@ export class User implements IUser {
   @ApiHideProperty()
   @ManyToOne(() => Flat, (flat) => flat.members, { onDelete: 'SET NULL' })
   flat?: Flat;
+
+  @Column({ nullable: true })
+  color?: string;
+
+  @Column({ nullable: true })
+  textWhite?: boolean;
 }

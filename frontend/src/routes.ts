@@ -5,6 +5,7 @@ import ShoppingListView from './views/ShoppingListView.vue'
 import RegisterView from './views/RegisterView.vue'
 import LoginView from './views/LoginView.vue'
 import JoinView from './views/JoinView.vue'
+import SettingsView from './views/SettingsView.vue'
 
 import { useUser } from './composables/useUser'
 const { user } = useUser()
@@ -70,6 +71,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'split',
         component: () => import('./views/SplitView.vue'),
+      },
+      {
+        path: '/profile',
+        component: SettingsView,
       },
     ],
   },
