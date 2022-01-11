@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useFlat } from '@/composables/useFlat'
+import type { IUser } from '@interfaces/user.interface'
 
-const { flat } = useFlat()
-const members = flat.value?.members
-members?.forEach((member) => {
-  console.log(member.firstName)
-})
+defineProps<{
+  members: IUser[]
+}>()
 </script>
 
 <template>
