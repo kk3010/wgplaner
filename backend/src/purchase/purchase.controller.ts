@@ -47,7 +47,6 @@ export class PurchaseController {
   }
 
   @Get()
-  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'find all purchases in the flat' })
   findAll(@User('flatId') flatId: number) {
     return this.purchaseService.findAll(flatId);
