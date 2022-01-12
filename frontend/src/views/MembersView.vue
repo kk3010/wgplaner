@@ -2,6 +2,7 @@
 import MembersComponent from '@/components/MembersComponent.vue'
 import { useFlat } from '@/composables/useFlat'
 import { watchEffect } from 'vue'
+import InvitationToken from '@/components/flat/InvitationToken.vue'
 
 const { flat } = useFlat()
 
@@ -13,7 +14,8 @@ watchEffect(() =>
 </script>
 
 <template>
-  <div class="-space-x-5 avatar-group">
+  <div>
     <MembersComponent v-if="flat" :members="flat.members" />
+    <InvitationToken />
   </div>
 </template>
