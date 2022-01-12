@@ -14,8 +14,8 @@ export function useShoppingItems() {
 
   useSse<{ item: IShoppingItem }>({
     'shopping-item.update': (msg) => {
-      // TODO handle edit shoppingItems
-      console.log(msg)
+      const index = shoppingItems.value.findIndex(({ id }) => id === msg.item.id)
+      shoppingItems.value.splice(index, 1, { ...shoppingItems.value[index], ...msg.item })
     },
     'shopping-item.create': (msg) => {
       console.log(msg)

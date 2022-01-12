@@ -65,8 +65,8 @@ export class ShoppingItemController {
     @Param('id') id: number,
     @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
-    this.sseService.emit(user, 'shopping-item.update', { id });
     await this.shoppingItemService.update(id, ShoppingItemDto);
+    this.sseService.emit(user, 'shopping-item.update', { id, ...ShoppingItemDto });
   }
 
   @Delete(':id')
