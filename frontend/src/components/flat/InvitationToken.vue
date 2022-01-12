@@ -25,7 +25,7 @@ const copy = async () => {
       <p class="pr-16 input flex flex-auto items-center input-primary font-bold uppercase input-bordered">
         {{ flat?.invitationToken }}
       </p>
-      <button @click="copy" class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+      <button @click="copy" title="Copy to clipboard" class="absolute top-0 right-0 rounded-l-none btn btn-primary">
         {{ copied ? 'Copied' : 'Copy' }}
       </button>
     </div>
