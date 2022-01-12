@@ -10,10 +10,6 @@ const routes = [
     link: '/split',
     text: 'Split',
   },
-  {
-    link: '/members',
-    text: 'members',
-  },
 ]
 
 const { flat } = useFlat()
