@@ -11,10 +11,18 @@ import type { IUser } from '../../src/interfaces/user.interface';
 import { generateFakeUser } from '../user/user.mock';
 import { CreateFlatDto } from '../../src/flat/dto/create-flat.dto';
 import { registerGlobalPipes } from '../registerGlobalPipes';
+import { SseService } from '../../src/sse/sse.service';
+import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
+import { UpdateFlatDto } from '../../src/flat/dto/update-flat.dto';
 
 const flatServiceFactory: () => MockType<FlatService> = () => ({
   create: jest.fn(),
+  updateName: jest.fn(),
   findOneById: jest.fn(),
+});
+
+const sseServiceFactory: () => MockType<SseService> = () => ({
+  emit: jest.fn(),
 });
 
 describe('Flat', () => {
@@ -22,6 +30,7 @@ describe('Flat', () => {
   let user: IUser;
   let flat: IFlat;
   let flatService: MockType<FlatService>;
+  let sseService: MockType<SseService>;
 
   beforeAll(async () => {
     user = generateFakeUser();
@@ -34,9 +43,17 @@ describe('Flat', () => {
           provide: FlatService,
           useFactory: flatServiceFactory,
         },
+        {
+          provide: SseService,
+          useFactory: sseServiceFactory,
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(BelongsToFlatGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     flatService = moduleRef.get(FlatService);
+    sseService = moduleRef.get(SseService);
     app = moduleRef.createNestApplication();
     app.use(createMockUserMiddleware(user));
     registerGlobalPipes(app);
@@ -81,19 +98,24 @@ describe('Flat', () => {
     });
   });
 
-  // TODO integrate guard for belongs to flat
-  // describe('/PATCH', () => {
-  //   it('should update the shopping item name', () => {
-  //     const body: UpdateFlatDto = {
-  //       name: 'Updated Flat',
-  //     };
+  describe('/PATCH', () => {
+    it('should update the shopping item name', async () => {
+      const body: UpdateFlatDto = {
+        name: 'Updated Flat',
+      };
 
-  //     return request(app.getHttpServer())
-  //       .patch(`/flat/${flat.id}`)
-  //       .send(body)
-  //       .expect(200);
-  //   });
-  // });
+      const expected: IFlat = { ...flat, name: body.name };
+
+      jest.spyOn(flatService, 'updateName').mockResolvedValue(expected);
+
+      await request(app.getHttpServer())
+        .patch(`/flat`)
+        .send(body)
+        .expect(HttpStatus.OK)
+        .expect(expected);
+      expect(sseService.emit).toHaveBeenCalled();
+    });
+  });
 
   afterAll(async () => {
     await app.close();

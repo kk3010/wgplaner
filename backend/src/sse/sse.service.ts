@@ -3,6 +3,7 @@ import type { MessageEvent } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import type { ListenerFn } from 'eventemitter2';
 import { Observable } from 'rxjs';
+import type { IUser } from '../interfaces/user.interface';
 
 @Injectable()
 export class SseService {
@@ -10,12 +11,15 @@ export class SseService {
 
   /**
    * Emit an event for the flat.
-   * @param flatId - The flat to publish this event for
+   * @param user - The user that triggered the event
    * @param eventName - The name used to identify the event
    * @param data - The message to be sent, will be converted via JSON.parse when it is an object
    */
-  emit(flatId: number, eventName: string, data: string | object) {
-    this.eventEmitter.emit(['sse', String(flatId)], { type: eventName, data });
+  emit(user: IUser, eventName: string, data: object) {
+    this.eventEmitter.emit(['sse', String(user.flatId)], {
+      type: eventName,
+      data: { ...data, user },
+    });
   }
 
   /**

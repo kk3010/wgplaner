@@ -10,7 +10,7 @@ COPY package*.json ./
 RUN npm install
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
-# COPY . .
+COPY . .
 
 EXPOSE 5000
 CMD [ "npm", "run", "start:dev" ]

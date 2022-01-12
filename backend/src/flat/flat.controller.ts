@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { FlatService } from './flat.service';
 import { CreateFlatDto } from './dto/create-flat.dto';
@@ -20,12 +21,16 @@ import {
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
 import type { IUser } from '../interfaces/user.interface';
+import { SseService } from '../sse/sse.service';
 
 @Controller('flat')
 @ApiTags('flat')
 @ApiBearerAuth()
 export class FlatController {
-  constructor(private readonly flatService: FlatService) {}
+  constructor(
+    private readonly flatService: FlatService,
+    private readonly sseService: SseService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'create flat' })
@@ -42,33 +47,52 @@ export class FlatController {
 
   @Patch()
   @ApiOperation({ summary: 'update flat name' })
-  async update(
-    @User('flatId') flatId: number,
-    @Body() updateFlatDto: UpdateFlatDto,
-  ) {
-    await this.flatService.updateName(flatId, updateFlatDto);
+  async update(@User() user: IUser, @Body() updateFlatDto: UpdateFlatDto) {
+    console.log('user', user);
+    console.log('ID', user.flatId);
+    const flat = await this.flatService.updateName(user.flatId, updateFlatDto);
+    this.sseService.emit(user, 'flat.update', {
+      flat,
+    });
+
+    return flat;
   }
 
   @Delete()
   @ApiOperation({ summary: 'delete flat' })
-  async remove(@User('flatId') flatId: number) {
-    await this.flatService.remove(flatId);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@User() user: IUser) {
+    try {
+      await this.flatService.remove(user.flatId);
+      this.sseService.emit(user, 'flat.delete', {
+        flat: user.flatId,
+      });
+    } catch (e) {
+      throw new HttpException('flat not found', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('join/:token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'join a flat' })
-  addMember(@User() user: IUser, @Param('token') token: string) {
-    return this.flatService.addMember(token, user);
+  async addMember(@User() user: IUser, @Param('token') token: string) {
+    const flat = await this.flatService.addMember(token, user);
+    this.sseService.emit(user, 'flat.memberJoined', {
+      flat,
+    });
+    return flat;
   }
 
   @Delete('user/:userToRemoveId')
   @ApiOperation({ summary: 'remove user from flat' })
   async removeUser(
-    @User('flatId') flatId: number,
+    @User() user: IUser,
     @Param('userToRemoveId') userToRemoveId: number,
   ) {
-    const flat = await this.flatService.findOneById(flatId);
+    let flat = await this.flatService.findOneById(user.flatId);
     await this.flatService.removeMember(flat, userToRemoveId);
+    this.sseService.emit(user, 'flat.memberRemoved', {
+      userToRemoveId,
+    });
   }
 }

@@ -46,10 +46,7 @@ export class ShoppingItemController {
       user.flatId,
       createShoppingItemDto,
     );
-    this.sseService.emit(user.flatId, 'shopping-item.create', {
-      item,
-      user: user.firstName,
-    });
+    this.sseService.emit(user, 'shopping-item.create', { item });
     return item;
   }
 
@@ -64,9 +61,11 @@ export class ShoppingItemController {
   @ApiOperation({ summary: 'update item' })
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
+    @User() user: IUser,
     @Param('id') id: number,
     @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
+    this.sseService.emit(user, 'shopping-item.update', { id });
     await this.shoppingItemService.update(id, ShoppingItemDto);
   }
 
@@ -77,10 +76,7 @@ export class ShoppingItemController {
   async remove(@User() user: IUser, @Param('id') id: number) {
     try {
       await this.shoppingItemService.remove(id);
-      this.sseService.emit(user.flatId, 'shopping-item.delete', {
-        id,
-        user: user.id,
-      });
+      this.sseService.emit(user, 'shopping-item.delete', { id });
     } catch (e) {
       throw new HttpException('item not found', HttpStatus.BAD_REQUEST);
     }
