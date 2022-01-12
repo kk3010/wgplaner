@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { IFlat } from '@interfaces/flat.interface'
 import axios from 'axios'
+import { useSse } from './useSse'
 
 const flat = ref<IFlat>()
 
@@ -25,6 +26,11 @@ export function useFlat() {
       return
     }
     await axios.patch('/flat', { name: n })
+    useSse({
+      'flat.update': (msg: any) => {
+        console.log(msg)
+      },
+    })
     flat.value = { ...flat.value, ...{ name: n } }
   }
 

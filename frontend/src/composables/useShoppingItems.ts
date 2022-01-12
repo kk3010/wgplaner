@@ -1,12 +1,33 @@
 import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 import { ref } from 'vue'
 import axios from 'axios'
+import { useSse } from './useSse'
+import { useToast } from './useToast'
 
 export type UpdateShoppingItem = Pick<IShoppingItem, 'id' | 'name' | 'quantity'>
 export type NewShoppingItem = Omit<UpdateShoppingItem, 'id'>
 
 export function useShoppingItems() {
   const shoppingItems = ref<IShoppingItem[]>([])
+
+  const { notify } = useToast()
+
+  useSse<{ item: IShoppingItem }>({
+    'shopping-item.update': (msg) => {
+      // TODO handle edit shoppingItems
+      console.log(msg)
+    },
+    'shopping-item.create': (msg) => {
+      console.log(msg)
+      shoppingItems.value.push(msg.item)
+      notify(`${msg.user.firstName} added a shopping item`)
+    },
+    'shopping-item.delete': (msg) => {
+      const index = shoppingItems.value.findIndex((el) => el.id === msg.item.id)
+      shoppingItems.value.splice(index, 1)
+      notify(`${msg.user.firstName} deleted a shopping item`)
+    },
+  })
 
   const fetchItems: () => Promise<void> = async () => {
     const { data } = await axios.get<IShoppingItem[]>('/shopping-item')
