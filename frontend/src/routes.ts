@@ -82,7 +82,7 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
     children: [
       {
-        path: 'members',
+        path: '',
         component: MembersView,
       },
       {
