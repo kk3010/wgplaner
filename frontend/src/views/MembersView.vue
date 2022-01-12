@@ -14,8 +14,18 @@ watchEffect(() =>
 </script>
 
 <template>
-  <div>
-    <MembersComponent v-if="flat" :members="flat.members" />
-    <InvitationToken />
+  <div class="flex flex-col">
+    <label class="label">
+      <span class="label-text font-bold text-xl">Manage members</span>
+    </label>
+    <div class="stats shadow p-6">
+      <MembersComponent v-if="flat" :members="flat.members" />
+    </div>
+    <label class="label">
+      <span class="label-text font-bold text-xl">Share an invitation token</span>
+    </label>
+    <div class="stats shadow p-6">
+      <InvitationToken />
+    </div>
   </div>
 </template>
