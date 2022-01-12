@@ -69,7 +69,7 @@ export function useFlat() {
     if (!flat.value) {
       return
     }
-    await axios.delete(`/flat/${userId}`)
+    await axios.delete(`/flat/user/${userId}`)
     const members = flat.value.members.filter((user) => user.id !== userId)
     flat.value = { ...flat.value, members }
   }
