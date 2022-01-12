@@ -26,7 +26,7 @@ const handleDelete = async () => {
 
 const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
   await createPurchase(purchase)
-  shoppingItems.value = shoppingItems.value.filter(({ id }) => !purchase.shoppingItems.includes(id))
+  shoppingItems.value = shoppingItems.value.filter(({ id }) => !purchase.shoppingItems?.includes(id))
   notify('Purchase created', 'success')
 }
 </script>

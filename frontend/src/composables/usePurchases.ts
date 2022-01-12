@@ -10,7 +10,7 @@ export type UpdatePurchase = {
 }
 
 export type CreatePurchase = Transfer & {
-  shoppingItems: number[]
+  shoppingItems?: number[]
 }
 
 export type Transfer = Omit<UpdatePurchase, 'id'>

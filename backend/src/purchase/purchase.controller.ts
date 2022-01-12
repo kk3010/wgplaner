@@ -14,6 +14,7 @@ import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { IUser } from '../interfaces/user.interface';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
+import { Flat } from 'src/flat/entities/flat.entity';
 
 @ApiBearerAuth()
 @ApiTags('purchase')
@@ -36,7 +37,6 @@ export class PurchaseController {
   }
 
   @Get()
-  @UseGuards(BelongsToFlatGuard)
   @ApiOperation({ summary: 'find all purchases in the flat' })
   findAll(@User('flatId') flatId: number) {
     return this.purchaseService.findAll(flatId);

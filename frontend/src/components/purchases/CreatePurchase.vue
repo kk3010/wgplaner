@@ -6,7 +6,7 @@ import MembersTable from '../flat/MembersTable.vue'
 
 const props = defineProps<{
   members: IUser[]
-  shoppingItems: number[]
+  shoppingItems?: number[]
 }>()
 
 const emit = defineEmits<{
