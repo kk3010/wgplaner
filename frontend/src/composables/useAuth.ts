@@ -79,5 +79,5 @@ export function useAuth(user: Ref<IUser | undefined>) {
     user.value = undefined
   }
 
-  return { login, logout, register, addAxiosAuth, getAccessToken }
+  return { login, logout, register, addAxiosAuth, getAccessToken, refresh }
 }

@@ -18,7 +18,6 @@ export function useShoppingItems() {
       shoppingItems.value.splice(index, 1, { ...shoppingItems.value[index], ...msg.item })
     },
     'shopping-item.create': (msg) => {
-      console.log(msg)
       shoppingItems.value.push(msg.item)
       notify(`${msg.user.firstName} added a shopping item`)
     },

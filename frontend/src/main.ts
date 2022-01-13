@@ -6,6 +6,7 @@ import { routes } from './routes'
 import axios from 'axios'
 import { useAuth } from './composables/useAuth'
 import { useUser } from './composables/useUser'
+import { initSse } from '@/composables/useSse'
 
 const { user, getUser } = useUser()
 const { addAxiosAuth } = useAuth(user)
@@ -22,6 +23,7 @@ const router = createRouter({
 getUser()
   .catch()
   .finally(() => {
+    initSse()
     const app = createApp(App)
 
     app.use(router)
