@@ -60,10 +60,9 @@ export class PurchaseController {
     @Param('id') id: number,
     @Body() updatePurchaseDto: UpdatePurchaseDto,
   ) {
-    const purchase = await this.purchaseService.update(id, updatePurchaseDto);
+    await this.purchaseService.update(id, updatePurchaseDto);
     this.sseService.emit(user, 'purchase.update', {
-      purchase,
+      purchase: { id, ...updatePurchaseDto },
     });
-    return purchase;
   }
 }

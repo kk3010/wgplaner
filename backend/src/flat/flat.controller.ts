@@ -15,7 +15,7 @@ import { CreateFlatDto } from './dto/create-flat.dto';
 import { UpdateFlatDto } from './dto/update-flat.dto';
 import {
   ApiBearerAuth,
-  ApiNotFoundResponse, 
+  ApiNotFoundResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -48,14 +48,10 @@ export class FlatController {
   @Patch()
   @ApiOperation({ summary: 'update flat name' })
   async update(@User() user: IUser, @Body() updateFlatDto: UpdateFlatDto) {
-    console.log('user', user);
-    console.log('ID', user.flatId);
-    const flat = await this.flatService.updateName(user.flatId, updateFlatDto);
+    await this.flatService.updateName(user.flatId, updateFlatDto);
     this.sseService.emit(user, 'flat.update', {
-      flat,
+      flat: { ...updateFlatDto },
     });
-
-    return flat;
   }
 
   @Delete()
@@ -65,7 +61,7 @@ export class FlatController {
     try {
       await this.flatService.remove(user.flatId);
       this.sseService.emit(user, 'flat.delete', {
-        flat: user.flatId,
+        id: user.flatId,
       });
     } catch (e) {
       throw new HttpException('flat not found', HttpStatus.BAD_REQUEST);
@@ -76,11 +72,10 @@ export class FlatController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'join a flat' })
   async addMember(@User() user: IUser, @Param('token') token: string) {
-    const flat = await this.flatService.addMember(token, user);
+    await this.flatService.addMember(token, user);
     this.sseService.emit(user, 'flat.memberJoined', {
-      flat,
+      member: user,
     });
-    return flat;
   }
 
   @Delete('user/:userToRemoveId')
@@ -89,10 +84,10 @@ export class FlatController {
     @User() user: IUser,
     @Param('userToRemoveId') userToRemoveId: number,
   ) {
-    let flat = await this.flatService.findOneById(user.flatId);
+    const flat = await this.flatService.findOneById(user.flatId);
     await this.flatService.removeMember(flat, userToRemoveId);
     this.sseService.emit(user, 'flat.memberRemoved', {
-      userToRemoveId,
+      id: userToRemoveId,
     });
   }
 }
