@@ -12,7 +12,7 @@ export function useShoppingItems() {
 
   const { notify } = useToast()
 
-  useSse<{ item: IShoppingItem }>({
+  useSse({
     'shopping-item.update': (msg) => {
       const index = shoppingItems.value.findIndex(({ id }) => id === msg.item.id)
       shoppingItems.value.splice(index, 1, { ...shoppingItems.value[index], ...msg.item })

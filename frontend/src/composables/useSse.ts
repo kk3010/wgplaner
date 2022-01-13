@@ -6,9 +6,9 @@ import type { IUser } from '@interfaces/user.interface'
 
 let source: EventSourcePolyfill
 
-type SubscriberFn<T> = (msg: { user: IUser } & T) => void
+type SubscriberFn = (msg: { user: IUser } & Record<any, any>) => void
 
-export function useSse<T>(subscriberMap: Record<string, SubscriberFn<T>>) {
+export function useSse(subscriberMap: Record<string, SubscriberFn>) {
   const { user } = useUser()
 
   if (!source) {

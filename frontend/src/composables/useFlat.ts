@@ -1,9 +1,32 @@
 import { ref } from 'vue'
-import type { IFlat } from '@interfaces/flat.interface'
 import axios from 'axios'
+import type { IFlat } from '@interfaces/flat.interface'
 import { useSse } from './useSse'
+import { useToast } from './useToast'
 
 const flat = ref<IFlat>()
+
+const { notify } = useToast()
+
+useSse({
+  'flat.update': (msg) => {
+    flat.value = { ...flat.value, ...msg.flat }
+  },
+  'flat.delete': (msg) => {
+    notify(`${msg.user.firstName} deleted "${flat.value?.name}".`)
+    window.location.reload()
+  },
+  'flat.memberJoined': (msg) => {
+    notify(`${msg.member.firstName} joined "${flat.value?.name}".`)
+    flat.value?.members.push(msg.member)
+  },
+  'flat.memberRemoved': (msg) => {
+    const index = flat.value!.members.findIndex((member) => member.id === msg.id)
+    const member = flat.value!.members[index]
+    notify(`${member.firstName} left "${flat.value?.name}".`)
+    index && flat.value?.members.splice(index, 1)
+  },
+})
 
 export function useFlat() {
   const createFlat: (name: string) => Promise<void> = async (name) => {
@@ -26,11 +49,6 @@ export function useFlat() {
       return
     }
     await axios.patch('/flat', { name: n })
-    useSse({
-      'flat.update': (msg: any) => {
-        console.log(msg)
-      },
-    })
     flat.value = { ...flat.value, ...{ name: n } }
   }
 
