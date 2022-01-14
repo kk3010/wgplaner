@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import type { IPurchase } from '@interfaces/purchase.interface'
 import axios from 'axios'
+import { useSse } from './useSse'
+import { useToast } from './useToast'
 
 export type UpdatePurchase = {
   id: number
@@ -16,7 +18,21 @@ export type CreatePurchase = Transfer & {
 export type Transfer = Omit<UpdatePurchase, 'id'>
 
 export function usePurchases() {
+  const { notify } = useToast()
   const purchases = ref<IPurchase[]>([])
+
+  useSse({
+    'purchase.create': (msg) => {
+      notify(`${msg.user.firstName} created a purchase`)
+      purchases.value.push(msg.purchase)
+    },
+    'purchase.update': (msg) => {
+      const purchase: IPurchase = msg.purchase
+      notify(`${msg.user.firstName} updated a purchase`)
+      const index = purchases.value.findIndex(({ id }) => id === purchase.id)
+      purchases.value.splice(index, 1, { ...purchases[index], ...purchase })
+    },
+  })
 
   const fetchPurchases: () => Promise<void> = async () => {
     const { data } = await axios.get<IPurchase[]>('/purchase')

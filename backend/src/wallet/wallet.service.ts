@@ -4,12 +4,14 @@ import type { IUser } from '../interfaces/user.interface';
 import { Repository } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
 import { OnEvent } from '@nestjs/event-emitter';
+import { SseService } from '../sse/sse.service';
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
     private walletRepository: Repository<Wallet>,
+    private sseService: SseService,
   ) {}
 
   @OnEvent('flat.join')
@@ -48,5 +50,7 @@ export class WalletService {
       { userId: user.id, flatId: user.flatId },
       { balance: () => `wallet.balance + ${value}` },
     );
+    const wallet = await this.findOneByUserId(user.id, user.flatId);
+    this.sseService.emit(user, 'wallet.update', { wallet });
   }
 }

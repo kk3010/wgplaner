@@ -8,6 +8,7 @@ import { generateFakeUser } from '../../test/user/user.mock';
 import { generateFakeFlat } from '../../test/flat/flat.mock';
 import type { MockType } from '../../test/mockType';
 import { IWallet } from 'src/interfaces/wallet.interface';
+import { SseService } from '../sse/sse.service';
 
 const mockWalletRepositoryFactory: () => MockType<Repository<Wallet>> = () => ({
   create: jest.fn(),
@@ -15,6 +16,10 @@ const mockWalletRepositoryFactory: () => MockType<Repository<Wallet>> = () => ({
   find: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
+});
+
+const mockSseServiceFactory: () => MockType<SseService> = () => ({
+  emit: jest.fn(),
 });
 
 describe('WalletService', () => {
@@ -28,6 +33,10 @@ describe('WalletService', () => {
         {
           provide: getRepositoryToken(Wallet),
           useFactory: mockWalletRepositoryFactory,
+        },
+        {
+          provide: SseService,
+          useFactory: mockSseServiceFactory,
         },
       ],
     }).compile();

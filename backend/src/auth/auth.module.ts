@@ -26,7 +26,7 @@ import { RefreshTokensService } from './services/refresh-tokens.service';
         secret: configService.get('JWT_SECRET'),
         signOptions: {
           expiresIn:
-            configService.get('NODE_ENV') === 'development' ? '60m' : '5m',
+            configService.get('NODE_ENV') === 'development' ? '1m' : '5m',
         },
       }),
     }),

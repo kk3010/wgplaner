@@ -1,33 +1,43 @@
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useUser } from './useUser'
 import { useAuth } from './useAuth'
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, ref, watchEffect } from 'vue'
+import type { IUser } from '@interfaces/user.interface'
 
-let source: EventSourcePolyfill
+const source = ref<EventSourcePolyfill>()
 
-type SubscriberFn = (msg: any) => void
+type SubscriberFn = (msg: { user: IUser } & Record<any, any>) => void
 
-export function useSse(subscriberMap: Record<string, SubscriberFn>) {
-  if (!source) {
-    const { user } = useUser()
-    const { getAccessToken } = useAuth(user)
-    source = new EventSourcePolyfill('/api/sse', { headers: { Authorization: `Bearer ${getAccessToken()}` } })
+const { user } = useUser()
+
+export const initSse = () => {
+  const { getAccessToken, refresh } = useAuth(user)
+  const establishConnection = () => {
+    source.value = new EventSourcePolyfill('/api/sse', { headers: { Authorization: `Bearer ${getAccessToken()}` } })
+    source.value.addEventListener('error', async (e) => {
+      if ((e as any).status === 422) {
+        await refresh()
+        establishConnection()
+      }
+    })
   }
 
-  const listeners: any[] = []
+  if (!source.value) {
+    establishConnection()
+  }
+}
 
-  Object.entries(subscriberMap).forEach(([event, handler]) => {
-    const listener = ({ data }) => {
-      const { type, data: d } = JSON.parse(data)
-      if (type === event) {
-        handler(d)
-      }
+export function useSse(subscriberMap: Record<string, SubscriberFn>) {
+  const listener = ({ data }) => {
+    const parsed = JSON.parse(data)
+    const handler = subscriberMap[parsed.type]
+
+    if (handler && user.value?.id !== parsed.data.user.id) {
+      handler(parsed.data)
     }
+  }
 
-    source.addEventListener('message', listener)
+  watchEffect(() => source.value?.addEventListener('message', listener))
 
-    listeners.push(listener)
-  })
-
-  onBeforeUnmount(() => listeners.forEach((listener) => source.removeEventListener('message', listener)))
+  onBeforeUnmount(() => source.value?.removeEventListener('message', listener))
 }

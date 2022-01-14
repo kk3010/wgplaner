@@ -65,8 +65,8 @@ export class ShoppingItemController {
     @Param('id') id: number,
     @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
-    this.sseService.emit(user, 'shopping-item.update', { id });
     await this.shoppingItemService.update(id, ShoppingItemDto);
+    this.sseService.emit(user, 'shopping-item.update', { item: { id, ...ShoppingItemDto }});
   }
 
   @Delete(':id')
@@ -76,7 +76,7 @@ export class ShoppingItemController {
   async remove(@User() user: IUser, @Param('id') id: number) {
     try {
       await this.shoppingItemService.remove(id);
-      this.sseService.emit(user, 'shopping-item.delete', { id });
+      this.sseService.emit(user, 'shopping-item.delete', { item: { id }});
     } catch (e) {
       throw new HttpException('item not found', HttpStatus.BAD_REQUEST);
     }
