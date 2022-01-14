@@ -28,7 +28,7 @@ export function useUser() {
       return
     }
     await axios.delete('/user')
-    user.value = undefined
+    window.location.reload()
   }
 
   return { user, getUser, updateUser, deleteUser }

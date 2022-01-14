@@ -4,16 +4,13 @@ import { MenuIcon } from '@heroicons/vue/outline'
 import { useUser } from '@/composables/useUser'
 import { useAuth } from '@/composables/useAuth'
 import UserAvatar from './user/UserAvatar.vue'
-import { useRouter } from 'vue-router'
 
 const { user } = useUser()
 const { logout } = useAuth(user)
-const { push } = useRouter()
 
 const confirmLogout = () => {
   if (window.confirm('Are you sure you want to logout?')) {
     logout()
-    push('/')
   }
 }
 </script>
