@@ -111,8 +111,7 @@ describe('Flat', () => {
       await request(app.getHttpServer())
         .patch(`/flat`)
         .send(body)
-        .expect(HttpStatus.OK)
-        .expect(expected);
+        .expect(HttpStatus.OK);
       expect(sseService.emit).toHaveBeenCalled();
     });
   });
