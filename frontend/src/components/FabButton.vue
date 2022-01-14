@@ -16,7 +16,7 @@ onClickOutside(target, () => toggle(false))
         <slot></slot>
       </div>
     </transition>
-    <button class="btn btn-lg btn-circle btn-primary text-3xl" @click="toggle()">
+    <button class="btn btn-lg btn-circle btn-primary" @click="toggle()">
       <MenuIcon class="h-8 w-8" />
     </button>
   </div>

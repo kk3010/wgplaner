@@ -64,7 +64,7 @@ const confirmLogout = () => {
             font-semibold
           "
         >
-          <li><router-link to="/profile">Profile</router-link></li>
+          <li><router-link to="/profile" active-class="active">Profile</router-link></li>
           <li @click="confirmLogout">
             <router-link to=""> Logout </router-link>
           </li>
