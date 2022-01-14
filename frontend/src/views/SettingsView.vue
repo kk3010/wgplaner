@@ -29,7 +29,7 @@ const userState = reactive({
 </script>
 
 <template>
-  <div class="px-2 py-6 flex flex-col justify-center w-full max-w-sm mx-auto">
+  <div class="flex flex-col justify-center w-full max-w-sm mx-auto">
     <h1 class="text-3xl font-black mb-10 text-center">Profile Settings</h1>
     <div class="flex flex-col items-center space-y-4">
       <UserAvatar class="!w-20 !h-20" :user="userState" />

@@ -55,7 +55,7 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
 </script>
 
 <template>
-  <div class="px-2 py-6">
+  <div>
     <h1 class="text-3xl font-black mb-6">Split</h1>
     <div class="flex flex-col">
       <div v-if="userBalance !== undefined" class="mb-4">
@@ -85,20 +85,20 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
               Pay back
             </label>
             <input type="checkbox" id="payback-modal" class="modal-toggle" />
-            <PaybackModal class="z-13" @submit="handlePayback" />
+            <PaybackModal class="z-50" @submit="handlePayback" />
           </MemberWalletStat>
         </div>
       </div>
       <div>
         <h2 class="text-xl font-bold my-4">All Purchases</h2>
-        <div class="stats w-full grid-flow-row md:grid-flow-col gap-5 flex flex-wrap">
+        <div class="flex flex-col gap-5">
           <Spending v-for="purchase in purchases" :key="purchase.id" :purchase="purchase"> </Spending>
         </div>
       </div>
     </div>
     <teleport to="body">
       <transition name="scale">
-        <AddButton>
+        <AddButton class="z-40">
           <label
             for="create-purchase-modal"
             class="btn btn-circle btn-secondary modal-button mb-2"

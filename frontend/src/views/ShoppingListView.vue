@@ -32,9 +32,8 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
 </script>
 
 <template>
-  <div class="px-2 py-6">
+  <div>
     <h1 class="text-3xl font-black mb-6">Shopping list</h1>
-
     <ShoppingList
       class="w-full overflow-scroll"
       v-model:checked="checked"

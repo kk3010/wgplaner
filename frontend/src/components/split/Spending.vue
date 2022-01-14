@@ -1,38 +1,53 @@
 <script lang="ts" setup>
+import { useFlat } from '@/composables/useFlat'
 import type { IPurchase } from '@interfaces/purchase.interface'
+import { computed } from 'vue'
 import UserAvatar from '../user/UserAvatar.vue'
 
-defineProps<{
+const props = defineProps<{
   purchase: IPurchase
 }>()
+
+const { flat } = useFlat()
+const buyer = computed(() => flat.value?.members.find((member) => member.id === props.purchase.buyerId))
 </script>
 
 <template>
-  <div class="card shadow-lg collapse collapse-arrow col-span-1 w-full">
+  <div class="card shadow-lg collapse collapse-arrow w-full">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
-      <h2 class="card-title">{{ purchase.name }}</h2>
-
-      <span class="badge badge-info mb-4">{{
-        purchase.shoppingItems && purchase.shoppingItems.length > 0 ? 'Purchase' : 'Spending'
-      }}</span>
-
-      <div class="ml-0">
-        <div class="stat-value" :class="purchase.price <= 0 ? 'text-green-400' : 'text-red-400'">
-          {{ purchase.price.toFixed(2) }} €
+      <div class="stat place-content-center bg-transparent">
+        <div class="stat-figure">
+          <UserAvatar v-if="buyer" :user="buyer"></UserAvatar>
         </div>
-        <!-- <UserAvatar :user="buyer!"></UserAvatar> -->
+        <div class="stat-value">{{ purchase.price.toFixed(2) }} €</div>
+        <div class="stat-title mb-2 opacity-100 font-bold">
+          <h3>{{ purchase.name }}</h3>
+        </div>
+        <div class="stat-desc opacity-100">
+          <span class="badge badge-info badge-lg">{{ purchase.shoppingItems?.length ? 'Purchase' : 'Spending' }}</span>
+        </div>
       </div>
     </div>
-    <div class="collapse-content">
-      <h3 class="card-title">Payers:</h3>
-      <div class="mb-6 -space-x-4 avatar-group" v-if="purchase.payers && purchase.payers.length > 0">
-        <UserAvatar v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
-      </div>
-      <div class="mb-3">
-        <h3 class="card-title" v-if="purchase.shoppingItems && purchase.shoppingItems.length > 0">Purchased Items:</h3>
-        <p v-for="item in purchase.shoppingItems" :key="item.id">{{ item.quantity }}x {{ item.name }}</p>
-      </div>
+    <div class="collapse-content px-10">
+      <label>
+        <span class="text-lg font-bold opacity-80">Payers</span>
+        <div class="mb-6 -space-x-4 avatar-group" v-if="purchase.payers && purchase.payers.length > 0">
+          <UserAvatar v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
+        </div>
+      </label>
+      <label v-if="purchase.shoppingItems && purchase.shoppingItems.length > 0">
+        <span class="text-lg font-bold opacity-80">Purchased Items</span>
+        <ul class="list-none">
+          <li v-for="item in purchase.shoppingItems" :key="item.id">{{ item.quantity }}x {{ item.name }}</li>
+        </ul>
+      </label>
     </div>
   </div>
 </template>
+
+<style scoped>
+.avatar-group > .avatar {
+  @apply !border-base-content/10 bg-base-100;
+}
+</style>
