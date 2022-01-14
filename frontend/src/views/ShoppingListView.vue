@@ -32,14 +32,18 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
 </script>
 
 <template>
-  <ShoppingList
-    class="w-full overflow-scroll"
-    v-model:checked="checked"
-    :items="shoppingItems.sort((a, b) => b.id - a.id)"
-    @create="createItem"
-    @delete="deleteItem($event.id)"
-    @update="updateItem"
-  />
+  <div class="px-2 py-6">
+    <h1 class="text-3xl font-black mb-6">Shopping list</h1>
+
+    <ShoppingList
+      class="w-full overflow-scroll"
+      v-model:checked="checked"
+      :items="shoppingItems.sort((a, b) => b.id - a.id)"
+      @create="createItem"
+      @delete="deleteItem($event.id)"
+      @update="updateItem"
+    />
+  </div>
   <teleport to="body">
     <transition name="scale">
       <FabButton v-show="checked.length" class="z-10">
@@ -53,7 +57,7 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
         <input type="checkbox" id="create-purchase-modal" class="modal-toggle" />
         <CreatePurchase v-if="flat" @create="handleCreatePurchase" :members="flat.members" :shoppingItems="checked" />
         <button class="btn btn-circle btn-error" title="delete" @click="handleDelete">
-          <TrashIcon class="h-6 w-6" />
+          <TrashIcon class="h-6 w-6 text-white" />
         </button>
       </FabButton>
     </transition>
