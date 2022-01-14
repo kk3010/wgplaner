@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PencilIcon } from '@heroicons/vue/outline'
+import { CheckIcon } from '@heroicons/vue/outline'
 import type { IShoppingItem } from '@interfaces/shopping-item.interface'
 import { ref, reactive } from 'vue'
 import { useVModel, onClickOutside, useSwipe } from '@vueuse/core'
@@ -25,6 +26,7 @@ const row = ref()
 
 const handleUpdate = () => {
   editing.value = false
+
   if (props.item.name !== changedItem.name || props.item.quantity !== changedItem.quantity) {
     emit('update', changedItem)
   }
@@ -65,7 +67,11 @@ onClickOutside(row, handleUpdate)
       <td>
         <input type="text" class="input input-bordered w-20 lg:w-auto" v-model="changedItem.name" />
       </td>
-      <td></td>
+      <td>
+        <button @click="handleUpdate" :class="`btn btn-circle ml-2 ${item.name ? 'btn-primary' : 'btn-disabled'}`">
+          <CheckIcon class="w-6 h-6" />
+        </button>
+      </td>
     </template>
     <template v-else>
       <th>
@@ -76,7 +82,7 @@ onClickOutside(row, handleUpdate)
       <td>{{ item.quantity }}</td>
       <td class="font-bold truncate">{{ item.name }}</td>
       <td>
-        <button class="btn btn-circle btn-ghost" @click="editing = true">
+        <button class="btn btn-circle btn-ghost ml-2" @click="editing = true">
           <PencilIcon class="w-6 h-6" />
         </button>
       </td>

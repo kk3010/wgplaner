@@ -34,5 +34,8 @@ onClickOutside(row, handleSave)
     <td colspan="0" class="inline-flex">
       <input type="text" placeholder="name" class="input input-bordered w-28 lg:w-auto" v-model="item.name" />
     </td>
+    <td>
+      <button @click="handleSave" :class="`btn ${item.name ? 'btn-primary' : 'btn-disabled'}`">Add</button>
+    </td>
   </tr>
 </template>
