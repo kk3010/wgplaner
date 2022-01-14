@@ -16,6 +16,7 @@ export const initSse = () => {
     source.value = new EventSourcePolyfill('/api/sse', { headers: { Authorization: `Bearer ${getAccessToken()}` } })
     source.value.addEventListener('error', async (e) => {
       if ((e as any).status === 422) {
+        source.value!.close()
         await refresh()
         establishConnection()
       }
