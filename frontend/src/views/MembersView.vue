@@ -18,7 +18,7 @@ watchEffect(() =>
     <label class="label">
       <span class="label-text font-bold text-xl">Manage members</span>
     </label>
-    <div class="flex flex-col sm:flex-row stats shadow p-6">
+    <div class="flex flex-col lg:flex-row p-6">
       <MembersComponent v-if="flat" :members="flat.members" />
     </div>
     <label class="label">
