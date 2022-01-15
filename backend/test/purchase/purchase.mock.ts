@@ -1,14 +1,13 @@
 import { datatype, commerce } from 'faker';
 import type { IPurchase } from '../../src/interfaces/purchase.interface';
 import type { IShoppingItem } from '../../src/interfaces/shopping-item.interface';
-import type { IUser } from '../../src/interfaces/user.interface';
 
 export const generateFakePurchase: (
   flatId?: number,
   buyerId?: number,
   shoppingItems?: IShoppingItem[],
-  payers?: IUser[],
-) => IPurchase = (flatId, buyerId, shoppingItems = [], payers = []) => {
+  payerIds?: number[],
+) => IPurchase = (flatId, buyerId, shoppingItems = [], payerIds = []) => {
   const purchase: IPurchase = {
     id: datatype.number(),
     name: commerce.department(),
@@ -16,7 +15,7 @@ export const generateFakePurchase: (
     buyerId,
     flatId,
     shoppingItems,
-    payers,
+    payerIds,
   };
 
   return purchase;

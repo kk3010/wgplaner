@@ -88,7 +88,7 @@ describe('Purchase', () => {
         id: 1,
         buyerId: user.id,
         flatId: flat.id,
-        payers: [user],
+        payerIds: [user.id],
         shoppingItems,
       };
 

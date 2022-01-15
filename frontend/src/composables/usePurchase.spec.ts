@@ -9,7 +9,7 @@ const genPurchase: () => IPurchase = () => ({
   id: 1,
   name: 'purchase',
   buyerId: 1,
-  payers: [],
+  payerIds: [],
   price: 0,
   shoppingItems: [],
   flatId: 1,

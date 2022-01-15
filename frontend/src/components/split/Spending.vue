@@ -1,10 +1,22 @@
 <script lang="ts" setup>
 import UserAvatar from '../user/UserAvatar.vue'
-import { IPurchase } from '@interfaces/purchase.interface'
+import type { IUser } from '@interfaces/user.interface'
+import type { IPurchase } from '@interfaces/purchase.interface'
+import { computed, toRefs } from 'vue'
 
-defineProps<{
+const props = defineProps<{
+  members: IUser[]
   purchase: IPurchase
 }>()
+
+const { members, purchase } = toRefs(props)
+
+const payers = computed(
+  () =>
+    purchase.value.payerIds
+      .map((id) => members.value.find((member) => member.id === id))
+      .filter((member) => member !== undefined) as IUser[],
+)
 </script>
 
 <template>
@@ -24,11 +36,11 @@ defineProps<{
     </div>
     <div class="collapse-content">
       <h3 class="card-title">Payers:</h3>
-      <div class="mb-6" v-if="purchase.payers && purchase.payers.length > 0">
-        <UserAvatar class="m-1" v-for="payer in purchase.payers" :key="payer.id" :user="payer" />
+      <div class="mb-6" v-if="payers.length">
+        <UserAvatar class="m-1" v-for="payer in payers" :key="payer.id" :user="payer" />
       </div>
       <div class="mb-3">
-        <h3 class="card-title" v-if="purchase.shoppingItems && purchase.shoppingItems.length > 0">Purchased Items:</h3>
+        <h3 class="card-title" v-if="purchase.shoppingItems?.length">Purchased Items:</h3>
         <p v-for="item in purchase.shoppingItems" :key="item.id">{{ item.quantity }}x {{ item.name }}</p>
       </div>
     </div>

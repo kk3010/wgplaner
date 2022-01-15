@@ -5,15 +5,18 @@ import { useSse } from './useSse'
 
 const wallets = ref<IWallet[]>()
 
-useSse({
-  'wallet.update': (msg) => {
-    const wallet: IWallet = msg.wallet
-    const index = wallets.value?.findIndex(({ id }) => id === wallet.id)
-    if (index) {
-      wallets.value!.splice(index, 1, wallet)
-    }
+useSse(
+  {
+    'wallet.update': (msg) => {
+      const wallet: IWallet = msg.wallet
+      const index = wallets.value?.findIndex(({ id }) => id === wallet.id)
+      if (index) {
+        wallets.value!.splice(index, 1, wallet)
+      }
+    },
   },
-})
+  true,
+)
 
 export function useWallets() {
   const fetchWallets: () => Promise<void> = async () => {

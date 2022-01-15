@@ -28,12 +28,12 @@ export const initSse = () => {
   }
 }
 
-export function useSse(subscriberMap: Record<string, SubscriberFn>) {
+export function useSse(subscriberMap: Record<string, SubscriberFn>, listenToSelf = false) {
   const listener = ({ data }) => {
     const parsed = JSON.parse(data)
     const handler = subscriberMap[parsed.type]
 
-    if (handler && user.value?.id !== parsed.data.user.id) {
+    if (handler && (listenToSelf || user.value?.id !== parsed.data.user.id)) {
       handler(parsed.data)
     }
   }

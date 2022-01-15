@@ -74,7 +74,7 @@ describe('PurchaseService', () => {
         flatId: user.flatId,
         buyerId: user.id,
         shoppingItems,
-        payers: [user],
+        payerIds: [user.id],
       };
 
       jest.spyOn(repository, 'create').mockResolvedValue(expected);

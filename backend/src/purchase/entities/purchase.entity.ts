@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import type { IPurchase } from '../../interfaces/purchase.interface';
 import { Exclude } from 'class-transformer';
@@ -50,7 +51,12 @@ export class Purchase implements IPurchase {
   @ManyToOne(() => User)
   buyer: User;
 
-  @ManyToMany(() => User, { eager: true })
+  @RelationId((purchase: Purchase) => purchase.payers)
+  payerIds: number[];
+
+  @Exclude()
+  @ManyToMany(() => User)
+  @ApiHideProperty()
   @JoinTable()
   payers: User[];
 
