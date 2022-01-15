@@ -22,9 +22,11 @@ useSse({
   },
   'flat.memberRemoved': (msg) => {
     const index = flat.value!.members.findIndex((member) => member.id === msg.id)
-    const member = flat.value!.members[index]
-    notify(`${member.firstName} left "${flat.value?.name}".`)
-    index && flat.value?.members.splice(index, 1)
+    if (index > -1) {
+      const member = flat.value!.members[index]
+      notify(`${member.firstName} left "${flat.value?.name}".`)
+      flat.value?.members.splice(index, 1)
+    }
   },
 })
 

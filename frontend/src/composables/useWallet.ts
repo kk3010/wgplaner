@@ -9,8 +9,8 @@ useSse(
   {
     'wallet.update': (msg) => {
       const wallet: IWallet = msg.wallet
-      const index = wallets.value?.findIndex(({ id }) => id === wallet.id)
-      if (index) {
+      const index = wallets.value!.findIndex(({ id }) => id === wallet.id)
+      if (index > -1) {
         wallets.value!.splice(index, 1, wallet)
       }
     },

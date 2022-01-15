@@ -30,7 +30,9 @@ export function usePurchases() {
       const purchase: IPurchase = msg.purchase
       notify(`${msg.user.firstName} updated a purchase`)
       const index = purchases.value.findIndex(({ id }) => id === purchase.id)
-      purchases.value.splice(index, 1, { ...purchases[index], ...purchase })
+      if (index > -1) {
+        purchases.value.splice(index, 1, { ...purchases[index], ...purchase })
+      }
     },
   })
 
