@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
-      '@interfaces': resolve(__dirname, '../backend/src/interfaces'),
+      '@interfaces': resolve(__dirname, '../common/interfaces'),
     },
   },
   server: {

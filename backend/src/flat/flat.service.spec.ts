@@ -8,8 +8,8 @@ import { FlatService } from './flat.service';
 import { MockType } from '../../test/mockType';
 import { generateFakeUser } from '../../test/user/user.mock';
 import { generateFakeFlat } from '../../test/flat/flat.mock';
-import type { IFlat } from '../interfaces/flat.interface';
-import type { IUser } from '../interfaces/user.interface';
+import type { IFlat } from '@interfaces/flat.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 const mockFlatRepositoryFactory: () => MockType<Repository<Flat>> = () => ({

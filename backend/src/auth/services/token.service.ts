@@ -5,8 +5,8 @@ import { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { RefreshTokensService } from './refresh-tokens.service';
 import { RefreshTokenPayloadDto } from '../dto/refresh-token-payload.dto';
-import type { IUser } from '../../interfaces/user.interface';
-import type { IRefreshToken } from '../../interfaces/refresh-token.interface';
+import type { IUser } from '@interfaces/user.interface';
+import type { IRefreshToken } from '@interfaces/refresh-token.interface';
 
 @Injectable()
 export class TokenService {

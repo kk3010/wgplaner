@@ -1,6 +1,6 @@
 import { ApiHideProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
-import type { IWallet } from '../../interfaces/wallet.interface';
+import type { IWallet } from '@interfaces/wallet.interface';
 import {
   Column,
   Entity,

@@ -9,9 +9,9 @@ import { generateFakeFlat } from '../flat/flat.mock';
 import { WalletController } from '../../src/wallet/wallet.controller';
 import { BelongsToFlatGuard } from '../../src/flat/belongs-to-flat.guard';
 import { generateFakeWallet } from './wallet.mock';
-import type { IUser } from '../../src/interfaces/user.interface';
-import type { IFlat } from '../../src/interfaces/flat.interface';
-import type { IWallet } from '../../src/interfaces/wallet.interface';
+import type { IUser } from '@interfaces/user.interface';
+import type { IFlat } from '@interfaces/flat.interface';
+import type { IWallet } from '@interfaces/wallet.interface';
 import type { MockType } from '../mockType';
 
 const walletServiceFactory: () => MockType<WalletService> = () => ({

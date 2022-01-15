@@ -9,7 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { IPurchase } from '../../interfaces/purchase.interface';
+import type { IPurchase } from '@interfaces/purchase.interface';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';

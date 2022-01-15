@@ -1,7 +1,7 @@
 import { Injectable, SetMetadata } from '@nestjs/common';
 import type { ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
-import { IUser } from '../interfaces/user.interface';
+import { IUser } from '@interfaces/user.interface';
 import { ModuleRef, Reflector } from '@nestjs/core';
 
 const SERVICE_TOKEN = 'BelongsToFlatService';

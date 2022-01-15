@@ -11,7 +11,7 @@ import { UserService } from '../src/user/user.service';
 import { createMockUserMiddleware } from './user/mock-user.middleware';
 import { LoginDto } from '../src/auth/dto/login.dto';
 import type { MockType } from './mockType';
-import type { IUser } from '../src/interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { User } from '../src/user/entities/user.entity';
 import { registerGlobalPipes } from './registerGlobalPipes';
 

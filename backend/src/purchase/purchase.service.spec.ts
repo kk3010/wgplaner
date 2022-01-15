@@ -7,7 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateFakeUser } from '../../test/user/user.mock';
 import { generateFakeShoppingItem } from '../../test/shopping-item/shoppingItem.mock';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
-import type { IPurchase } from '../../src/interfaces/purchase.interface';
+import type { IPurchase } from '@interfaces/purchase.interface';
 import { generateFakePurchase } from '../../test/purchase/purchase.mock';
 import { WalletService } from '../wallet/wallet.service';
 

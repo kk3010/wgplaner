@@ -1,5 +1,5 @@
 import { name, internet, datatype } from 'faker';
-import type { IUser } from '../../src/interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 
 export const generateFakeUser: (flatId?: number) => IUser = (
   flatId?: number,

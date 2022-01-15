@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { IShoppingItem } from '../../interfaces/shopping-item.interface';
+import type { IShoppingItem } from '@interfaces/shopping-item.interface';
 import { Flat } from '../../flat/entities/flat.entity';
 import { Purchase } from '../../purchase/entities/purchase.entity';
 import { Exclude } from 'class-transformer';

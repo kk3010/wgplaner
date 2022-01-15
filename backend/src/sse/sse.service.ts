@@ -3,7 +3,7 @@ import type { MessageEvent } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import type { ListenerFn } from 'eventemitter2';
 import { Observable } from 'rxjs';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 
 @Injectable()
 export class SseService {

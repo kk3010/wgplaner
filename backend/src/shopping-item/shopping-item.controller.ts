@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
 import { BelongsToFlatGuard, SetService } from '../flat/belongs-to-flat.guard';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { SseService } from '../sse/sse.service';
 import { HttpCode } from '@nestjs/common';
 import { UpdateShoppingItemDto } from './dto/update-shopping-item.dto';
@@ -66,7 +66,9 @@ export class ShoppingItemController {
     @Body() ShoppingItemDto: UpdateShoppingItemDto,
   ) {
     await this.shoppingItemService.update(id, ShoppingItemDto);
-    this.sseService.emit(user, 'shopping-item.update', { item: { id, ...ShoppingItemDto }});
+    this.sseService.emit(user, 'shopping-item.update', {
+      item: { id, ...ShoppingItemDto },
+    });
   }
 
   @Delete(':id')
@@ -76,7 +78,7 @@ export class ShoppingItemController {
   async remove(@User() user: IUser, @Param('id') id: number) {
     try {
       await this.shoppingItemService.remove(id);
-      this.sseService.emit(user, 'shopping-item.delete', { item: { id }});
+      this.sseService.emit(user, 'shopping-item.delete', { item: { id } });
     } catch (e) {
       throw new HttpException('item not found', HttpStatus.BAD_REQUEST);
     }
