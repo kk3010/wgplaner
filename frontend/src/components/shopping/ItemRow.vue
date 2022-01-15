@@ -32,22 +32,22 @@ const handleUpdate = () => {
   }
 }
 
-const left = ref(0)
+const right = ref(0)
 
 const { lengthX, coordsStart, isSwiping } = useSwipe(row, {
   threshold: 20,
   onSwipe() {
-    if (lengthX.value < 0) {
-      left.value = Math.abs(lengthX.value) / (row.value.offsetWidth - coordsStart.x)
+    if (lengthX.value > 0) {
+      right.value = Math.abs(lengthX.value) / (row.value.offsetWidth - coordsStart.x)
     } else {
-      left.value = 0
+      right.value = 0
     }
-    row.value.style = `transform: translate(${left.value * 100}%)`
+    row.value.style = `transform: translate(${right.value * -100}%)`
   },
   onSwipeEnd() {
-    if (left.value >= 0.5) {
+    if (right.value >= 0.6) {
       emit('delete', props.item)
-      row.value.style = `transform: translate(100%)`
+      row.value.style = `transform: translate(-100%)`
     } else {
       row.value.style = ''
     }
