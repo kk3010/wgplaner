@@ -5,6 +5,8 @@ import { useUser } from '@/composables/useUser'
 import { useAuth } from '@/composables/useAuth'
 import UserAvatar from './user/UserAvatar.vue'
 import { useRouter } from 'vue-router'
+import { LogoutIcon } from '@heroicons/vue/outline'
+import { UserIcon } from '@heroicons/vue/outline'
 
 const { user } = useUser()
 const { logout } = useAuth(user)
@@ -64,9 +66,11 @@ const confirmLogout = () => {
             font-semibold
           "
         >
-          <li><router-link to="/profile" active-class="active">Profile</router-link></li>
+          <li>
+            <router-link to="/profile" active-class="active"> <UserIcon class="w-4 h-4 mr-1" /> Profile</router-link>
+          </li>
           <li @click="confirmLogout">
-            <router-link to=""> Logout </router-link>
+            <router-link to=""><LogoutIcon class="w-4 h-4 mr-2" /> Logout </router-link>
           </li>
         </ul>
       </div>

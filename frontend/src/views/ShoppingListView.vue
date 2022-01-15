@@ -35,7 +35,7 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
   <div>
     <h1 class="text-3xl font-black mb-6">Shopping list</h1>
     <ShoppingList
-      class="w-full overflow-scroll"
+      class="w-full overflow-auto"
       v-model:checked="checked"
       :items="shoppingItems.sort((a, b) => b.id - a.id)"
       @create="createItem"
