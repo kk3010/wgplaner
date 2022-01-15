@@ -1,7 +1,7 @@
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useUser } from './useUser'
 import { useAuth } from './useAuth'
-import { onBeforeUnmount, ref, watchEffect } from 'vue'
+import { getCurrentInstance, onBeforeUnmount, ref, watchEffect } from 'vue'
 import type { IUser } from '@interfaces/user.interface'
 
 const source = ref<EventSourcePolyfill>()
@@ -40,5 +40,7 @@ export function useSse(subscriberMap: Record<string, SubscriberFn>, listenToSelf
 
   watchEffect(() => source.value?.addEventListener('message', listener))
 
-  onBeforeUnmount(() => source.value?.removeEventListener('message', listener))
+  if (getCurrentInstance()) {
+    onBeforeUnmount(() => source.value?.removeEventListener('message', listener))
+  }
 }
