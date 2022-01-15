@@ -1,8 +1,13 @@
 <script lang="ts" setup>
+import { IUser } from '@interfaces/user.interface'
 import { computed, ref } from 'vue'
 
 defineEmits<{
   (event: 'submit', amount: number): void
+}>()
+
+defineProps<{
+  receiver: IUser
 }>()
 
 const amount = ref(0)
@@ -14,6 +19,9 @@ const submitEnabled = computed(() => amount.value > 0)
   <div class="modal">
     <div class="modal-box max-h-screen overflow-auto">
       <div class="form-control">
+        <h3 class="text-xl">
+          Payback to <strong>{{ receiver.firstName + ' ' + receiver.lastName }}</strong>
+        </h3>
         <label class="label">
           <span class="label-text">Amount</span>
         </label>

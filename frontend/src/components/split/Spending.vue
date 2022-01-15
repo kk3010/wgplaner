@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const { flat } = useFlat()
 const buyer = computed(() => flat.value?.members.find((member) => member.id === props.purchase.buyerId))
+const isPurchase = !!props.purchase.shoppingItems?.length
 </script>
 
 <template>
@@ -25,7 +26,9 @@ const buyer = computed(() => flat.value?.members.find((member) => member.id === 
           <h3>{{ purchase.name }}</h3>
         </div>
         <div class="stat-desc opacity-100">
-          <span class="badge badge-info badge-lg">{{ purchase.shoppingItems?.length ? 'Purchase' : 'Spending' }}</span>
+          <span :class="(isPurchase ? 'badge-info' : 'badge-success') + ' badge badge-lg'">{{
+            isPurchase ? 'Purchase' : 'Spending'
+          }}</span>
         </div>
       </div>
     </div>

@@ -45,6 +45,8 @@ const paybackUser = ref<number>()
 const handlePayback = async (amount: number) => {
   await transferMoney(paybackUser.value!, amount)
   await fetchWallets()
+  await fetchPurchases()
+  notify('Payback successful', 'success')
 }
 
 const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
@@ -59,7 +61,7 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
     <h1 class="text-3xl font-black mb-6">Split</h1>
     <div class="flex flex-col">
       <div v-if="userBalance !== undefined" class="mb-4">
-        <h2 class="text-xl font-bold mb-4">My Balance</h2>
+        <h2 class="text-xl font-bold mb-4">My balance</h2>
         <div
           class="text-6xl md:text-8xl text-center font-bold"
           :class="userBalance >= 0 ? 'text-green-400' : 'text-red-400'"
@@ -68,9 +70,10 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
         </div>
       </div>
       <div>
-        <h2 class="text-xl font-bold my-4">Other's Balance</h2>
-        <div class="stats w-full shadow md:grid-flow-col grid-flow-row">
+        <h2 class="text-xl font-bold mt-8 mb-4">Member balances</h2>
+        <div class="stats border-dash !overflow-auto w-full shadow grid grid-flow-row lg:grid-flow-col">
           <MemberWalletStat
+            class="lg:!border-t-0 lg:!border-l-2"
             v-for="wallet in memberWallets"
             :key="wallet.id"
             :balance="wallet.balance"
@@ -85,12 +88,16 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
               Pay back
             </label>
             <input type="checkbox" id="payback-modal" class="modal-toggle" />
-            <PaybackModal class="z-50" @submit="handlePayback" />
+            <PaybackModal
+              v-if="paybackUser"
+              @submit="handlePayback"
+              :receiver="flat?.members.find(member => member.id === paybackUser)!"
+            />
           </MemberWalletStat>
         </div>
       </div>
       <div>
-        <h2 class="text-xl font-bold my-4">All Purchases</h2>
+        <h2 class="text-xl font-bold mt-8 mb-4">Activities</h2>
         <div class="flex flex-col gap-5">
           <Spending v-for="purchase in purchases" :key="purchase.id" :purchase="purchase"> </Spending>
         </div>
@@ -113,3 +120,9 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
     </teleport>
   </div>
 </template>
+
+<style scoped>
+.stat:first-child {
+  border: none !important;
+}
+</style>

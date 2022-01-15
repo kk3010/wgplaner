@@ -36,7 +36,7 @@ export function usePurchases() {
 
   const fetchPurchases: () => Promise<void> = async () => {
     const { data } = await axios.get<IPurchase[]>('/purchase')
-    purchases.value = data
+    purchases.value = data.reverse()
   }
 
   const fetchPurchaseById: (id: number) => Promise<IPurchase> = async (id) => {
