@@ -8,19 +8,19 @@ import type { IShoppingItem } from '@interfaces/shopping-item.interface';
 export class PurchaseSeederService {
   constructor(private readonly purchaseService: PurchaseService) {}
 
-  create(user: IUser, items: IShoppingItem[]) {
+  create(user: IUser, items: IShoppingItem[], payers: number[]) {
     return Promise.all(
       Array.from(Array(5)).map(() => {
         const { id, ...purchase } = generateFakePurchase(
           user.flatId,
           user.id,
           items,
-          [user],
+          payers,
         );
         return this.purchaseService.create(user, {
           ...purchase,
           shoppingItems: items.map(({ id }) => id),
-          payers: purchase.payers.map(({ id }) => id),
+          payers,
         });
       }),
     );

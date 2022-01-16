@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { IUser } from '@interfaces/user.interface';
+import type { IPurchase } from '@interfaces/purchase.interface';
 import { Repository } from 'typeorm';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
@@ -44,30 +45,28 @@ export class PurchaseService {
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
     const purchase = await this.findOneById(id);
-    const payersAsObject = updatePurchaseDto.payers?.map(
-      (id) => ({ id } as IUser),
-    );
 
     // when the payers have been changed, undo old wallet update and apply with new price and payers
-    if (payersAsObject) {
+    if (updatePurchaseDto.payers) {
       await this.updateAllAccounts(purchase, true);
       await this.updateAllAccounts({
         ...purchase,
-        payers: payersAsObject,
+        payerIds: updatePurchaseDto.payers,
       });
     }
 
     await this.purchaseRepository.save({
       ...purchase,
       ...updatePurchaseDto,
-      payers: payersAsObject ?? purchase.payers,
+      payers:
+        updatePurchaseDto.payers?.map((id) => ({ id })) ?? purchase.payers,
     });
   }
 
-  async updateAllAccounts(purchase: Purchase, undo = false) {
-    const { price, payers, buyerId, flatId } = purchase;
-    const splitCosts = price / payers.length;
-    const factor = undo ? -1 : 1;
+  async updateAllAccounts(purchase: IPurchase, undo = false) {
+    const { price, payerIds, buyerId, flatId } = purchase;
+    const splitCosts = price / payerIds.length;
+    const factor = price < 0 || undo ? -1 : 1;
 
     //Add amount to the wallet of the buyer
     await this.walletService.updateBalance(
@@ -77,9 +76,9 @@ export class PurchaseService {
 
     //Remove splittedCosts from the wallets of all payers
     await Promise.all(
-      payers.map((payer) =>
+      payerIds.map((id) =>
         this.walletService.updateBalance(
-          { ...payer, flatId } as IUser,
+          { id, flatId } as IUser,
           -factor * splitCosts,
         ),
       ),

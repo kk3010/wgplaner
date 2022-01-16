@@ -15,7 +15,9 @@ export function useShoppingItems() {
   useSse({
     'shopping-item.update': (msg) => {
       const index = shoppingItems.value.findIndex(({ id }) => id === msg.item.id)
-      shoppingItems.value.splice(index, 1, { ...shoppingItems.value[index], ...msg.item })
+      if (index > -1) {
+        shoppingItems.value.splice(index, 1, { ...shoppingItems.value[index], ...msg.item })
+      }
     },
     'shopping-item.create': (msg) => {
       shoppingItems.value.push(msg.item)

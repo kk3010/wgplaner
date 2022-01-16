@@ -37,9 +37,12 @@ async function bootstrap() {
     logger.log(`Test user: \n email: ${testUser.email} password: ${password}`);
     await shoppingItemSeeder.create(flat.id);
     await Promise.all(
-      [...users, testUser].map(async (user) => {
+      [...users, testUser].map(async (user, _, members) => {
         const items = await shoppingItemSeeder.create(flat.id);
-        return purchaseSeeder.create(user, items);
+        const payers = members
+          .slice(0, Math.round(Math.random() * members.length))
+          .map((m) => m.id);
+        return purchaseSeeder.create(user, items, payers);
       }),
     );
   } catch (e) {

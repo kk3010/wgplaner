@@ -30,13 +30,15 @@ export function usePurchases() {
       const purchase: IPurchase = msg.purchase
       notify(`${msg.user.firstName} updated a purchase`)
       const index = purchases.value.findIndex(({ id }) => id === purchase.id)
-      purchases.value.splice(index, 1, { ...purchases[index], ...purchase })
+      if (index > -1) {
+        purchases.value.splice(index, 1, { ...purchases[index], ...purchase })
+      }
     },
   })
 
   const fetchPurchases: () => Promise<void> = async () => {
     const { data } = await axios.get<IPurchase[]>('/purchase')
-    purchases.value = data
+    purchases.value = data.reverse()
   }
 
   const fetchPurchaseById: (id: number) => Promise<IPurchase> = async (id) => {

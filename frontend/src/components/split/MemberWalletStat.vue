@@ -24,10 +24,8 @@ const balance = useTransition(toRef(props, 'balance'), {
     <div class="stat-figure">
       <UserAvatar :user="user" />
     </div>
-    <div class="stat-title">{{ user?.firstName }}</div>
-    <div class="stat-value" :class="balance >= 0 ? 'text-green-600' : 'text-red-700'">
-      {{ balance.toFixed(2) }}
-    </div>
+    <div class="stat-title">{{ user?.firstName + ' ' + user?.lastName }}</div>
+    <div class="stat-value" :class="balance >= 0 ? 'text-green-400' : 'text-red-400'">{{ balance.toFixed(2) }} €</div>
     <div class="stat-actions">
       <slot :user="user" />
     </div>

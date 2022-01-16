@@ -78,7 +78,7 @@ const toggleOverflow = (state: boolean) =>
             />
           </label>
         </th>
-        <th>Quantity</th>
+        <th>Amount</th>
         <th>What</th>
         <th></th>
       </tr>
@@ -92,6 +92,7 @@ const toggleOverflow = (state: boolean) =>
         @after-leave="toggleOverflow(false)"
       >
         <NewItemRow @create="$emit('create', $event)" key="newRow" />
+
         <ItemRow
           v-for="item in items"
           :key="item.id"

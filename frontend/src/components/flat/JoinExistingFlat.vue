@@ -2,11 +2,13 @@
 import { ref } from 'vue'
 import { useFlat } from '@/composables/useFlat'
 import { useRouter } from 'vue-router'
+import { useUser } from '@/composables/useUser'
 
 const err = ref<string>()
 const token = ref<string>()
 const { joinFlat } = useFlat()
 const { push } = useRouter()
+const { getUser } = useUser()
 
 async function handleJoin() {
   if (!token.value) {
@@ -14,6 +16,7 @@ async function handleJoin() {
   }
   try {
     await joinFlat(token.value)
+    await getUser()
     await push('/')
   } catch (e) {
     err.value = 'Wrong token string. Please enter the correct one'

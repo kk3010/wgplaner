@@ -16,7 +16,13 @@ export class WalletService {
 
   @OnEvent('flat.join')
   async handleFlatJoin(payload: { userId: number; flatId: number }) {
-    await this.create({ id: payload.userId, flatId: payload.flatId } as IUser);
+    const existing = await this.findOneByUserId(payload.userId, payload.flatId);
+    if (!existing) {
+      await this.create({
+        id: payload.userId,
+        flatId: payload.flatId,
+      } as IUser);
+    }
   }
 
   create(user: IUser) {

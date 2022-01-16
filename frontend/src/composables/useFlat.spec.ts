@@ -122,7 +122,7 @@ describe('useFlat', () => {
       })
 
       it('DELETE /flat/{userId}', async () => {
-        mock.onDelete(/\/flat\/\d+/).reply(200)
+        mock.onDelete(/\/flat\/user\/\d+/).reply(200)
         await removeUser(user.id)
         expect(mock.history.delete).toHaveLength(1)
         expect(flat.value?.members).toHaveLength(0)

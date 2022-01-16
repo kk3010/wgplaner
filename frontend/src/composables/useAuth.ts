@@ -72,11 +72,7 @@ export function useAuth(user: Ref<IUser | undefined>) {
 
   const logout = () => {
     localStorage.removeItem(REFRESH_TOKEN)
-    if (axiosInterceptor) {
-      axios.interceptors.request.eject(axiosInterceptor)
-      axiosInterceptor = null
-    }
-    user.value = undefined
+    window.location.reload()
   }
 
   return { login, logout, register, addAxiosAuth, getAccessToken, refresh }

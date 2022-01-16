@@ -6,6 +6,7 @@ import RegisterView from './views/RegisterView.vue'
 import LoginView from './views/LoginView.vue'
 import JoinView from './views/JoinView.vue'
 import SettingsView from './views/SettingsView.vue'
+import MembersView from './views/MembersView.vue'
 
 import { useUser } from './composables/useUser'
 const { user } = useUser()
@@ -13,17 +14,21 @@ const { user } = useUser()
 const routes: RouteRecordRaw[] = [
   {
     path: '/auth',
-    beforeEnter() {
+    beforeEnter(from) {
       if (user.value && user.value.flatId) {
+        console.log('bin in auth, user und flat gesetzt, redirect to /')
+
         return {
           path: '/',
         }
       }
-      if (user.value && !user.value.flatId) {
+      if (from.path !== '/flat' && user.value && !user.value.flatId) {
+        console.log('bin in auth, user gesetzt, aber keine flat, redirect to /flat')
+
         return {
           path: '/flat',
         }
-      }
+      } else return
     },
     component: AuthView,
     children: [
@@ -39,11 +44,15 @@ const routes: RouteRecordRaw[] = [
         path: '/flat',
         beforeEnter() {
           if (!user.value) {
+            console.log('bin in /flat und kein user ist gesetzt, redirect to /register')
+
             return {
               path: '/register',
             }
           }
           if (user.value.flatId) {
+            console.log('bin in /flat und user ist gesetzt, redirect to /')
+
             return {
               path: '/',
             }
@@ -57,13 +66,25 @@ const routes: RouteRecordRaw[] = [
     path: '',
     beforeEnter() {
       if (!user.value) {
+        console.log('bin in "" user nicht gesetzt, redirect to register')
         return {
           path: '/register',
+        }
+      }
+      if (!user.value?.flatId) {
+        console.log('bin in "" keine flat id, redirect to flat')
+
+        return {
+          path: '/flat',
         }
       }
     },
     component: HomeView,
     children: [
+      {
+        path: '',
+        component: MembersView,
+      },
       {
         path: 'shopping',
         component: ShoppingListView,

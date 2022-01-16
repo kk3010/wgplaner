@@ -30,21 +30,23 @@ const handleSubmit = () => {
   emit('create', purchase)
 }
 
-const submitEnabled = computed(() => payers.value.length > 0)
+const submitEnabled = computed(() => purchase.price > 0 && payers.value.length > 0)
 </script>
 
 <template>
   <div class="modal">
     <div class="modal-box max-h-screen overflow-auto">
+      <h3 class="text-xl font-bold mb-3">New Spending</h3>
+
       <form class="space-y-4" @keydown="$event.key === 'Enter' && submitEnabled && accept.click()">
         <div class="form-control">
-          <label for="name" class="form-label">
+          <label for="name" class="form-label mb-2">
             <span class="label-text">Name</span>
           </label>
           <input id="name" name="name" type="text" class="input input-bordered" v-model="purchase.name" />
         </div>
         <div class="form-control">
-          <label for="price" class="form-label">
+          <label for="price" class="form-label mb-2">
             <span class="label-text">Price</span>
           </label>
           <label class="input-group">
@@ -61,12 +63,12 @@ const submitEnabled = computed(() => payers.value.length > 0)
           </label>
         </div>
         <div class="form-control">
-          <label for="payers" class="form-label">
+          <label for="payers" class="form-label mb-2">
             <span class="label-text">Payers</span>
           </label>
           <MembersTable class="w-full" id="payers" :members="members" v-model="payers" />
         </div>
-        <div class="modal-action">
+        <div class="modal-action py-2">
           <label
             ref="accept"
             for="create-purchase-modal"

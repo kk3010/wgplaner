@@ -1,7 +1,7 @@
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useUser } from './useUser'
 import { useAuth } from './useAuth'
-import { onBeforeUnmount, ref, watchEffect } from 'vue'
+import { getCurrentInstance, onBeforeUnmount, ref, watchEffect } from 'vue'
 import type { IUser } from '@interfaces/user.interface'
 
 const source = ref<EventSourcePolyfill>()
@@ -16,6 +16,7 @@ export const initSse = () => {
     source.value = new EventSourcePolyfill('/api/sse', { headers: { Authorization: `Bearer ${getAccessToken()}` } })
     source.value.addEventListener('error', async (e) => {
       if ((e as any).status === 422) {
+        source.value!.close()
         await refresh()
         establishConnection()
       }
@@ -27,17 +28,19 @@ export const initSse = () => {
   }
 }
 
-export function useSse(subscriberMap: Record<string, SubscriberFn>) {
+export function useSse(subscriberMap: Record<string, SubscriberFn>, listenToSelf = false) {
   const listener = ({ data }) => {
     const parsed = JSON.parse(data)
     const handler = subscriberMap[parsed.type]
 
-    if (handler && user.value?.id !== parsed.data.user.id) {
+    if (handler && (listenToSelf || user.value?.id !== parsed.data.user.id)) {
       handler(parsed.data)
     }
   }
 
   watchEffect(() => source.value?.addEventListener('message', listener))
 
-  onBeforeUnmount(() => source.value?.removeEventListener('message', listener))
+  if (getCurrentInstance()) {
+    onBeforeUnmount(() => source.value?.removeEventListener('message', listener))
+  }
 }

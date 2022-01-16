@@ -91,14 +91,20 @@ describe('useAuth', () => {
 
   describe('logout', () => {
     const mockUser = {} as IUser
+    let locationSpy
     beforeEach(() => {
       user.value = mockUser
+      // @ts-ignore
+      delete window.location
+      locationSpy = jest.fn()
+      // @ts-ignore
+      window.location = { reload: locationSpy }
     })
 
     it('clears user ref on logout', () => {
       logout()
-      expect(user.value).toBeUndefined()
       expect(localStorage.removeItem).toHaveBeenCalled()
+      expect(locationSpy).toHaveBeenCalled()
     })
   })
 })
