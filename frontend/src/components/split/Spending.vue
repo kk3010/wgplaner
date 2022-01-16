@@ -5,6 +5,8 @@ import type { IUser } from '@interfaces/user.interface'
 import { computed, toRefs } from 'vue'
 import UserAvatar from '../user/UserAvatar.vue'
 
+type TransactionType = 'Purchase' | 'Reimbursement' | 'Spending'
+
 const { flat } = useFlat()
 
 const props = defineProps<{
@@ -23,7 +25,15 @@ const payers = computed(
       .filter((member) => member !== undefined) as IUser[],
 )
 
-const isPurchase = !!props.purchase.shoppingItems?.length
+const transactionType = computed<TransactionType>(() => {
+  if (purchase.value.shoppingItems?.length) {
+    return 'Purchase'
+  }
+  if (purchase.value.price < 0) {
+    return 'Reimbursement'
+  }
+  return 'Spending'
+})
 </script>
 
 <template>
@@ -34,20 +44,29 @@ const isPurchase = !!props.purchase.shoppingItems?.length
         <div class="stat-figure">
           <UserAvatar v-if="buyer" :user="buyer"></UserAvatar>
         </div>
-        <div class="stat-value">{{ purchase.price.toFixed(2) }} €</div>
+        <div class="stat-value">{{ Math.abs(purchase.price).toFixed(2) }} €</div>
         <div class="stat-title mb-2 opacity-100 font-bold">
           <h3>{{ purchase.name }}</h3>
         </div>
         <div class="stat-desc opacity-100">
-          <span :class="(isPurchase ? 'badge-info' : 'badge-success') + ' badge badge-lg'">{{
-            isPurchase ? 'Purchase' : 'Spending'
-          }}</span>
+          <span
+            class="badge badge-lg"
+            :class="{
+              'badge-info': transactionType === 'Purchase',
+              'badge-success': transactionType === 'Spending',
+              'badge-warning': transactionType === 'Reimbursement',
+            }"
+          >
+            {{ transactionType }}
+          </span>
         </div>
       </div>
     </div>
     <div class="collapse-content px-10">
       <label v-if="payers?.length">
-        <span class="text-lg font-bold opacity-80">Payers</span>
+        <span class="text-lg font-bold opacity-80">{{
+          transactionType === 'Reimbursement' ? 'Receivers' : 'Payers'
+        }}</span>
         <div class="mb-6 -space-x-4 avatar-group">
           <UserAvatar v-for="payer in payers" :key="payer.id" :user="payer" />
         </div>

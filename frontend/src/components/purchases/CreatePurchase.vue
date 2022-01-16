@@ -30,7 +30,7 @@ const handleSubmit = () => {
   emit('create', purchase)
 }
 
-const submitEnabled = computed(() => payers.value.length > 0)
+const submitEnabled = computed(() => purchase.price > 0 && payers.value.length > 0)
 </script>
 
 <template>

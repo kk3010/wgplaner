@@ -66,7 +66,7 @@ export class PurchaseService {
   async updateAllAccounts(purchase: IPurchase, undo = false) {
     const { price, payerIds, buyerId, flatId } = purchase;
     const splitCosts = price / payerIds.length;
-    const factor = undo ? -1 : 1;
+    const factor = price < 0 || undo ? -1 : 1;
 
     //Add amount to the wallet of the buyer
     await this.walletService.updateBalance(
