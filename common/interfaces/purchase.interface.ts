@@ -1,4 +1,3 @@
-import type { IUser } from './user.interface';
 import type { IShoppingItem } from './shopping-item.interface';
 
 export interface IPurchase {
@@ -6,7 +5,7 @@ export interface IPurchase {
   name?: string;
   price: number;
   buyerId: number;
-  payers: IUser[];
+  payerIds: number[];
   shoppingItems?: IShoppingItem[];
   flatId?: number;
 }

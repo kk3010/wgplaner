@@ -9,17 +9,17 @@ const { user, updateUser, deleteUser } = useUser()
 const { removeUser } = useFlat()
 const { push } = useRouter()
 
-const handleLeaveFlat = () => {
+const handleLeaveFlat = async () => {
   if (window.confirm('Are you sure you want to leave the flat?')) {
-    removeUser(user.value!.id)
-    push('/')
+    await removeUser(user.value!.id)
+    await push('/')
   }
 }
 
-const handleDeleteUser = () => {
+const handleDeleteUser = async () => {
   if (window.confirm('Are you sure you want to delete your account?')) {
-    deleteUser()
-    push('/')
+    await deleteUser()
+    window.location.reload()
   }
 }
 

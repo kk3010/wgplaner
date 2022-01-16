@@ -4,11 +4,13 @@ import SideMenu from '@/components/SideMenu.vue'
 import MenuComponent from '@/components/MenuComponent.vue'
 import { useFlat } from '../composables/useFlat'
 import ToastAlert from '@/components/ToastAlert.vue'
+import { initSse } from '@/composables/useSse'
 
 const { getFlat } = useFlat()
 
 onMounted(async () => {
   await getFlat()
+  initSse()
 })
 </script>
 

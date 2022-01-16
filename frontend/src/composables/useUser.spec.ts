@@ -53,8 +53,15 @@ describe('useUser', () => {
   })
 
   describe('deleteUser', () => {
+    let locationSpy
+
     beforeEach(() => {
       user.value = expected
+      // @ts-ignore
+      delete window.location
+      locationSpy = jest.fn()
+      // @ts-ignore
+      window.location = { reload: locationSpy }
     })
 
     it('DELETE /user', async () => {
@@ -62,6 +69,7 @@ describe('useUser', () => {
       await deleteUser()
       expect(mock.history.delete).toHaveLength(1)
       expect(user.value).toBeUndefined()
+      expect(locationSpy).toHaveBeenCalled()
     })
 
     it('does not unset user on failed request', async () => {
@@ -69,6 +77,7 @@ describe('useUser', () => {
       await expect(deleteUser()).rejects.toThrow()
       expect(mock.history.delete).toHaveLength(1)
       expect(user.value).toEqual(expected)
+      expect(locationSpy).not.toHaveBeenCalled()
     })
   })
 })

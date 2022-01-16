@@ -26,8 +26,8 @@ const memberWallets = computed(() => {
   const members = flat.value?.members
   if (members && wallets.value) {
     return wallets.value
-      .filter(({ userId }) => userId !== user.value!.id)
       .map((wallet) => ({ ...wallet, user: members.find(({ id }) => wallet.userId === id) }))
+      .filter((wallet) => wallet.user && wallet.userId !== user.value!.id)
       .sort((a, b) => a.id - b.id)
   }
   return null
@@ -44,14 +44,11 @@ const paybackUser = ref<number>()
 
 const handlePayback = async (amount: number) => {
   await transferMoney(paybackUser.value!, amount)
-  await fetchWallets()
-  await fetchPurchases()
   notify('Payback successful', 'success')
 }
 
 const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
   await createPurchase(purchase)
-  await fetchPurchases()
   notify('Purchase created', 'success')
 }
 </script>
@@ -98,8 +95,13 @@ const handleCreatePurchase = async (purchase: CreatePurchaseType) => {
       </div>
       <div>
         <h2 class="text-xl font-bold mt-8 mb-4">Activities</h2>
-        <div class="flex flex-col gap-5">
-          <Spending v-for="purchase in purchases" :key="purchase.id" :purchase="purchase"> </Spending>
+        <div class="flex flex-col gap-5" v-if="flat">
+          <Spending
+            v-for="purchase in purchases.sort((a, b) => b.id - a.id)"
+            :key="purchase.id"
+            :purchase="purchase"
+            :members="flat.members"
+          />
         </div>
       </div>
     </div>
