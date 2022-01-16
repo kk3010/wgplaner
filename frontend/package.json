@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "tsc -b ../common && vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "lint": "eslint '*/**/*.{vue,js,ts}' --fix",
     "test": "jest",
@@ -45,8 +45,5 @@
     "typescript": "^4.5.4",
     "vite": "^2.6.4",
     "vue-tsc": "^0.28.9"
-  },
-  "msw": {
-    "workerDirectory": "public"
   }
 }
