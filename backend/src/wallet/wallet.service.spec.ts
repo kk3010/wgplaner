@@ -7,7 +7,7 @@ import { generateFakeWallet } from '../../test/wallet/wallet.mock';
 import { generateFakeUser } from '../../test/user/user.mock';
 import { generateFakeFlat } from '../../test/flat/flat.mock';
 import type { MockType } from '../../test/mockType';
-import { IWallet } from 'src/interfaces/wallet.interface';
+import { IWallet } from '@interfaces/wallet.interface';
 import { SseService } from '../sse/sse.service';
 
 const mockWalletRepositoryFactory: () => MockType<Repository<Wallet>> = () => ({

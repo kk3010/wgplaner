@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { Repository } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
 import { OnEvent } from '@nestjs/event-emitter';

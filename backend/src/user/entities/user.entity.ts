@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Flat } from '../../flat/entities/flat.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { IUser } from '../../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()

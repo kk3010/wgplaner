@@ -2,26 +2,24 @@ version: '3.8'
 
 services:
   frontend:
-    build: ./frontend
-    expose:
-      - 3000
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules/
-    networks:
-      - frontend
+    image: wgplaner-frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
 
-  backend:
-    build: ./backend
-    expose:
-      - 5000
     ports:
       - 5000:5000
-    volumes:
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules/
+    networks:
+      - frontend
+    depends_on:
+      - backend
+
+  backend:
+    image: wgplaner-backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    env_file: ./backend/.env.sample
     depends_on:
       - postgres
     networks:
@@ -36,8 +34,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: wgplaner
-    ports:
-      - 5432:5432
     networks:
       - backend
 
@@ -56,6 +52,7 @@ services:
 volumes:
   postgres:
 
+    null
 networks:
-  frontend:
-  backend:
+  frontend: null
+  backend: null

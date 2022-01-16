@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SseService } from './sse.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 
 describe('SseService', () => {
   let service: SseService;

@@ -1,5 +1,5 @@
 import { generateFakeUser } from './user.mock';
-import type { IUser } from '../../src/interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import type { NextFunction, Request, Response } from 'express';
 
 export const createMockUserMiddleware =

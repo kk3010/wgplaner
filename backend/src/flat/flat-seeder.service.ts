@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { generateFakeFlat } from '../../test/flat/flat.mock';
 import { FlatService } from './flat.service';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 
 @Injectable()
 export class FlatSeederService {

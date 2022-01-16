@@ -6,9 +6,9 @@ import { RefreshTokensService } from './refresh-tokens.service';
 import { ConfigService } from '@nestjs/config';
 import { generateFakeUser } from '../../../test/user/user.mock';
 import type { MockType } from '../../../test/mockType';
-import type { IUser } from '../../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import type { SignOptions } from 'jsonwebtoken';
-import type { IRefreshToken } from '../../interfaces/refresh-token.interface';
+import type { IRefreshToken } from '@interfaces/refresh-token.interface';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { RefreshTokenPayloadDto } from '../dto/refresh-token-payload.dto';
 

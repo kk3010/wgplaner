@@ -1,6 +1,6 @@
 import { User } from '../../user/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import type { IFlat } from '../../interfaces/flat.interface';
+import type { IFlat } from '@interfaces/flat.interface';
 import { ShoppingItem } from '../../shopping-item/entities/shopping-item.entity';
 import { Purchase } from '../../purchase/entities/purchase.entity';
 

@@ -7,7 +7,7 @@ import { UserController } from '../../src/user/user.controller';
 import { UpdateUserDto } from '../../src/user/dto/update-user.dto';
 import type { INestApplication } from '@nestjs/common';
 import type { MockType } from '../mockType';
-import type { IUser } from '../../src/interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { registerGlobalPipes } from '../registerGlobalPipes';
 
 const userServiceFactory: () => MockType<UserService> = () => ({

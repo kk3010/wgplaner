@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '../user/user.decorator';
-import type { IUser } from '../interfaces/user.interface';
+import type { IUser } from '@interfaces/user.interface';
 import { SseService } from '../sse/sse.service';
 
 @Controller('flat')

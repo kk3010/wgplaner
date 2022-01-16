@@ -1,16 +1,21 @@
-FROM node:lts-alpine
+FROM node:16
 
-# make the 'app' folder the current working directory
-WORKDIR /usr/src/app
+WORKDIR /app/common
+
+COPY ./common .
+
+WORKDIR /app/frontend
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
+COPY ./frontend/package*.json ./
 
 # install project dependencies
 RUN npm install
 
-# copy project files and folders to the current working directory (i.e. 'app' folder)
-COPY . .
+COPY ./frontend .
 
-EXPOSE 3000
-CMD [ "npm", "run", "dev" ]
+RUN npm run build
+
+EXPOSE 5000
+
+CMD [ "npm", "run", "serve", "--", "--host" ]
