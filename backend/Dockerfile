@@ -16,6 +16,8 @@ COPY ./backend .
 
 RUN npm run build
 
+COPY ./wait-for.sh .
+
 EXPOSE 5000
 
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "./startup-backend.sh" ]
