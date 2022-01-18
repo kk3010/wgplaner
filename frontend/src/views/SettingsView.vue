@@ -29,8 +29,8 @@ const userState = reactive({
 </script>
 
 <template>
-  <div class="flex flex-col justify-center w-full max-w-sm mx-auto">
-    <h1 class="text-3xl font-black mb-10 text-center">Profile Settings</h1>
+  <div class="flex flex-col justify-center w-full max-w-sm mx-auto mb-5">
+    <h1 class="text-3xl font-black mb-10 mt-2 text-center">Profile Settings</h1>
     <div class="flex flex-col items-center space-y-4">
       <UserAvatar class="!w-20 !h-20" :user="userState" />
       <div class="relative flex flex-col space-y-2 items-center">
@@ -56,34 +56,34 @@ const userState = reactive({
           </label>
         </div>
       </div>
-      <form @submit.prevent="updateUser({ firstName: userState.firstName })">
+      <form class="w-10/12" @submit.prevent="updateUser({ firstName: userState.firstName })">
         <div class="form-control">
           <label class="label" for="firstName">
             <span class="label-text">First Name</span>
           </label>
-          <div class="relative">
+          <div class="relative lg:max-w-md">
             <input id="firstName" type="text" v-model="userState.firstName" class="w-full pr-16 input input-bordered" />
             <button type="submit" class="absolute top-0 right-0 rounded-l-none btn btn-dark">Change</button>
           </div>
         </div>
       </form>
-      <form @submit.prevent="updateUser({ lastName: userState.lastName })">
+      <form class="w-10/12" @submit.prevent="updateUser({ lastName: userState.lastName })">
         <div class="form-control">
           <label class="label" for="lastName">
             <span class="label-text">Last Name</span>
           </label>
-          <div class="relative">
+          <div class="relative lg:max-w-md">
             <input id="lastName" type="text" v-model="userState.lastName" class="w-full pr-16 input input-bordered" />
             <button type="submit" class="absolute top-0 right-0 rounded-l-none btn btn-dark">Change</button>
           </div>
         </div>
       </form>
-      <form @submit.prevent="updateUser({ firstName: userState.firstName })">
+      <form class="w-10/12" @submit.prevent="updateUser({ firstName: userState.firstName })">
         <div class="form-control">
           <label class="label" for="email">
             <span class="label-text">Email</span>
           </label>
-          <div class="relative">
+          <div class="relative lg:max-w-md">
             <input id="email" type="email" v-model="userState.email" class="w-full pr-16 input input-bordered" />
             <button type="submit" class="absolute top-0 right-0 rounded-l-none btn btn-dark">Change</button>
           </div>

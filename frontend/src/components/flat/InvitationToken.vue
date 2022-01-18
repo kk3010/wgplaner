@@ -22,7 +22,7 @@ const copy = async () => {
 <template>
   <div class="form-control">
     <div class="relative lg:max-w-md">
-      <p class="pr-16 input flex flex-auto items-center input-primary font-bold uppercase input-bordered">
+      <p class="pr-16 input flex flex-auto items-center input-primary font-bold uppercase input-bordered truncate">
         {{ flat?.invitationToken }}
       </p>
       <button @click="copy" title="Copy to clipboard" class="absolute top-0 right-0 rounded-l-none btn btn-primary">
