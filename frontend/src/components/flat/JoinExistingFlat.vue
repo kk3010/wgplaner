@@ -34,7 +34,7 @@ async function handleJoin() {
         class="input input-bordered input-accent mt-4"
         v-model="token"
         name="invitationToken"
-        placeholder="Paste your invitation link"
+        placeholder="Paste your invitation token"
         type="text"
       />
     </div>
