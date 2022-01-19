@@ -1,4 +1,6 @@
-FROM node:16
+FROM node:16-alpine
+
+RUN apk add --no-cache netcat-openbsd
 
 WORKDIR /app/common
 
@@ -15,6 +17,8 @@ RUN npm install
 COPY ./frontend .
 
 RUN npm run build
+
+COPY ./wait-for.sh .
 
 EXPOSE 5000
 
