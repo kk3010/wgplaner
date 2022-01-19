@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -16,6 +23,7 @@ import type { IUser } from '@interfaces/user.interface';
 import { AuthenticationPayloadDto } from './dto/authentication-payload.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { User } from '../user/user.decorator';
+import { RefreshTokensService } from './services/refresh-tokens.service';
 
 @SkipJwtAuth()
 @ApiTags('auth')
@@ -23,6 +31,7 @@ import { User } from '../user/user.decorator';
 export class AuthController {
   constructor(
     private tokenService: TokenService,
+    private refreshTokenService: RefreshTokensService,
     private userService: UserService,
   ) {}
 
@@ -55,6 +64,12 @@ export class AuthController {
       );
 
     return this.buildResponsePayload(user, token);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@User('id') userId: number) {
+    await this.refreshTokenService.revokeRefreshTokens(userId);
   }
 
   private async generateTokensForUser(

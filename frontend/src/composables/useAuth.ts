@@ -70,7 +70,8 @@ export function useAuth(user: Ref<IUser | undefined>) {
     setTokens(data)
   }
 
-  const logout = () => {
+  const logout = async () => {
+    await axios.post<never>('/auth/logout')
     localStorage.removeItem(REFRESH_TOKEN)
     window.location.reload()
   }

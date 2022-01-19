@@ -14,11 +14,17 @@ import type { MockType } from './mockType';
 import type { IUser } from '@interfaces/user.interface';
 import { User } from '../src/user/entities/user.entity';
 import { registerGlobalPipes } from './registerGlobalPipes';
+import { RefreshTokensService } from '../src/auth/services/refresh-tokens.service';
 
 const tokenServiceFactory: () => MockType<TokenService> = () => ({
   generateAccessToken: jest.fn(),
   generateRefreshToken: jest.fn(),
 });
+
+const refreshTokenServiceFactory: () => MockType<RefreshTokensService> =
+  () => ({
+    revokeRefreshTokens: jest.fn(),
+  });
 
 const userServiceFactory: () => MockType<UserService> = () => ({
   create: jest.fn(),
@@ -32,6 +38,7 @@ describe('Auth', () => {
   let app: INestApplication;
   let tokenService: MockType<TokenService>;
   let userService: MockType<UserService>;
+  let refreshService: MockType<RefreshTokensService>;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -46,6 +53,10 @@ describe('Auth', () => {
           provide: UserService,
           useFactory: userServiceFactory,
         },
+        {
+          provide: RefreshTokensService,
+          useFactory: refreshTokenServiceFactory,
+        },
       ],
     })
       .overrideGuard(LocalAuthGuard)
@@ -56,6 +67,7 @@ describe('Auth', () => {
     app.use(createMockUserMiddleware());
     registerGlobalPipes(app);
     tokenService = moduleRef.get(TokenService);
+    refreshService = moduleRef.get(RefreshTokensService);
     userService = moduleRef.get(UserService);
     await app.init();
   });
@@ -65,6 +77,7 @@ describe('Auth', () => {
     jest
       .spyOn(tokenService, 'generateRefreshToken')
       .mockResolvedValue('refresh');
+    jest.spyOn(refreshService, 'revokeRefreshTokens').mockResolvedValue(true);
   });
 
   describe('/login', () => {
@@ -108,6 +121,16 @@ describe('Auth', () => {
         .post('/auth/register')
         .send(user)
         .expect(HttpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe('/logout', () => {
+    it('revokes all refresh tokens', async () => {
+      await request(app.getHttpServer())
+        .post('/auth/logout')
+        .send({ id: 1 })
+        .expect(HttpStatus.OK);
+      expect(refreshService.revokeRefreshTokens).toHaveBeenCalled();
     });
   });
 

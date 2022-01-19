@@ -12,6 +12,7 @@ const refreshTokensRepositoryFactory: () => MockType<Repository<RefreshToken>> =
     create: jest.fn(),
     findOne: jest.fn(),
     save: jest.fn(),
+    update: jest.fn(),
   });
 
 describe('RefreshTokensService', () => {
@@ -44,6 +45,7 @@ describe('RefreshTokensService', () => {
     jest
       .spyOn(refreshTokensRepository, 'save')
       .mockImplementation((val) => val);
+    jest.spyOn(service, 'revokeRefreshTokens').mockResolvedValue();
     jest.spyOn(global.Date, 'now').mockReturnValue(0);
 
     const user = generateFakeUser();

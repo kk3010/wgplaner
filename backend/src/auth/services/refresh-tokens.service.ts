@@ -14,6 +14,8 @@ export class RefreshTokensService {
   async createRefreshToken(user: IUser, ttl: number) {
     const expires = new Date(Date.now() + ttl);
 
+    await this.revokeRefreshTokens(user.id);
+
     const token = this.refreshTokensRepository.create({
       user_id: user.id,
       expires,
@@ -25,5 +27,12 @@ export class RefreshTokensService {
 
   findOne(id: number) {
     return this.refreshTokensRepository.findOne(id);
+  }
+
+  async revokeRefreshTokens(userId: number) {
+    await this.refreshTokensRepository.update(
+      { user_id: userId },
+      { is_revoked: true },
+    );
   }
 }

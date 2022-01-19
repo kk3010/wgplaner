@@ -10,9 +10,9 @@ import { UserIcon } from '@heroicons/vue/outline'
 const { user } = useUser()
 const { logout } = useAuth(user)
 
-const confirmLogout = () => {
+const confirmLogout = async () => {
   if (window.confirm('Are you sure you want to logout?')) {
-    logout()
+    await logout()
   }
 }
 </script>

@@ -93,6 +93,7 @@ describe('useAuth', () => {
     const mockUser = {} as IUser
     let locationSpy
     beforeEach(() => {
+      mock.onPost('/auth/logout').reply(200)
       user.value = mockUser
       // @ts-ignore
       delete window.location
@@ -101,8 +102,9 @@ describe('useAuth', () => {
       window.location = { reload: locationSpy }
     })
 
-    it('clears user ref on logout', () => {
-      logout()
+    it('clears user ref on logout', async () => {
+      await logout()
+      expect(mock.history.post).toHaveLength(1)
       expect(localStorage.removeItem).toHaveBeenCalled()
       expect(locationSpy).toHaveBeenCalled()
     })
