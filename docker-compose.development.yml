@@ -4,8 +4,19 @@ services:
   backend:
     ports:
       - 5000:5000
-      
+
   postgres:
     ports:
       - 5432:5432
-  
+
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: galkaev
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    networks:
+      - backend
