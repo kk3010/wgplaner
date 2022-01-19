@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useFlat } from '@/composables/useFlat'
-import { useRouter } from 'vue-router'
 
 const name = ref('')
-const { push } = useRouter()
 const { createFlat } = useFlat()
+
+const emits = defineEmits<{
+  (event: 'submit'): void
+}>()
 
 async function handleCreate() {
   await createFlat(name.value)
-  await push('/')
+  emits('submit')
 }
 </script>
 
@@ -25,10 +27,11 @@ async function handleCreate() {
         name="flatName"
         placeholder="Give it a name"
         type="text"
+        required
       />
     </div>
     <div class="justify-center card-actions">
-      <button class="btn btn-lg btn-outline btn-accent">Create</button>
+      <button class="btn btn-lg btn-outline btn-accent" type="submit" :disabled="!name">Create</button>
     </div>
   </form>
 </template>

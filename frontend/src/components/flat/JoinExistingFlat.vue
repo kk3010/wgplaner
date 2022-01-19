@@ -1,23 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useFlat } from '@/composables/useFlat'
-import { useRouter } from 'vue-router'
-import { useUser } from '@/composables/useUser'
 
 const err = ref<string>()
 const token = ref<string>()
 const { joinFlat } = useFlat()
-const { push } = useRouter()
-const { getUser } = useUser()
+
+const emits = defineEmits<{
+  (event: 'submit'): void
+}>()
 
 async function handleJoin() {
-  if (!token.value) {
-    return
-  }
   try {
-    await joinFlat(token.value)
-    await getUser()
-    await push('/')
+    await joinFlat(token.value!)
+    emits('submit')
   } catch (e) {
     err.value = 'Wrong token string. Please enter the correct one'
   }
@@ -36,11 +32,12 @@ async function handleJoin() {
         name="invitationToken"
         placeholder="Paste your invitation token"
         type="text"
+        required
       />
     </div>
     <p class="text-red-400 mt-4" v-if="err">{{ err }}</p>
     <div class="justify-center card-actions">
-      <button class="btn btn-lg btn-outline btn-accent" type="submit">Join</button>
+      <button class="btn btn-lg btn-outline btn-accent" :disabled="!token" type="submit">Join</button>
     </div>
   </form>
 </template>
