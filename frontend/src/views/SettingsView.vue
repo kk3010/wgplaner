@@ -29,7 +29,7 @@ const userState = reactive({
 </script>
 
 <template>
-  <div class="flex flex-col justify-center w-full max-w-sm mx-auto mb-5">
+  <div class="flex flex-col justify-center w-full max-w-sm mx-auto">
     <h1 class="text-3xl font-black mb-10 mt-2 text-center">Profile Settings</h1>
     <div class="flex flex-col items-center space-y-4">
       <UserAvatar class="!w-20 !h-20" :user="userState" />
@@ -56,7 +56,7 @@ const userState = reactive({
           </label>
         </div>
       </div>
-      <form class="w-10/12" @submit.prevent="updateUser({ firstName: userState.firstName })">
+      <form class="w-full" @submit.prevent="updateUser({ firstName: userState.firstName })">
         <div class="form-control">
           <label class="label" for="firstName">
             <span class="label-text">First Name</span>
@@ -67,7 +67,7 @@ const userState = reactive({
           </div>
         </div>
       </form>
-      <form class="w-10/12" @submit.prevent="updateUser({ lastName: userState.lastName })">
+      <form class="w-full" @submit.prevent="updateUser({ lastName: userState.lastName })">
         <div class="form-control">
           <label class="label" for="lastName">
             <span class="label-text">Last Name</span>
@@ -78,7 +78,7 @@ const userState = reactive({
           </div>
         </div>
       </form>
-      <form class="w-10/12" @submit.prevent="updateUser({ firstName: userState.firstName })">
+      <form class="w-full" @submit.prevent="updateUser({ firstName: userState.firstName })">
         <div class="form-control">
           <label class="label" for="email">
             <span class="label-text">Email</span>
@@ -90,8 +90,8 @@ const userState = reactive({
         </div>
       </form>
     </div>
-    <div class="mt-20 space-y-4">
-      <div class="divider my-10">
+    <div class="mt-4 md:mt-8 lg:mt-12 space-y-4">
+      <div class="divider mb-8">
         <h2 class="text-xl">Danger Zone</h2>
       </div>
       <button @click="handleLeaveFlat" class="rounded block btn-sm btn btn-outline btn-error mx-auto">

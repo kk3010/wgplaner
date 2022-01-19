@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import MembersComponent from '@/components/MembersComponent.vue'
 import { useFlat } from '@/composables/useFlat'
-import { watchEffect } from 'vue'
 import InvitationToken from '@/components/flat/InvitationToken.vue'
 import RenameFlat from '@/components/flat/RenameFlat.vue'
 
-const { flat } = useFlat()
+const { flat, deleteFlat } = useFlat()
 
-watchEffect(() =>
-  flat.value?.members.forEach((member) => {
-    console.log(member.firstName)
-  }),
-)
+async function handleDeletion() {
+  if (window.confirm('Are you sure you want to delete the flat? This cannot be undone.')) {
+    await deleteFlat()
+  }
+}
 </script>
 
 <template>
@@ -34,5 +33,9 @@ watchEffect(() =>
     <div class="rounded-box shadow p-6">
       <InvitationToken />
     </div>
+    <div class="divider mt-12 mb-4">
+      <h2 class="text-xl">Danger Zone</h2>
+    </div>
+    <button @click="handleDeletion" class="rounded block btn-sm btn btn-outline btn-error mx-auto">delete flat</button>
   </div>
 </template>

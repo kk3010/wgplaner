@@ -64,6 +64,7 @@ export class FlatController {
         id: user.flatId,
       });
     } catch (e) {
+      console.error(e);
       throw new HttpException('flat not found', HttpStatus.BAD_REQUEST);
     }
   }

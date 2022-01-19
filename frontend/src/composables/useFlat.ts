@@ -59,7 +59,7 @@ export function useFlat() {
       return
     }
     await axios.delete('/flat')
-    flat.value = undefined
+    window.location.reload()
   }
 
   const joinFlat: (token: string) => Promise<void> = async (token) => {

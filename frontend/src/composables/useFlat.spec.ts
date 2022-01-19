@@ -100,17 +100,27 @@ describe('useFlat', () => {
     })
 
     describe('deleteFlat', () => {
+      let locationSpy
+      beforeEach(() => {
+        // @ts-ignore
+        delete window.location
+        locationSpy = jest.fn()
+        // @ts-ignore
+        window.location = { reload: locationSpy }
+      })
+
       it('DELETE /flat and unset ref', async () => {
         mock.onDelete('/flat').reply(200)
         await deleteFlat()
         expect(mock.history.delete).toHaveLength(1)
-        expect(flat.value).toBeUndefined()
+        expect(locationSpy).toHaveBeenCalled()
       })
       it('does not unset flat when request fails', async () => {
         mock.onDelete('/flat').networkError()
         await expect(deleteFlat()).rejects.toThrow()
         expect(mock.history.delete).toHaveLength(1)
         expect(flat.value).toEqual(original)
+        expect(locationSpy).not.toHaveBeenCalled()
       })
     })
 

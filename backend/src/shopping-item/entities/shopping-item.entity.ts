@@ -28,7 +28,7 @@ export class ShoppingItem implements IShoppingItem {
   @Exclude()
   @ApiHideProperty()
   @ManyToOne(() => Flat, {
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
   })
   flat: Flat;
 

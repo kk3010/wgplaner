@@ -69,7 +69,7 @@ export class Purchase implements IPurchase {
   @Column()
   flatId: number;
 
-  @ManyToOne(() => Flat)
+  @ManyToOne(() => Flat, { onDelete: 'CASCADE' })
   @Exclude()
   @ApiHideProperty()
   flat: Flat;

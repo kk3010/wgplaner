@@ -45,13 +45,13 @@ export class Wallet implements IWallet {
   @Column()
   flatId: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   @Exclude()
   @ApiHideProperty()
   user: User;
 
-  @ManyToOne(() => Flat)
+  @ManyToOne(() => Flat, { onDelete: 'CASCADE' })
   @Exclude()
   @ApiHideProperty()
   flat: Flat;
