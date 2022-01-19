@@ -49,9 +49,7 @@ services:
       - backend
 
 volumes:
-  postgres:
-
-    null
+  postgres: null
 networks:
   frontend: null
   backend: null
